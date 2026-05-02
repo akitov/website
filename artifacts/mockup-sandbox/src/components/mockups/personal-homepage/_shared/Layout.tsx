@@ -40,6 +40,7 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
           background: "#ffffff",
           height: isMobile ? "52px" : "60px",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
+          borderRadius: isMobile ? "0" : "6px",
           position: "relative",
           maxWidth: isMobile ? "100%" : "960px",
           margin: isMobile ? "0" : "30px auto 0",
