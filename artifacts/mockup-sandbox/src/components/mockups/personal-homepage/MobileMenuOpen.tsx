@@ -72,13 +72,14 @@ export function MobileMenuOpen() {
           <button
             type="button"
             aria-label="Close menu"
+            aria-pressed="true"
             style={{
               width: "50px",
               height: "44px",
               borderRadius: "8px",
-              border: "1px solid #cfcfcf",
-              background: "linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%)",
-              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+              border: "1px solid #c5c5c5",
+              background: "#e6e6e6",
+              boxShadow: "inset 0 2px 5px rgba(0, 0, 0, 0.12), inset 0 -1px 0 rgba(255, 255, 255, 0.4)",
               display: "inline-flex",
               flexDirection: "column",
               alignItems: "center",
@@ -90,9 +91,9 @@ export function MobileMenuOpen() {
               zIndex: 1,
             }}
           >
-            <span style={{ display: "block", width: "22px", height: "2px", background: "#999", borderRadius: "1px" }} />
-            <span style={{ display: "block", width: "22px", height: "2px", background: "#999", borderRadius: "1px" }} />
-            <span style={{ display: "block", width: "22px", height: "2px", background: "#999", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "22px", height: "2px", background: "#7a7a7a", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "22px", height: "2px", background: "#7a7a7a", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "22px", height: "2px", background: "#7a7a7a", borderRadius: "1px" }} />
           </button>
 
           {/* Center: page title — bolder + larger for the menu drawer */}
