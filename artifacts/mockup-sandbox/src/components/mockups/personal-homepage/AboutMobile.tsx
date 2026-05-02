@@ -5,40 +5,93 @@ export function AboutMobile() {
   const socialLinkStyle: React.CSSProperties = {
     color: "#cc0000",
     fontFamily: "Arial, Helvetica, sans-serif",
-    fontSize: "14px",
+    fontSize: "13px",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    gap: "6px",
+    gap: "5px",
     textDecoration: "none",
   };
 
   const bioTextStyle: React.CSSProperties = {
-    fontFamily: "Georgia, 'Times New Roman', serif",
-    fontSize: "15px",
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: "14px",
     lineHeight: 1.7,
-    color: "#333",
+    color: "#444",
     marginBottom: "16px",
   };
 
   const endorseBlockStyle: React.CSSProperties = {
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
     gap: "16px",
   };
 
-  const circleStyle: React.CSSProperties = {
+  const circleBase: React.CSSProperties = {
     width: "70px",
     height: "70px",
     borderRadius: "50%",
-    backgroundColor: "#5fbeaa",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    color: "white",
+    color: "#333",
     flexShrink: 0,
   };
+
+  const skills = [
+    {
+      score: 80,
+      bg: "#a8d3c8",
+      title: "User Experience",
+      desc: "Product Concept, Wireframes, UI, Design, Measuring customer success",
+    },
+    {
+      score: 63,
+      bg: "#ececec",
+      title: "Entrepreneurship",
+      desc: "Market research, Positioning, Customer Development and Validation",
+    },
+    {
+      score: 33,
+      bg: "#b8d8e8",
+      title: "Product Management",
+      desc: "Team management, Prioritization, Removing obstacles and increasing velocity",
+    },
+  ];
+
+  const striveItems = [
+    {
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#222">
+          <circle cx="9" cy="7" r="3" />
+          <circle cx="17" cy="9" r="2.2" />
+          <path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6v1H3v-1z" />
+          <path d="M14.5 14c2.2 0 4.5 1.5 4.5 4v2h-4v-2c0-1.6-.6-3-1.5-4 .3 0 .7-.0 1-.0z" />
+        </svg>
+      ),
+      label: "Help teams achieve their best",
+    },
+    {
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#222">
+          <rect x="6" y="2" width="12" height="20" rx="2" />
+          <rect x="8" y="4" width="8" height="13" fill="#e8e8e8" />
+          <circle cx="12" cy="19.5" r="0.8" fill="#e8e8e8" />
+        </svg>
+      ),
+      label: "Build products people love",
+    },
+    {
+      icon: (
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#222" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 3h15v15H3z" />
+          <path d="M6 11l4 4 8-9" />
+        </svg>
+      ),
+      label: "Get things done",
+    },
+  ];
 
   return (
     <Layout activeNav="about" pageTitle="RESUMÉ" isMobile={true}>
@@ -69,9 +122,9 @@ export function AboutMobile() {
         <h1
           style={{
             fontFamily: "Georgia, 'Times New Roman', serif",
-            fontSize: "28px",
+            fontSize: "26px",
             fontWeight: "bold",
-            color: "#333",
+            color: "#222",
             margin: "0 0 16px 0",
             textAlign: "center",
           }}
@@ -85,7 +138,7 @@ export function AboutMobile() {
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "center",
-            gap: "16px",
+            gap: "12px 16px",
             marginBottom: "30px",
           }}
         >
@@ -93,7 +146,7 @@ export function AboutMobile() {
             <span>✉</span> Email
           </a>
           <a style={socialLinkStyle}>
-            <span>✎</span> Medium
+            <span style={{ fontWeight: "bold" }}>M</span> Medium
           </a>
           <a style={socialLinkStyle}>
             <span style={{ fontWeight: "bold" }}>in</span> LinkedIn
@@ -102,7 +155,7 @@ export function AboutMobile() {
             <span>𝕏</span> Twitter
           </a>
           <a style={socialLinkStyle}>
-            <span>☎</span> Skype
+            <span>S</span> Skype
           </a>
         </div>
 
@@ -114,95 +167,91 @@ export function AboutMobile() {
           <p style={bioTextStyle}>
             Also a crypto believer, continuous learner and tennis enthusiast.
           </p>
-          <p style={bioTextStyle}>
+          <p style={{ ...bioTextStyle, marginBottom: 0 }}>
             Thanks for stopping by!
             <br />
             <strong>Alex</strong>
           </p>
         </div>
 
-        {/* Skills Section */}
-        <div style={{ width: "100%" }}>
+        {/* Most endorsed Section */}
+        <div style={{ width: "100%", marginBottom: "40px" }}>
           <h2
             style={{
               fontFamily: "Arial, Helvetica, sans-serif",
-              fontSize: "14px",
+              fontSize: "13px",
               fontWeight: "bold",
               color: "#333",
               marginBottom: "24px",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "6px",
             }}
           >
-            Most endorsed in:
+            Most endorsed
             <span
               style={{
                 background: "#0077b5",
                 color: "white",
-                padding: "2px 4px",
+                padding: "1px 5px",
                 borderRadius: "2px",
-                fontSize: "10px",
+                fontSize: "11px",
+                fontWeight: "bold",
               }}
             >
               in
             </span>
           </h2>
 
-          <div
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {skills.map((skill) => (
+              <div key={skill.title} style={endorseBlockStyle}>
+                <div style={{ ...circleBase, backgroundColor: skill.bg }}>
+                  <span style={{ fontSize: "22px", fontWeight: "normal", lineHeight: 1, fontFamily: "Arial, Helvetica, sans-serif" }}>
+                    {skill.score}
+                  </span>
+                  <span style={{ fontSize: "9px", letterSpacing: "1px", marginTop: "2px", fontFamily: "Arial, Helvetica, sans-serif" }}>
+                    ENDR
+                  </span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ margin: "0 0 6px 0", fontFamily: "Georgia, 'Times New Roman', serif", fontSize: "17px", color: "#333", fontWeight: "normal" }}>
+                    {skill.title}
+                  </h3>
+                  <p style={{ margin: 0, fontFamily: "Arial, Helvetica, sans-serif", fontSize: "12px", color: "#666", lineHeight: 1.5 }}>
+                    <strong style={{ color: "#444" }}>What exactly:</strong> {skill.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* I strive to Section */}
+        <div style={{ width: "100%" }}>
+          <h2
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: "13px",
+              fontWeight: "bold",
+              color: "#333",
+              marginBottom: "24px",
             }}
           >
-            {/* Skill 1 */}
-            <div style={endorseBlockStyle}>
-              <div style={circleStyle}>
-                <span style={{ fontSize: "24px", fontWeight: "bold", lineHeight: 1 }}>80</span>
-                <span style={{ fontSize: "9px", letterSpacing: "1px" }}>ENDR</span>
-              </div>
-              <div>
-                <h3 style={{ margin: "0 0 6px 0", fontFamily: "Georgia", fontSize: "16px", color: "#333" }}>
-                  User Experience
-                </h3>
-                <p style={{ margin: 0, fontFamily: "Arial", fontSize: "13px", color: "#666", lineHeight: 1.5 }}>
-                  What exactly: Product Concept, Wireframes, UI, Design, Measuring customer success
-                </p>
-              </div>
-            </div>
+            I strive to:
+          </h2>
 
-            {/* Skill 2 */}
-            <div style={endorseBlockStyle}>
-              <div style={circleStyle}>
-                <span style={{ fontSize: "24px", fontWeight: "bold", lineHeight: 1 }}>67</span>
-                <span style={{ fontSize: "9px", letterSpacing: "1px" }}>ENDR</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            {striveItems.map((item, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ width: "40px", display: "flex", justifyContent: "center", flexShrink: 0 }}>
+                  {item.icon}
+                </div>
+                <div style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: "14px", color: "#333" }}>
+                  {item.label}
+                </div>
               </div>
-              <div>
-                <h3 style={{ margin: "0 0 6px 0", fontFamily: "Georgia", fontSize: "16px", color: "#333" }}>
-                  Product Management
-                </h3>
-                <p style={{ margin: 0, fontFamily: "Arial", fontSize: "13px", color: "#666", lineHeight: 1.5 }}>
-                  What exactly: MVP, Business Model, KPIs, Roadmap, Stakeholder management
-                </p>
-              </div>
-            </div>
-
-            {/* Skill 3 */}
-            <div style={endorseBlockStyle}>
-              <div style={circleStyle}>
-                <span style={{ fontSize: "24px", fontWeight: "bold", lineHeight: 1 }}>52</span>
-                <span style={{ fontSize: "9px", letterSpacing: "1px" }}>ENDR</span>
-              </div>
-              <div>
-                <h3 style={{ margin: "0 0 6px 0", fontFamily: "Georgia", fontSize: "16px", color: "#333" }}>
-                  Entrepreneurship
-                </h3>
-                <p style={{ margin: 0, fontFamily: "Arial", fontSize: "13px", color: "#666", lineHeight: 1.5 }}>
-                  What exactly: Lean startup, Funding, Go-to-market strategy, Growth
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
