@@ -68,25 +68,26 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             type="button"
             aria-label="Open menu"
             style={{
-              width: "44px",
+              width: "50px",
               height: "44px",
-              borderRadius: "6px",
-              border: "1px solid #d8d8d8",
-              background: "#ffffff",
+              borderRadius: "8px",
+              border: "1px solid #cfcfcf",
+              background: "linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%)",
+              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
               display: "inline-flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: "4px",
+              gap: "5px",
               padding: 0,
               cursor: "pointer",
               flexShrink: 0,
               zIndex: 1,
             }}
           >
-            <span style={{ display: "block", width: "20px", height: "2px", background: "#555", borderRadius: "1px" }} />
-            <span style={{ display: "block", width: "20px", height: "2px", background: "#555", borderRadius: "1px" }} />
-            <span style={{ display: "block", width: "20px", height: "2px", background: "#555", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "22px", height: "2px", background: "#999", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "22px", height: "2px", background: "#999", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "22px", height: "2px", background: "#999", borderRadius: "1px" }} />
           </button>
         ) : (
           <div style={{ display: "flex", gap: "18px", zIndex: 1 }}>
