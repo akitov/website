@@ -4,7 +4,7 @@ import { Layout } from "./_shared/Layout";
 export function ProjectPageMobile() {
   return (
     <Layout activeNav="work" pageTitle="WORK" isMobile={true}>
-      <div style={{ padding: "15px", fontFamily: "Georgia, 'Times New Roman', serif" }}>
+      <div style={{ padding: "14px", fontFamily: "Georgia, 'Times New Roman', serif" }}>
         
         {/* Top right navigation */}
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "30px" }}>

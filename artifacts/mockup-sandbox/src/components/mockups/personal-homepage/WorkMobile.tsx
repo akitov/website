@@ -57,6 +57,7 @@ export function WorkMobile() {
             display: "flex",
             flexDirection: "column",
             gap: "0",
+            padding: "0 14px",
           }}
         >
           {portfolioItems.map((item, index) => (
