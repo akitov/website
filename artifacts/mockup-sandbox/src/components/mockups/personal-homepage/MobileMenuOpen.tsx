@@ -36,18 +36,18 @@ export function MobileMenuOpen() {
   return (
     <div
       style={{
-        background: "#ffffff",
+        background: "#e8e8e8",
         minHeight: "100vh",
         margin: 0,
         fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
       }}
     >
-      <style>{`html, body { margin: 0; padding: 0; background: #ffffff; }`}</style>
+      <style>{`html, body { margin: 0; padding: 0; background: #e8e8e8; }`}</style>
 
-      {/* Header card — matches other mobile pages */}
+      {/* Single white drawer card containing the header + tile grid */}
       <div
         style={{
-          margin: "16px 14px 0",
+          margin: "16px 14px",
           borderRadius: "8px",
           overflow: "hidden",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
@@ -131,22 +131,22 @@ export function MobileMenuOpen() {
             />
           </div>
         </nav>
-      </div>
 
-      {/* Tile grid */}
-      <div
-        style={{
-          padding: "20px 14px 28px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "16px",
-        }}
-      >
-        {items.map((item) => (
-          <div key={item.label} style={item.active ? tileActive : tileBase}>
-            {item.label}
-          </div>
-        ))}
+        {/* Tile grid — inside the same white card */}
+        <div
+          style={{
+            padding: "16px 14px 20px",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "16px",
+          }}
+        >
+          {items.map((item) => (
+            <div key={item.label} style={item.active ? tileActive : tileBase}>
+              {item.label}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
