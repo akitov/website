@@ -60,11 +60,11 @@ export function BlogPostMobile() {
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           {/* TOP META / THUMBNAIL */}
           <div>
-            <div style={{ marginBottom: "16px", maxWidth: "220px", margin: "0 auto 16px" }}>
+            <div style={{ marginBottom: "16px" }}>
               <img
                 src="/__mockup/images/slack-ux-thumb.png"
                 alt="Slack UX"
-                style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", display: "block", backgroundColor: "#ddd" }}
+                style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", display: "block", backgroundColor: "#ddd" }}
               />
             </div>
             <div style={{ textAlign: "center" }}>
