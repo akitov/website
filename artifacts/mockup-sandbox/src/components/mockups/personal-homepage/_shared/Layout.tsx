@@ -27,25 +27,32 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
         fontFamily: "Georgia, 'Times New Roman', serif",
       }}
     >
-      {/* Red top stripe */}
-      <div style={{ height: "4px", background: "#cc0000" }} />
-
-      {/* Nav bar — white card with subtle shadow, constrained to content width */}
-      <nav
+      {/* Header card — red stripe sits flush atop the white nav, all rounded together */}
+      <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: isMobile ? "0 14px" : "0 16px",
-          background: "#ffffff",
-          height: isMobile ? "52px" : "60px",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
-          borderRadius: isMobile ? "0" : "6px",
-          position: "relative",
           maxWidth: isMobile ? "100%" : "960px",
           margin: isMobile ? "0" : "30px auto 0",
+          borderRadius: isMobile ? "0" : "6px",
+          overflow: "hidden",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
+          background: "#ffffff",
         }}
       >
+        {/* Red top stripe — part of the card */}
+        <div style={{ height: "4px", background: "#cc0000" }} />
+
+        {/* Nav bar */}
+        <nav
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: isMobile ? "0 14px" : "0 16px",
+            background: "#ffffff",
+            height: isMobile ? "52px" : "60px",
+            position: "relative",
+          }}
+        >
         {/* Left: nav links */}
         <div style={{ display: "flex", gap: isMobile ? "10px" : "18px", zIndex: 1 }}>
           <span style={navLinkStyle("home")}>HOME</span>
@@ -86,7 +93,8 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             alt="Profile"
           />
         </div>
-      </nav>
+        </nav>
+      </div>
 
       {/* Main content */}
       <div>{children}</div>
