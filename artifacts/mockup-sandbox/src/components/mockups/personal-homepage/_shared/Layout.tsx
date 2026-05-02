@@ -11,9 +11,9 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
   const navLinkStyle = (key: "home" | "work" | "about"): React.CSSProperties => ({
     fontFamily: "'Arial Narrow', Arial, Helvetica, sans-serif",
     fontSize: isMobile ? "10px" : "12px",
-    fontWeight: "bold",
+    fontWeight: activeNav === key ? "bold" : "normal",
     letterSpacing: "0.08em",
-    color: activeNav === key ? "#cc0000" : "#333",
+    color: activeNav === key ? "#cc0000" : "#555",
     textDecoration: "none",
     cursor: "pointer",
     userSelect: "none",
@@ -47,7 +47,7 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
         <div style={{ display: "flex", gap: isMobile ? "10px" : "18px", zIndex: 1 }}>
           <span style={navLinkStyle("home")}>HOME</span>
           <span style={navLinkStyle("work")}>WORK</span>
-          <span style={navLinkStyle("about")}>RESUM?</span>
+          <span style={navLinkStyle("about")}>RESUMÉ</span>
         </div>
 
         {/* Center: page title */}
@@ -66,22 +66,39 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
           {pageTitle}
         </div>
 
-        {/* Right: avatar */}
+        {/* Right: avatar (with vertical separator on desktop) */}
         <div
           style={{
-            width: isMobile ? "36px" : "44px",
-            height: isMobile ? "36px" : "44px",
-            borderRadius: "50%",
-            overflow: "hidden",
-            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: isMobile ? "0" : "20px",
             zIndex: 1,
           }}
         >
-          <img
-            src="https://i.pravatar.cc/88?img=52"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            alt="Profile"
-          />
+          {!isMobile && (
+            <div
+              style={{
+                width: "1px",
+                height: "44px",
+                background: "#c8c8c8",
+              }}
+            />
+          )}
+          <div
+            style={{
+              width: isMobile ? "36px" : "44px",
+              height: isMobile ? "36px" : "44px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src="https://i.pravatar.cc/88?img=52"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              alt="Profile"
+            />
+          </div>
         </div>
       </nav>
 
