@@ -60,7 +60,7 @@ export function HomeMobile() {
   ];
 
   return (
-    <Layout pageTitle="" isMobile={true}>
+    <Layout activeNav="home" pageTitle="HOME" isMobile={true}>
       <div style={{ padding: "40px 16px", margin: "0 auto", maxWidth: "100%" }}>
         
         {/* Header */}

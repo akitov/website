@@ -32,9 +32,9 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
       {/* Header card — red stripe sits flush atop the white nav, all rounded together */}
       <div
         style={{
-          maxWidth: isMobile ? "100%" : "960px",
-          margin: isMobile ? "0" : "30px auto 0",
-          borderRadius: isMobile ? "0" : "6px",
+          maxWidth: isMobile ? "auto" : "960px",
+          margin: isMobile ? "16px 14px 0" : "30px auto 0",
+          borderRadius: isMobile ? "8px" : "6px",
           overflow: "hidden",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
           background: "#ffffff",
@@ -49,18 +49,45 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: isMobile ? "0 14px" : "0 16px",
+            padding: isMobile ? "12px 14px" : "0 16px",
             background: "#ffffff",
-            height: isMobile ? "52px" : "60px",
+            height: isMobile ? "auto" : "60px",
             position: "relative",
           }}
         >
-        {/* Left: nav links */}
-        <div style={{ display: "flex", gap: isMobile ? "10px" : "18px", zIndex: 1 }}>
-          <span style={navLinkStyle("home")}>HOME</span>
-          <span style={navLinkStyle("work")}>WORK</span>
-          <span style={navLinkStyle("about")}>RESUMÉ</span>
-        </div>
+        {/* Left: hamburger (mobile) or nav links (desktop) */}
+        {isMobile ? (
+          <button
+            type="button"
+            aria-label="Open menu"
+            style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "6px",
+              border: "1px solid #d8d8d8",
+              background: "#ffffff",
+              display: "inline-flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "4px",
+              padding: 0,
+              cursor: "pointer",
+              flexShrink: 0,
+              zIndex: 1,
+            }}
+          >
+            <span style={{ display: "block", width: "20px", height: "2px", background: "#555", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "20px", height: "2px", background: "#555", borderRadius: "1px" }} />
+            <span style={{ display: "block", width: "20px", height: "2px", background: "#555", borderRadius: "1px" }} />
+          </button>
+        ) : (
+          <div style={{ display: "flex", gap: "18px", zIndex: 1 }}>
+            <span style={navLinkStyle("home")}>HOME</span>
+            <span style={navLinkStyle("work")}>WORK</span>
+            <span style={navLinkStyle("about")}>RESUMÉ</span>
+          </div>
+        )}
 
         {/* Center: page title */}
         <div
@@ -69,10 +96,10 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             left: "50%",
             transform: "translateX(-50%)",
             fontFamily: "'Arial Narrow', Arial, Helvetica, sans-serif",
-            fontSize: isMobile ? "12px" : "14px",
+            fontSize: isMobile ? "20px" : "14px",
             fontWeight: "bold",
-            letterSpacing: "0.12em",
-            color: "#333",
+            letterSpacing: isMobile ? "0.04em" : "0.12em",
+            color: "#222",
           }}
         >
           {pageTitle}
@@ -81,8 +108,8 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
         {/* Right: avatar */}
         <div
           style={{
-            width: isMobile ? "36px" : "44px",
-            height: isMobile ? "36px" : "44px",
+            width: isMobile ? "44px" : "44px",
+            height: isMobile ? "44px" : "44px",
             borderRadius: "50%",
             overflow: "hidden",
             flexShrink: 0,
@@ -104,9 +131,9 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
       {/* Footer card — mirrors header: white card with red BOTTOM stripe, rounded */}
       <div
         style={{
-          maxWidth: isMobile ? "100%" : "960px",
-          margin: isMobile ? "60px 0 0" : "60px auto 30px",
-          borderRadius: isMobile ? "0" : "6px",
+          maxWidth: isMobile ? "auto" : "960px",
+          margin: isMobile ? "60px 14px 16px" : "60px auto 30px",
+          borderRadius: isMobile ? "8px" : "6px",
           overflow: "hidden",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
           background: "#ffffff",

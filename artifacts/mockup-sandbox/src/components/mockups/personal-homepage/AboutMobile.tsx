@@ -41,7 +41,7 @@ export function AboutMobile() {
   };
 
   return (
-    <Layout activeNav="about" pageTitle="RESUM?" isMobile={true}>
+    <Layout activeNav="about" pageTitle="RESUMÉ" isMobile={true}>
       <div
         style={{
           width: "100%",
