@@ -39,13 +39,28 @@ function parseFrontmatter(raw) {
   const fm = {};
   let key = null;
   let buf = [];
+  const unquote = (s) => {
+    s = s.trim();
+    if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+      return s.slice(1, -1);
+    }
+    return s;
+  };
   const flush = () => {
     if (key === null) return;
     let v = buf.join('\n').trim();
     if (v.startsWith('[') && v.endsWith(']')) {
-      v = v.slice(1, -1).split(',').map((x) => x.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
-    } else if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
-      v = v.slice(1, -1);
+      v = v.slice(1, -1).split(',').map((x) => unquote(x)).filter(Boolean);
+    } else if (v.includes('\n') || v.startsWith('- ')) {
+      // YAML block-list: each non-empty line begins with "- ".
+      const lines = v.split('\n').map((l) => l.trim()).filter(Boolean);
+      if (lines.length > 0 && lines.every((l) => l.startsWith('- '))) {
+        v = lines.map((l) => unquote(l.slice(2)));
+      } else {
+        v = unquote(v);
+      }
+    } else {
+      v = unquote(v);
     }
     fm[key] = v;
     key = null;
@@ -96,8 +111,10 @@ async function buildManifest(dir, sort) {
     })
   );
   items.sort(sort);
+  // No `generatedAt` — keep manifest output byte-deterministic so re-running
+  // the script with no content change produces zero diff. This prevents the
+  // GitHub Action that runs regenerate from churning commits in a loop.
   const manifest = {
-    generatedAt: new Date().toISOString(),
     slugs: items.map((i) => i.slug),
     items: items.map((i) => {
       const fm = i.frontmatter;
@@ -116,12 +133,25 @@ async function buildManifest(dir, sort) {
       };
     }),
   };
-  await fs.writeFile(
-    path.join(ROOT, dir, 'manifest.json'),
-    JSON.stringify(manifest, null, 2) + '\n',
-    'utf8'
-  );
+  // Write only when the content actually changes, so timestamp-free output
+  // and unchanged manifest content together guarantee idempotency.
+  const target = path.join(ROOT, dir, 'manifest.json');
+  const next = JSON.stringify(manifest, null, 2) + '\n';
+  let prev = '';
+  try { prev = await fs.readFile(target, 'utf8'); } catch {}
+  if (prev !== next) {
+    await fs.writeFile(target, next, 'utf8');
+  }
   return items;
+}
+
+// Same write-only-on-change helper for per-slug HTML files.
+async function writeIfChanged(filePath, content) {
+  let prev = '';
+  try { prev = await fs.readFile(filePath, 'utf8'); } catch {}
+  if (prev !== content) {
+    await fs.writeFile(filePath, content, 'utf8');
+  }
 }
 
 const POST_SHIM = (slug, fm) => `<!doctype html>
@@ -229,7 +259,7 @@ async function main() {
   const blogSlugs = new Set(blogItems.map((i) => i.slug));
   await clearGenerated(ROOT, (n) => /^[\w.-]+\.html$/.test(n) && !RESERVED_ROOT_HTML.has(n) && !blogSlugs.has(n.replace(/\.html$/, '')));
   for (const item of blogItems) {
-    await fs.writeFile(path.join(ROOT, `${item.slug}.html`), POST_SHIM(item.slug, item.frontmatter), 'utf8');
+    await writeIfChanged(path.join(ROOT, `${item.slug}.html`), POST_SHIM(item.slug, item.frontmatter));
   }
 
   // Per-slug HTML for projects under /work/.
@@ -237,7 +267,7 @@ async function main() {
   const workDir = path.join(ROOT, 'work');
   await clearGenerated(workDir, (n) => /^[\w.-]+\.html$/.test(n) && n !== 'index.html' && !projSlugs.has(n.replace(/\.html$/, '')));
   for (const item of projectItems) {
-    await fs.writeFile(path.join(workDir, `${item.slug}.html`), PROJECT_SHIM(item.slug, item.frontmatter), 'utf8');
+    await writeIfChanged(path.join(workDir, `${item.slug}.html`), PROJECT_SHIM(item.slug, item.frontmatter));
   }
 
   console.log(`Wrote blog/manifest.json (${blogItems.length} posts) and projects/manifest.json (${projectItems.length} projects).`);

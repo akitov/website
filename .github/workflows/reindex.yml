@@ -17,6 +17,10 @@ permissions:
 
 jobs:
   reindex:
+    # Guard against self-trigger: don't re-run when the bot just pushed the
+    # regenerated manifests (defense in depth — regenerate.mjs is also
+    # deterministic + write-only-on-change, so re-runs produce no diff).
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     defaults:
       run:
