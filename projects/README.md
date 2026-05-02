@@ -22,8 +22,9 @@ order: 10                                  # lower = earlier in the work grid
 Markdown body goes here.
 ```
 
-> Legacy field aliases (`date` → `updated`, `image` → first entry of
-> `images[]`) are still honored by the renderer.
+> Field aliases honored by the renderer: `slug` or `excerpt` may be
+> used in place of `subtitle`; `date` → `updated`; `image` → first entry
+> of `images[]`. New projects should prefer the canonical names above.
 
 Discovery rules are identical to the blog: manifest first, directory
 listing as fallback, the two unioned. See `../blog/README.md`.

@@ -39,7 +39,7 @@ function fmDate(fm) {
 }
 
 function fmSubtitle(fm) {
-  return fm.subtitle || fm.excerpt || '';
+  return fm.subtitle || fm.slug || fm.excerpt || '';
 }
 
 function fmHeroImage(fm) {
