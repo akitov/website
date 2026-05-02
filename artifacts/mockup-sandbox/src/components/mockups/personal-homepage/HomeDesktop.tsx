@@ -14,14 +14,29 @@ export function HomeDesktop() {
       style={{
         fontFamily: "Arial, Helvetica, sans-serif",
         fontSize: "12px",
-        paddingBottom: "10px",
-        borderBottom: "1px solid #d0d0d0",
-        marginBottom: "16px",
+        marginBottom: "14px",
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
       }}
     >
-      <span style={{ fontWeight: "bold", color: "#333" }}>{date}</span>
-      <span style={{ fontStyle: "italic", color: "#888", fontFamily: "Georgia, serif", margin: "0 6px" }}>{type}</span>
-      <a href="#" style={{ color: "#222", textDecoration: "none", fontWeight: "bold" }}>{category}</a>
+      <span style={{ fontWeight: "bold", color: "#222" }}>{date}</span>
+      <span style={{ fontStyle: "italic", color: "#888", fontFamily: "Georgia, serif" }}>{type}</span>
+      <a
+        href="#"
+        style={{
+          color: "#222",
+          textDecoration: "none",
+          background: "#ffffff",
+          border: "1px solid #d8d8d8",
+          borderRadius: "4px",
+          padding: "2px 8px",
+          fontSize: "11px",
+          fontWeight: "normal",
+        }}
+      >
+        {category}
+      </a>
     </div>
   );
 
@@ -72,37 +87,40 @@ export function HomeDesktop() {
   );
 
   const Quote = ({ text, author, source }: { text: string; author: string; source?: string }) => (
-    <div>
+    <div
+      style={{
+        borderLeft: "1px solid #c8c8c8",
+        paddingLeft: "20px",
+      }}
+    >
       <div
         style={{
-          fontSize: "70px",
-          color: "#bbb",
-          fontFamily: "Georgia, serif",
-          lineHeight: "0.6",
-          marginBottom: "-10px",
-          marginTop: "10px",
-        }}
-      >
-        &ldquo;
-      </div>
-      <div
-        style={{
-          fontSize: "20px",
+          fontSize: "24px",
           color: "#333",
-          fontFamily: "Georgia, serif",
+          fontFamily: "Georgia, 'Times New Roman', serif",
           fontStyle: "italic",
-          lineHeight: "1.4",
+          lineHeight: "1.35",
         }}
       >
+        <span style={{ color: "#999", fontStyle: "normal", marginRight: "2px" }}>&ldquo;</span>
         {text}
+        <span style={{ color: "#999", fontStyle: "normal", marginLeft: "1px" }}>&rdquo;</span>
       </div>
-      <div style={{ marginTop: "16px", fontSize: "12px", fontFamily: "Arial, sans-serif", color: "#888" }}>
-        <span style={{ marginRight: "4px" }}>🏷</span>
-        <span style={{ fontStyle: "italic", fontFamily: "Georgia, serif" }}>{author}</span>
+      <div
+        style={{
+          marginTop: "18px",
+          fontSize: "13px",
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          fontStyle: "italic",
+          color: "#888",
+        }}
+      >
+        <span style={{ marginRight: "6px", color: "#aaa", fontStyle: "normal" }}>🪶</span>
+        {author}
         {source && (
           <>
             ,{" "}
-            <a href="#" style={{ color: "#cc0000", textDecoration: "none" }}>
+            <a href="#" style={{ color: "#cc0000", textDecoration: "none", fontStyle: "normal" }}>
               {source}
             </a>
           </>
