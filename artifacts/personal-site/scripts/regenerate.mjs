@@ -127,7 +127,7 @@ async function buildManifest(dir, sort) {
         type: fm.type || '',
         category: fm.category || '',
         updated: fm.updated || fm.date || '',
-        subtitle: fm.subtitle || fm.excerpt || '',
+        subtitle: fm.subtitle || fm.slug || fm.excerpt || '',
         client: fm.client || '',
         images,
       };
@@ -160,7 +160,7 @@ const POST_SHIM = (slug, fm) => `<!doctype html>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${escapeHtml(fm.title || slug)} — Alexander Kitov</title>
-    ${(fm.subtitle || fm.excerpt) ? `<meta name="description" content="${escapeAttr(fm.subtitle || fm.excerpt)}" />` : ''}
+    ${(fm.subtitle || fm.slug || fm.excerpt) ? `<meta name="description" content="${escapeAttr(fm.subtitle || fm.slug || fm.excerpt)}" />` : ''}
     <link rel="stylesheet" href="/styles.css" />
     <link rel="icon" type="image/svg+xml" href="/assets/avatar.svg" />
     <link rel="canonical" href="/${slug}.html" />
@@ -192,7 +192,7 @@ const PROJECT_SHIM = (slug, fm) => `<!doctype html>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${escapeHtml(fm.title || slug)} — Alexander Kitov</title>
-    ${fm.subtitle ? `<meta name="description" content="${escapeAttr(fm.subtitle)}" />` : ''}
+    ${(fm.subtitle || fm.slug) ? `<meta name="description" content="${escapeAttr(fm.subtitle || fm.slug)}" />` : ''}
     <link rel="stylesheet" href="/styles.css" />
     <link rel="icon" type="image/svg+xml" href="/assets/avatar.svg" />
     <link rel="canonical" href="/work/${slug}.html" />

@@ -105,7 +105,7 @@ async function init() {
   document.querySelector('[data-project-topnav]').innerHTML = navLinkHtml(next);
   document.querySelector('[data-project-head]').innerHTML = `
     <h1>${esc(fm.title || slug)}</h1>
-    ${fm.subtitle ? `<p>${esc(fm.subtitle)}</p>` : ''}
+    ${(fm.subtitle || fm.slug) ? `<p>${esc(fm.subtitle || fm.slug)}</p>` : ''}
   `;
   document.querySelector('[data-project-main]').innerHTML = renderMain(item);
   document.querySelector('[data-project-side]').innerHTML = renderSide(fm);

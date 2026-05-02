@@ -22,10 +22,10 @@ source: Source URL             # optional for type=quote
 Markdown body goes here.
 ```
 
-> Legacy field aliases (`date` → `updated`, `excerpt` → `subtitle`,
-> `image` → first entry of `images[]`) are still honored by the renderer
-> for backwards compatibility, but new posts should use the canonical
-> names above.
+> Field aliases honored by the renderer (any of these works in place of
+> `subtitle`): `slug`, `excerpt`. Other legacy aliases: `date` → `updated`,
+> `image` → first entry of `images[]`. New posts should prefer the
+> canonical names above, but mixing aliases is supported.
 
 ## How discovery works
 
