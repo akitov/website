@@ -24,15 +24,17 @@ export function HomeDesktop() {
       <span style={{ fontStyle: "italic", color: "#888", fontFamily: "Georgia, serif" }}>{type}</span>
       <a
         href="#"
+        className="ak-pill"
         style={{
           color: "#222",
           textDecoration: "none",
-          background: "#ffffff",
-          border: "1px solid #d8d8d8",
-          borderRadius: "4px",
+          background: "#dcdcdc",
+          border: "none",
+          borderRadius: "3px",
           padding: "2px 8px",
           fontSize: "11px",
           fontWeight: "normal",
+          transition: "background 0.15s ease",
         }}
       >
         {category}
@@ -131,6 +133,7 @@ export function HomeDesktop() {
 
   return (
     <Layout pageTitle="HOME" activeNav="home" isMobile={false}>
+      <style>{`.ak-pill:hover { background: #ffffff !important; }`}</style>
       <div style={{ padding: "40px 24px 0", maxWidth: "900px", margin: "0 auto" }}>
         {/* Page heading */}
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
@@ -151,15 +154,17 @@ export function HomeDesktop() {
             {pills.map((pill) => (
               <div
                 key={pill.name}
+                className="ak-pill"
                 style={{
-                  background: "#f5f5f5",
-                  border: "1px solid #d0d0d0",
+                  background: "#dcdcdc",
+                  border: "none",
                   borderRadius: "3px",
                   padding: "3px 10px",
                   fontFamily: "Arial, Helvetica, sans-serif",
                   fontSize: "12px",
-                  color: "#666",
+                  color: "#444",
                   cursor: "pointer",
+                  transition: "background 0.15s ease",
                 }}
               >
                 {pill.name} ({pill.count})
