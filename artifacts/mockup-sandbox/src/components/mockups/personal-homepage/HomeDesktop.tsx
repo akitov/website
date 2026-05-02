@@ -89,15 +89,22 @@ export function HomeDesktop() {
   );
 
   const Quote = ({ text, author, source }: { text: string; author: string; source?: string }) => (
-    <div style={{ position: "relative", paddingLeft: "30px" }}>
+    <div
+      style={{
+        position: "relative",
+        paddingLeft: "30px",
+        borderLeft: "1px solid #c8c8c8",
+      }}
+    >
       <span
         style={{
           position: "absolute",
-          left: 0,
-          top: "-4px",
-          fontSize: "28px",
-          color: "#a8a8a8",
+          left: "20px",
+          top: "-2px",
+          fontSize: "42px",
+          color: "#555",
           fontFamily: "Georgia, 'Times New Roman', serif",
+          fontStyle: "italic",
           lineHeight: 1,
         }}
       >
@@ -106,34 +113,36 @@ export function HomeDesktop() {
       <div
         style={{
           fontSize: "24px",
-          color: "#666",
-          fontFamily: "Georgia, 'Times New Roman', serif",
+          color: "#555",
+          fontFamily: "Arial, Helvetica, sans-serif",
           fontStyle: "italic",
           lineHeight: "1.4",
+          paddingLeft: "20px",
         }}
       >
         {text}
-        <span style={{ color: "#a8a8a8", fontStyle: "normal", marginLeft: "2px" }}>&rdquo;</span>
+        <span style={{ color: "#555", fontStyle: "italic", fontFamily: "Georgia, serif", marginLeft: "2px" }}>
+          &rdquo;
+        </span>
       </div>
       <div
         style={{
           marginTop: "18px",
-          fontSize: "13px",
-          fontFamily: "Georgia, 'Times New Roman', serif",
-          fontStyle: "italic",
-          color: "#999",
+          fontSize: "14px",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          color: "#666",
           display: "flex",
           alignItems: "center",
-          gap: "8px",
+          gap: "10px",
         }}
       >
-        <span style={{ color: "#b8b8b8", fontStyle: "normal", fontSize: "14px" }}>🪶</span>
+        <span style={{ color: "#888", fontSize: "16px" }}>🪶</span>
         <span>
           {author}
           {source && (
             <>
               ,{" "}
-              <a href="#" style={{ color: "#cc0000", textDecoration: "none", fontStyle: "normal" }}>
+              <a href="#" style={{ color: "#cc0000", textDecoration: "none" }}>
                 {source}
               </a>
             </>
