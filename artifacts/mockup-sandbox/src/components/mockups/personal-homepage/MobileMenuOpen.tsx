@@ -96,14 +96,14 @@ export function MobileMenuOpen() {
             <span style={{ display: "block", width: "22px", height: "2px", background: "#7a7a7a", borderRadius: "1px" }} />
           </button>
 
-          {/* Center: page title — bolder + larger for the menu drawer */}
+          {/* Center: page title — matches Layout title */}
           <div
             style={{
               position: "absolute",
               left: "50%",
               transform: "translateX(-50%)",
               fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-              fontSize: "26px",
+              fontSize: "21px",
               fontWeight: 800,
               letterSpacing: "0.02em",
               color: "#1a1a1a",

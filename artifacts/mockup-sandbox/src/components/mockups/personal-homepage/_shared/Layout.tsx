@@ -103,15 +103,13 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             position: "absolute",
             left: "50%",
             transform: "translateX(-50%)",
-            fontFamily: isMobile
-              ? "'Helvetica Neue', Helvetica, Arial, sans-serif"
-              : "'Arial Narrow', Arial, Helvetica, sans-serif",
-            fontSize: isMobile ? "26px" : "14px",
-            fontWeight: isMobile ? 800 : "bold",
-            letterSpacing: isMobile ? "0.02em" : "0.12em",
-            color: isMobile ? "#1a1a1a" : "#222",
+            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize: "21px",
+            fontWeight: 800,
+            letterSpacing: "0.02em",
+            color: "#1a1a1a",
           }}
-          className="text-[22px]">
+        >
           {pageTitle}
         </div>
 
