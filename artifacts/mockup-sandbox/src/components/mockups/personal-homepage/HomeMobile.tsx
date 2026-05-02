@@ -2,6 +2,72 @@ import React from "react";
 import { Layout } from "./_shared/Layout";
 
 export function HomeMobile() {
+  const Quote = ({ text, author, source }: { text: string; author: string; source?: string }) => (
+    <div
+      style={{
+        position: "relative",
+        paddingLeft: "24px",
+        borderLeft: "1px solid #c8c8c8",
+        marginTop: "20px",
+      }}
+    >
+      <span
+        style={{
+          position: "absolute",
+          left: "16px",
+          top: "-2px",
+          fontSize: "36px",
+          color: "#555",
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          fontStyle: "italic",
+          lineHeight: 1,
+        }}
+      >
+        &ldquo;
+      </span>
+      <div
+        style={{
+          fontSize: "18px",
+          color: "#555",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontStyle: "italic",
+          lineHeight: 1.4,
+          paddingLeft: "16px",
+        }}
+      >
+        {text}
+        <span style={{ color: "#555", fontStyle: "italic", fontFamily: "Georgia, serif", marginLeft: "2px" }}>
+          &rdquo;
+        </span>
+      </div>
+      <div
+        style={{
+          marginTop: "16px",
+          fontSize: "13px",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          color: "#666",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          paddingLeft: "16px",
+        }}
+      >
+        <span style={{ color: "#888", fontSize: "15px" }}>🪶</span>
+        <span>
+          {author}
+          {source && (
+            <>
+              ,{" "}
+              <a href="#" style={{ color: "#cc0000", textDecoration: "none" }}>
+                {source}
+              </a>
+            </>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+
   const posts = [
     {
       id: 1,
@@ -9,15 +75,11 @@ export function HomeMobile() {
       type: "a Quote in",
       category: "Product",
       content: (
-        <div style={{ paddingTop: "20px" }}>
-          <div style={{ fontSize: "60px", color: "#ccc", fontFamily: "Georgia, serif", fontStyle: "italic", lineHeight: "0.8", marginBottom: "-16px" }}>"</div>
-          <div style={{ fontSize: "24px", color: "#333", fontFamily: "Georgia, serif", fontStyle: "italic", lineHeight: "1.4" }}>
-            Be harsh, in the interest of being excellent.
-          </div>
-          <div style={{ marginTop: "20px", fontSize: "12px", fontFamily: "Arial, sans-serif", color: "#666" }}>
-            ✎ Stewart Butterfield, Slack, <a href="#" style={{ color: "#cc0000", textDecoration: "none" }}>Source</a>
-          </div>
-        </div>
+        <Quote
+          text="Be harsh, in the interest of being excellent."
+          author="Stewart Butterfield, Slack"
+          source="Source"
+        />
       ),
     },
     {
