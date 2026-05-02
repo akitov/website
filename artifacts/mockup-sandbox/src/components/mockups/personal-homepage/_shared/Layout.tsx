@@ -25,8 +25,10 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
         background: "#e8e8e8",
         minHeight: "100vh",
         fontFamily: "Georgia, 'Times New Roman', serif",
+        margin: 0,
       }}
     >
+      <style>{`html, body { margin: 0; padding: 0; background: #e8e8e8; }`}</style>
       {/* Header card — red stripe sits flush atop the white nav, all rounded together */}
       <div
         style={{
