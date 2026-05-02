@@ -103,11 +103,13 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             position: "absolute",
             left: "50%",
             transform: "translateX(-50%)",
-            fontFamily: "'Arial Narrow', Arial, Helvetica, sans-serif",
-            fontSize: isMobile ? "20px" : "14px",
-            fontWeight: "bold",
-            letterSpacing: isMobile ? "0.04em" : "0.12em",
-            color: "#222",
+            fontFamily: isMobile
+              ? "'Helvetica Neue', Helvetica, Arial, sans-serif"
+              : "'Arial Narrow', Arial, Helvetica, sans-serif",
+            fontSize: isMobile ? "26px" : "14px",
+            fontWeight: isMobile ? 800 : "bold",
+            letterSpacing: isMobile ? "0.02em" : "0.12em",
+            color: isMobile ? "#1a1a1a" : "#222",
           }}
         >
           {pageTitle}
