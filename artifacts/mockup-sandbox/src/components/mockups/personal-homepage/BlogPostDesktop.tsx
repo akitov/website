@@ -19,7 +19,7 @@ export function BlogPostDesktop() {
             borderBottom: "1px dotted #ccc",
             marginBottom: "40px",
           }}
-        >
+          className="border-b-[0px]">
           <div style={{ cursor: "pointer" }}>
             <span style={{ color: "#cc0000", fontSize: "14px", marginRight: "6px" }}>‹</span>
             <span style={{ color: "#333" }}>A Quote in Product</span>
