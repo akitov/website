@@ -34,29 +34,46 @@ function navLinkHtml(item, direction) {
   return `<a class="ak-arrow-link" href="${href}">${label} <span class="ak-arrow">›</span></a>`;
 }
 
+function fmDate(fm) {
+  return fm.updated || fm.date || '';
+}
+
+function fmSubtitle(fm) {
+  return fm.subtitle || fm.excerpt || '';
+}
+
+function fmHeroImage(fm) {
+  if (Array.isArray(fm.images) && fm.images.length > 0) return fm.images[0];
+  return fm.image || '';
+}
+
 function renderHead(item) {
   const fm = item.frontmatter;
+  const date = fmDate(fm);
   if (fm.type === 'quote') {
     return `
       <h1>${esc(fm.author || 'A Quote')}</h1>
-      <p>${fm.category ? `In ${esc(fm.category)}` : ''}${fm.date ? ` — ${esc(fm.date)}` : ''}</p>
+      <p>${fm.category ? `In ${esc(fm.category)}` : ''}${date ? ` — ${esc(date)}` : ''}</p>
     `;
   }
+  const subtitle = fmSubtitle(fm);
   return `
     <h1>${esc(fm.title || item.slug)}</h1>
-    ${fm.excerpt ? `<p>${esc(fm.excerpt)}</p>` : ''}
+    ${subtitle ? `<p>${esc(subtitle)}</p>` : ''}
   `;
 }
 
 function renderSide(item) {
   const fm = item.frontmatter;
   const typeLabel = `${TYPE_LABELS[fm.type] || 'A Note'} in ${esc(fm.category || 'Notes')}`;
+  const hero = fmHeroImage(fm);
+  const date = fmDate(fm);
   return `
-    ${fm.image ? `<img src="${esc(fm.image)}" alt="${esc(fm.title || '')}" />` : ''}
+    ${hero ? `<img src="${esc(hero)}" alt="${esc(fm.title || '')}" />` : ''}
     <div style="margin-bottom:12px">
       <span class="ak-arrow-link">${typeLabel} <span class="ak-arrow">›</span></span>
     </div>
-    ${fm.date ? `<div class="ak-side-date">${esc(fm.date)}</div>` : ''}
+    ${date ? `<div class="ak-side-date">${esc(date)}</div>` : ''}
     <hr />
   `;
 }
@@ -74,10 +91,15 @@ function renderBody(item) {
       </div>
     `;
   }
-  if (typeof window.marked === 'undefined') {
-    return `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body)}</pre>`;
-  }
-  return window.marked.parse(item.body || '');
+  const main = typeof window.marked === 'undefined'
+    ? `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body)}</pre>`
+    : window.marked.parse(item.body || '');
+  // Trailing inline gallery for any extra images beyond the hero.
+  const extra = Array.isArray(fm.images) ? fm.images.slice(1) : [];
+  const gallery = extra
+    .map((src) => `<img src="${esc(src)}" alt="${esc(fm.title || '')}" />`)
+    .join('');
+  return main + (gallery ? `<div class="ak-post-gallery">${gallery}</div>` : '');
 }
 
 async function init() {

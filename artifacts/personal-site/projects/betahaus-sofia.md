@@ -1,10 +1,11 @@
 ---
 title: betahaus | Sofia
 subtitle: Creating and establishing the first coworking space in Sofia.
-image: /projects/images/betahaus-sofia.png
+client: betahaus | Sofia
+images: [/projects/images/betahaus-sofia.png]
 position: Co-Founder
 achievements: Angel capital raised, TEDxBG Speaker, Empower 2011 Finalists, Forbes Startup of the year finalist 2012
-date: 03.2011 - present
+updated: 03.2011 - present
 link: https://www.betahaus.bg
 order: 10
 ---

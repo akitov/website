@@ -1,10 +1,11 @@
 ---
 title: DIE ZEIT iPad App
 subtitle: A daily reading habit for one of Germany's most respected weekly newspapers.
-image: /projects/images/die-zeit-ipad.png
+client: ZEIT Online GmbH
+images: [/projects/images/die-zeit-ipad.png]
 position: Product Manager
 achievements: Significant lift in weekly active readers and subscription conversion
-date: 02.2014 - 12.2014
+updated: 02.2014 - 12.2014
 link: https://www.zeit.de
 order: 30
 ---

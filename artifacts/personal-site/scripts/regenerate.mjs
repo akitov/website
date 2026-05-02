@@ -99,15 +99,22 @@ async function buildManifest(dir, sort) {
   const manifest = {
     generatedAt: new Date().toISOString(),
     slugs: items.map((i) => i.slug),
-    items: items.map((i) => ({
-      slug: i.slug,
-      title: i.frontmatter.title || '',
-      type: i.frontmatter.type || '',
-      category: i.frontmatter.category || '',
-      date: i.frontmatter.date || '',
-      excerpt: i.frontmatter.excerpt || '',
-      image: i.frontmatter.image || '',
-    })),
+    items: items.map((i) => {
+      const fm = i.frontmatter;
+      const images = Array.isArray(fm.images)
+        ? fm.images
+        : (fm.image ? [fm.image] : []);
+      return {
+        slug: i.slug,
+        title: fm.title || '',
+        type: fm.type || '',
+        category: fm.category || '',
+        updated: fm.updated || fm.date || '',
+        subtitle: fm.subtitle || fm.excerpt || '',
+        client: fm.client || '',
+        images,
+      };
+    }),
   };
   await fs.writeFile(
     path.join(ROOT, dir, 'manifest.json'),
@@ -123,7 +130,7 @@ const POST_SHIM = (slug, fm) => `<!doctype html>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${escapeHtml(fm.title || slug)} — Alexander Kitov</title>
-    ${fm.excerpt ? `<meta name="description" content="${escapeAttr(fm.excerpt)}" />` : ''}
+    ${(fm.subtitle || fm.excerpt) ? `<meta name="description" content="${escapeAttr(fm.subtitle || fm.excerpt)}" />` : ''}
     <link rel="stylesheet" href="/styles.css" />
     <link rel="icon" type="image/svg+xml" href="/assets/avatar.svg" />
     <link rel="canonical" href="/${slug}.html" />
@@ -205,8 +212,12 @@ async function clearGenerated(dirAbs, predicate) {
   }
 }
 
+function dateOf(fm) {
+  return fm.updated || fm.date || '';
+}
+
 async function main() {
-  const blogItems = await buildManifest('blog', (a, b) => dateMs(b.frontmatter.date) - dateMs(a.frontmatter.date));
+  const blogItems = await buildManifest('blog', (a, b) => dateMs(dateOf(b.frontmatter)) - dateMs(dateOf(a.frontmatter)));
   const projectItems = await buildManifest('projects', (a, b) => {
     const ao = Number(a.frontmatter.order ?? 999);
     const bo = Number(b.frontmatter.order ?? 999);

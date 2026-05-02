@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-02T21:00:25.836Z",
+  "generatedAt": "2026-05-02T21:09:15.632Z",
   "slugs": [
     "betahaus-sofia",
     "zeit-magazin-ipad",
@@ -11,27 +11,36 @@
       "title": "betahaus | Sofia",
       "type": "",
       "category": "",
-      "date": "03.2011 - present",
-      "excerpt": "",
-      "image": "/projects/images/betahaus-sofia.png"
+      "updated": "03.2011 - present",
+      "subtitle": "Creating and establishing the first coworking space in Sofia.",
+      "client": "betahaus | Sofia",
+      "images": [
+        "/projects/images/betahaus-sofia.png"
+      ]
     },
     {
       "slug": "zeit-magazin-ipad",
       "title": "ZEIT MAGAZIN iPad App",
       "type": "",
       "category": "",
-      "date": "09.2013 - 06.2014",
-      "excerpt": "",
-      "image": "/projects/images/zeit-magazin-ipad.png"
+      "updated": "09.2013 - 06.2014",
+      "subtitle": "Reimagining the Saturday magazine of DIE ZEIT for tablet readers.",
+      "client": "ZEIT Online GmbH",
+      "images": [
+        "/projects/images/zeit-magazin-ipad.png"
+      ]
     },
     {
       "slug": "die-zeit-ipad",
       "title": "DIE ZEIT iPad App",
       "type": "",
       "category": "",
-      "date": "02.2014 - 12.2014",
-      "excerpt": "",
-      "image": "/projects/images/die-zeit-ipad.png"
+      "updated": "02.2014 - 12.2014",
+      "subtitle": "A daily reading habit for one of Germany's most respected weekly newspapers.",
+      "client": "ZEIT Online GmbH",
+      "images": [
+        "/projects/images/die-zeit-ipad.png"
+      ]
     }
   ]
 }

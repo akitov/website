@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-02T21:00:25.813Z",
+  "generatedAt": "2026-05-02T21:09:15.621Z",
   "slugs": [
     "slack-be-harsh",
     "slack-ux",
@@ -14,54 +14,64 @@
       "title": "",
       "type": "quote",
       "category": "Product",
-      "date": "03.02.2018",
-      "excerpt": "A reminder from Slack's founder about the value of candid feedback.",
-      "image": ""
+      "updated": "03.02.2018",
+      "subtitle": "A reminder from Slack's founder about the value of candid feedback.",
+      "client": "",
+      "images": []
     },
     {
       "slug": "slack-ux",
       "title": "How did the Slack UX convince our team?",
       "type": "lesson",
       "category": "UX",
-      "date": "01.03.2015",
-      "excerpt": "See which parts of Slack's onboarding made an impression and what was the magic moment for me. It is rare that a user's first experience with a product is so easy and rewarding.",
-      "image": "/blog/images/argyle.png"
+      "updated": "01.03.2015",
+      "subtitle": "See which parts of Slack's onboarding made an impression and what was the magic moment for me. It is rare that a user's first experience with a product is so easy and rewarding.",
+      "client": "",
+      "images": [
+        "/blog/images/argyle.png"
+      ]
     },
     {
       "slug": "first-principles",
       "title": "First principles reasoning",
       "type": "lesson",
       "category": "Life",
-      "date": "21.03.2013",
-      "excerpt": "Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.",
-      "image": "/blog/images/elon.jpg"
+      "updated": "21.03.2013",
+      "subtitle": "Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.",
+      "client": "",
+      "images": [
+        "/blog/images/elon.jpg"
+      ]
     },
     {
       "slug": "trust-more",
       "title": "You lose less by trusting more",
       "type": "lesson",
       "category": "People",
-      "date": "23.02.2013",
-      "excerpt": "Managing a business is not about asserting control to minimize costs and risks, but about working collaboratively to achieve an agreed goal.",
-      "image": ""
+      "updated": "23.02.2013",
+      "subtitle": "Managing a business is not about asserting control to minimize costs and risks, but about working collaboratively to achieve an agreed goal.",
+      "client": "",
+      "images": []
     },
     {
       "slug": "emerson-decision",
       "title": "",
       "type": "quote",
       "category": "Life",
-      "date": "07.01.2013",
-      "excerpt": "A reminder that the cost of indecision usually exceeds the cost of being wrong.",
-      "image": ""
+      "updated": "07.01.2013",
+      "subtitle": "A reminder that the cost of indecision usually exceeds the cost of being wrong.",
+      "client": "",
+      "images": []
     },
     {
       "slug": "tedxbg-2012",
       "title": "Speaker at TEDxBG 2012",
       "type": "event",
       "category": "Life",
-      "date": "07.01.2013",
-      "excerpt": "Presenting the coworking phenomenon through the lens of betahaus | sofia.",
-      "image": ""
+      "updated": "07.01.2013",
+      "subtitle": "Presenting the coworking phenomenon through the lens of betahaus | sofia.",
+      "client": "",
+      "images": []
     }
   ]
 }

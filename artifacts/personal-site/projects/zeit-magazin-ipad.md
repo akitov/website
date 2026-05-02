@@ -1,10 +1,11 @@
 ---
 title: ZEIT MAGAZIN iPad App
 subtitle: Reimagining the Saturday magazine of DIE ZEIT for tablet readers.
-image: /projects/images/zeit-magazin-ipad.png
+client: ZEIT Online GmbH
+images: [/projects/images/zeit-magazin-ipad.png]
 position: Product Manager
 achievements: Top 10 Lifestyle iPad app in Germany, App Store Editor's Pick
-date: 09.2013 - 06.2014
+updated: 09.2013 - 06.2014
 link: https://www.zeit.de
 order: 20
 ---

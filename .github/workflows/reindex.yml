@@ -1,11 +1,15 @@
-name: Reindex content
+name: Reindex personal-site content
+
+# Regenerates artifacts/personal-site/blog/manifest.json,
+# artifacts/personal-site/projects/manifest.json, and per-slug HTML pages
+# whenever a content file changes. Stdlib-only Node script — no install step.
 
 on:
   push:
     paths:
-      - "blog/**"
-      - "projects/**"
-      - "scripts/regenerate.mjs"
+      - "artifacts/personal-site/blog/**"
+      - "artifacts/personal-site/projects/**"
+      - "artifacts/personal-site/scripts/regenerate.mjs"
   workflow_dispatch:
 
 permissions:
@@ -14,6 +18,9 @@ permissions:
 jobs:
   reindex:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: artifacts/personal-site
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,7 +39,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add blog/manifest.json projects/manifest.json '*.html' 'work/*.html'
-            git commit -m "chore: reindex content"
+            git commit -m "chore: reindex personal-site content"
             git push
           else
             echo "No changes to commit."

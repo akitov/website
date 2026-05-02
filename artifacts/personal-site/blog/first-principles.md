@@ -1,10 +1,10 @@
 ---
 type: lesson
-date: 21.03.2013
+updated: 21.03.2013
 category: Life
 title: First principles reasoning
-excerpt: Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.
-image: /blog/images/elon.jpg
+subtitle: Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.
+images: [/blog/images/elon.jpg]
 ---
 
 Elon Musk attributes much of his ability to innovate to *first-principles thinking* — boiling problems down to fundamental truths and reasoning up from there, rather than reasoning by analogy.

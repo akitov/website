@@ -23,9 +23,11 @@ function renderSide(fm) {
   const title = esc(fm.title || '');
   const subtitleish = title.toLowerCase();
   const dl = [];
+  if (fm.client) dl.push(`<dt>Client:</dt><dd>${esc(fm.client)}</dd>`);
   if (fm.position) dl.push(`<dt>Position:</dt><dd>${esc(fm.position)}</dd>`);
   if (fm.achievements) dl.push(`<dt>Achievements:</dt><dd>${esc(fm.achievements)}</dd>`);
-  if (fm.date) dl.push(`<dt>Date:</dt><dd>${esc(fm.date)}</dd>`);
+  const dateField = fm.updated || fm.date;
+  if (dateField) dl.push(`<dt>Date:</dt><dd>${esc(dateField)}</dd>`);
 
   const link = fm.link
     ? `<a class="ak-project-link" href="${esc(fm.link)}" target="_blank" rel="noopener">View Project</a>`
@@ -38,18 +40,33 @@ function renderSide(fm) {
   `;
 }
 
+function fmHero(fm) {
+  if (Array.isArray(fm.images) && fm.images.length > 0) return fm.images[0];
+  return fm.image || '';
+}
+
+function fmGallery(fm) {
+  if (!Array.isArray(fm.images)) return [];
+  return fm.images.slice(1);
+}
+
 function renderMain(item) {
   const fm = item.frontmatter;
-  const image = fm.image
-    ? `<img src="${esc(fm.image)}" alt="${esc(fm.title || '')}" />`
+  const hero = fmHero(fm);
+  const heroHtml = hero
+    ? `<img src="${esc(hero)}" alt="${esc(fm.title || '')}" />`
     : '';
   const body =
     typeof window.marked !== 'undefined'
       ? window.marked.parse(item.body || '')
       : `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body)}</pre>`;
+  const gallery = fmGallery(fm)
+    .map((src) => `<img src="${esc(src)}" alt="${esc(fm.title || '')}" />`)
+    .join('');
   return `
-    ${image}
+    ${heroHtml}
     <div class="ak-project-body">${body}</div>
+    ${gallery ? `<div class="ak-project-gallery">${gallery}</div>` : ''}
   `;
 }
 
