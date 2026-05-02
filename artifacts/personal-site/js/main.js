@@ -73,6 +73,13 @@ function wireDrawer() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
   });
+  // Close the drawer when any in-drawer link is tapped, so the menu doesn't
+  // remain visually "open" if the link points to the current page (a no-op
+  // navigation) or to an in-page anchor.
+  drawer.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (link) close();
+  });
 }
 
 export async function bootChrome() {
