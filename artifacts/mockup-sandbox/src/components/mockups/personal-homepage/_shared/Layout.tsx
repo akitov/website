@@ -30,17 +30,19 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
       {/* Red top stripe */}
       <div style={{ height: "4px", background: "#cc0000" }} />
 
-      {/* Nav bar */}
+      {/* Nav bar — constrained to content width with breathing room above */}
       <nav
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: isMobile ? "0 14px" : "0 24px",
+          padding: isMobile ? "0 14px" : "0 8px 0 16px",
           background: "#e8e8e8",
           height: isMobile ? "52px" : "60px",
           borderBottom: "1px solid #c8c8c8",
           position: "relative",
+          maxWidth: isMobile ? "100%" : "960px",
+          margin: isMobile ? "0" : "30px auto 0",
         }}
       >
         {/* Left: nav links */}
