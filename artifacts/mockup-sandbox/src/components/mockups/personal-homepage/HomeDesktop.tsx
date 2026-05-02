@@ -21,18 +21,18 @@ export function HomeDesktop() {
       }}
     >
       <span style={{ fontWeight: "bold", color: "#222" }}>{date}</span>
-      <span style={{ fontStyle: "italic", color: "#888", fontFamily: "Georgia, serif" }}>{type}</span>
+      <span style={{ color: "#555", fontWeight: "normal" }}>{type}</span>
       <a
         href="#"
         className="ak-pill"
         style={{
           color: "#222",
           textDecoration: "none",
-          background: "#dcdcdc",
+          background: "#efefef",
           border: "none",
-          borderRadius: "3px",
-          padding: "2px 8px",
-          fontSize: "11px",
+          borderRadius: "4px",
+          padding: "3px 10px",
+          fontSize: "12px",
           fontWeight: "normal",
           transition: "background 0.15s ease",
         }}
@@ -156,13 +156,13 @@ export function HomeDesktop() {
                 key={pill.name}
                 className="ak-pill"
                 style={{
-                  background: "#dcdcdc",
+                  background: "#efefef",
                   border: "none",
-                  borderRadius: "3px",
-                  padding: "3px 10px",
+                  borderRadius: "4px",
+                  padding: "4px 12px",
                   fontFamily: "Arial, Helvetica, sans-serif",
                   fontSize: "12px",
-                  color: "#444",
+                  color: "#333",
                   cursor: "pointer",
                   transition: "background 0.15s ease",
                 }}
