@@ -36,13 +36,13 @@ export function MobileMenuOpen() {
   return (
     <div
       style={{
-        background: "#e8e8e8",
+        background: "#ffffff",
         minHeight: "100vh",
         margin: 0,
         fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
       }}
     >
-      <style>{`html, body { margin: 0; padding: 0; background: #e8e8e8; }`}</style>
+      <style>{`html, body { margin: 0; padding: 0; background: #ffffff; }`}</style>
 
       {/* Header card — matches other mobile pages */}
       <div
