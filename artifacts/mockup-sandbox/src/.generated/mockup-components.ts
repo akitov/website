@@ -7,6 +7,7 @@ export const modules: ModuleMap = {
   "./components/mockups/personal-homepage/BlogPostMobile.tsx": () => import("../components/mockups/personal-homepage/BlogPostMobile.tsx"),
   "./components/mockups/personal-homepage/HomeDesktop.tsx": () => import("../components/mockups/personal-homepage/HomeDesktop.tsx"),
   "./components/mockups/personal-homepage/HomeMobile.tsx": () => import("../components/mockups/personal-homepage/HomeMobile.tsx"),
+  "./components/mockups/personal-homepage/MobileMenuOpen.tsx": () => import("../components/mockups/personal-homepage/MobileMenuOpen.tsx"),
   "./components/mockups/personal-homepage/ProjectPageDesktop.tsx": () => import("../components/mockups/personal-homepage/ProjectPageDesktop.tsx"),
   "./components/mockups/personal-homepage/ProjectPageMobile.tsx": () => import("../components/mockups/personal-homepage/ProjectPageMobile.tsx"),
   "./components/mockups/personal-homepage/WorkDesktop.tsx": () => import("../components/mockups/personal-homepage/WorkDesktop.tsx"),
