@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-05-02T21:00:25.813Z",
+  "slugs": [
+    "slack-be-harsh",
+    "slack-ux",
+    "first-principles",
+    "trust-more",
+    "emerson-decision",
+    "tedxbg-2012"
+  ],
+  "items": [
+    {
+      "slug": "slack-be-harsh",
+      "title": "",
+      "type": "quote",
+      "category": "Product",
+      "date": "03.02.2018",
+      "excerpt": "A reminder from Slack's founder about the value of candid feedback.",
+      "image": ""
+    },
+    {
+      "slug": "slack-ux",
+      "title": "How did the Slack UX convince our team?",
+      "type": "lesson",
+      "category": "UX",
+      "date": "01.03.2015",
+      "excerpt": "See which parts of Slack's onboarding made an impression and what was the magic moment for me. It is rare that a user's first experience with a product is so easy and rewarding.",
+      "image": "/blog/images/argyle.png"
+    },
+    {
+      "slug": "first-principles",
+      "title": "First principles reasoning",
+      "type": "lesson",
+      "category": "Life",
+      "date": "21.03.2013",
+      "excerpt": "Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.",
+      "image": "/blog/images/elon.jpg"
+    },
+    {
+      "slug": "trust-more",
+      "title": "You lose less by trusting more",
+      "type": "lesson",
+      "category": "People",
+      "date": "23.02.2013",
+      "excerpt": "Managing a business is not about asserting control to minimize costs and risks, but about working collaboratively to achieve an agreed goal.",
+      "image": ""
+    },
+    {
+      "slug": "emerson-decision",
+      "title": "",
+      "type": "quote",
+      "category": "Life",
+      "date": "07.01.2013",
+      "excerpt": "A reminder that the cost of indecision usually exceeds the cost of being wrong.",
+      "image": ""
+    },
+    {
+      "slug": "tedxbg-2012",
+      "title": "Speaker at TEDxBG 2012",
+      "type": "event",
+      "category": "Life",
+      "date": "07.01.2013",
+      "excerpt": "Presenting the coworking phenomenon through the lens of betahaus | sofia.",
+      "image": ""
+    }
+  ]
+}
