@@ -111,7 +111,7 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
             letterSpacing: isMobile ? "0.02em" : "0.12em",
             color: isMobile ? "#1a1a1a" : "#222",
           }}
-        >
+          className="text-[22px]">
           {pageTitle}
         </div>
 
@@ -134,10 +134,8 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
         </div>
         </nav>
       </div>
-
       {/* Main content */}
       <div>{children}</div>
-
       {/* Footer card — mirrors header: white card with red BOTTOM stripe, rounded */}
       <div
         style={{
