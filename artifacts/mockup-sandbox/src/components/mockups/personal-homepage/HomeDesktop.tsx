@@ -22,40 +22,15 @@ export function HomeDesktop() {
     >
       <span style={{ fontWeight: "bold", color: "#222" }}>{date}</span>
       <span style={{ color: "#555", fontWeight: "normal" }}>{type}</span>
-      <a
-        href="#"
-        className="ak-pill"
-        style={{
-          color: "#222",
-          textDecoration: "none",
-          background: "#efefef",
-          border: "none",
-          borderRadius: "4px",
-          padding: "3px 10px",
-          fontSize: "12px",
-          fontWeight: "normal",
-          transition: "background 0.15s ease",
-        }}
-      >
+      <a href="#" className="ak-pill">
         {category}
       </a>
     </div>
   );
 
   const ReadMore = () => (
-    <a
-      href="#"
-      style={{
-        display: "inline-block",
-        marginTop: "14px",
-        color: "#cc0000",
-        fontSize: "12px",
-        fontFamily: "Arial, Helvetica, sans-serif",
-        textDecoration: "underline",
-        textDecorationColor: "#cc0000",
-      }}
-    >
-      Read More...
+    <a href="#" className="ak-arrow-link" style={{ display: "inline-block", marginTop: "14px", fontSize: "12px" }}>
+      Read More <span className="ak-arrow">›</span>
     </a>
   );
 
@@ -155,7 +130,6 @@ export function HomeDesktop() {
 
   return (
     <Layout pageTitle="HOME" activeNav="home" isMobile={false}>
-      <style>{`.ak-pill:hover { background: #ffffff !important; }`}</style>
       <div style={{ padding: "40px 24px 0", maxWidth: "900px", margin: "0 auto" }}>
         {/* Page heading */}
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
@@ -174,23 +148,9 @@ export function HomeDesktop() {
           {/* Category filter pills */}
           <div style={{ display: "flex", justifyContent: "center", gap: "8px", flexWrap: "wrap" }}>
             {pills.map((pill) => (
-              <div
-                key={pill.name}
-                className="ak-pill"
-                style={{
-                  background: "#efefef",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "4px 12px",
-                  fontFamily: "Arial, Helvetica, sans-serif",
-                  fontSize: "12px",
-                  color: "#333",
-                  cursor: "pointer",
-                  transition: "background 0.15s ease",
-                }}
-              >
+              <span key={pill.name} className="ak-pill">
                 {pill.name} ({pill.count})
-              </div>
+              </span>
             ))}
           </div>
         </div>

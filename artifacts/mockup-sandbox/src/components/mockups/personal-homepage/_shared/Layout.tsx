@@ -28,7 +28,14 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
         margin: 0,
       }}
     >
-      <style>{`html, body { margin: 0; padding: 0; background: #e8e8e8; }`}</style>
+      <style>{`
+        html, body { margin: 0; padding: 0; background: #e8e8e8; }
+        .ak-pill { background: #efefef; border: none; border-radius: 4px; padding: 3px 10px; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #222; text-decoration: none; cursor: pointer; display: inline-block; transition: background 0.15s ease; }
+        .ak-pill:hover { background: #ffffff; }
+        .ak-arrow-link { color: #333; text-decoration: none; font-family: Arial, Helvetica, sans-serif; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
+        .ak-arrow-link .ak-arrow { color: #cc0000; margin-left: 6px; font-weight: normal; font-size: 1.15em; }
+        .ak-arrow-link.ak-arrow-prev .ak-arrow { margin-left: 0; margin-right: 6px; }
+      `}</style>
       {/* Header card — red stripe sits flush atop the white nav, all rounded together */}
       <div
         style={{

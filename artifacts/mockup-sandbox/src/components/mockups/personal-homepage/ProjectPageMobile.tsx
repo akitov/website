@@ -8,15 +8,8 @@ export function ProjectPageMobile() {
         
         {/* Top right navigation */}
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "30px" }}>
-          <a href="#" style={{ 
-            color: "#cc0000", 
-            textDecoration: "none", 
-            fontFamily: "Arial, Helvetica, sans-serif",
-            fontSize: "11px",
-            fontWeight: "bold",
-            letterSpacing: "0.08em"
-          }}>
-            ZEIT MAGAZIN iPad App <span style={{ fontFamily: "serif" }}>›</span>
+          <a href="#" className="ak-arrow-link" style={{ fontSize: "11px" }}>
+            ZEIT MAGAZIN iPad App <span className="ak-arrow">›</span>
           </a>
         </div>
 

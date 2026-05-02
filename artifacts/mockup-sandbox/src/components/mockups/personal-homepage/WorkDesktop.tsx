@@ -44,21 +44,9 @@ export function WorkDesktop() {
           }}
         >
           {["betahaus | Sofia", "ZEIT MAGAZIN iPad App", "DIE ZEIT iPad App"].map((filter) => (
-            <div
-              key={filter}
-              style={{
-                border: "1px solid #888",
-                borderRadius: "2px",
-                padding: "4px 14px",
-                fontFamily: "Arial, Helvetica, sans-serif",
-                fontSize: "13px",
-                color: "#555",
-                cursor: "pointer",
-                display: "inline-block",
-              }}
-            >
+            <span key={filter} className="ak-pill">
               {filter}
-            </div>
+            </span>
           ))}
         </div>
 

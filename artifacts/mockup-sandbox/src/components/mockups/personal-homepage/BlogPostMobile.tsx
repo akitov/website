@@ -6,28 +6,13 @@ export function BlogPostMobile() {
     <Layout pageTitle="BLOG" isMobile={true}>
       <div style={{ padding: "0 14px 40px" }}>
         {/* Post Navigation */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: "16px 0",
-            fontFamily: "'Arial Narrow', Arial, Helvetica, sans-serif",
-            fontSize: "10px",
-            fontWeight: "bold",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            borderBottom: "1px dotted #ccc",
-            marginBottom: "24px",
-          }}
-        >
-          <div style={{ cursor: "pointer" }}>
-            <span style={{ color: "#cc0000", fontSize: "12px", marginRight: "4px" }}>‹</span>
-            <span style={{ color: "#333" }}>A Quote in Product</span>
-          </div>
-          <div style={{ cursor: "pointer" }}>
-            <span style={{ color: "#333", marginRight: "4px" }}>A Lesson in Life</span>
-            <span style={{ color: "#cc0000", fontSize: "12px" }}>›</span>
-          </div>
+        <div style={{ display: "flex", justifyContent: "space-between", padding: "16px 0", borderBottom: "1px dotted #ccc", marginBottom: "24px" }}>
+          <a href="#" className="ak-arrow-link ak-arrow-prev" style={{ fontSize: "10px" }}>
+            <span className="ak-arrow">‹</span> A Quote in Product
+          </a>
+          <a href="#" className="ak-arrow-link" style={{ fontSize: "10px" }}>
+            A Lesson in Life <span className="ak-arrow">›</span>
+          </a>
         </div>
 
         {/* Heading Area */}
@@ -69,14 +54,11 @@ export function BlogPostMobile() {
             </div>
             <div style={{ textAlign: "center" }}>
               <div style={{ marginBottom: "8px" }}>
-                <a href="#" style={{ color: "#cc0000", fontSize: "12px", fontFamily: "Arial, sans-serif", fontWeight: "bold", textDecoration: "none" }}>
-                  Read more here
+                <a href="#" className="ak-arrow-link" style={{ fontSize: "12px" }}>
+                  A Lesson in UX <span className="ak-arrow">›</span>
                 </a>
               </div>
-              <div style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: "13px", color: "#666", marginBottom: "6px" }}>
-                a Lesson in UX
-              </div>
-              <div style={{ fontFamily: "Arial, sans-serif", fontWeight: "bold", fontSize: "11px", color: "#999", marginBottom: "16px" }}>
+              <div style={{ fontFamily: "Arial, Helvetica, sans-serif", fontWeight: "bold", fontSize: "11px", color: "#999", marginBottom: "16px" }}>
                 01.03.2015
               </div>
               <hr style={{ border: "none", borderTop: "1px solid #ccc", margin: "0" }} />

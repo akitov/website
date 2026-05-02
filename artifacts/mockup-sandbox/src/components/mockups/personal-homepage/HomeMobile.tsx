@@ -72,20 +72,9 @@ export function HomeMobile() {
           {/* Pills */}
           <div style={{ display: "flex", justifyContent: "center", gap: "8px", flexWrap: "wrap" }}>
             {pills.map((pill) => (
-              <div 
-                key={pill.name} 
-                style={{ 
-                  border: "1px solid #888", 
-                  borderRadius: "2px", 
-                  padding: "4px 12px", 
-                  fontFamily: "Arial, sans-serif", 
-                  fontSize: "13px", 
-                  color: "#555", 
-                  cursor: "pointer" 
-                }}
-              >
+              <span key={pill.name} className="ak-pill">
                 {pill.name} ({pill.count})
-              </div>
+              </span>
             ))}
           </div>
         </div>
@@ -94,8 +83,10 @@ export function HomeMobile() {
         <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
           {posts.map(post => (
             <div key={post.id}>
-              <div style={{ fontFamily: "Arial, sans-serif", fontSize: "12px", color: "#555", borderBottom: "1px solid #d8d8d8", paddingBottom: "10px" }}>
-                {post.date} &nbsp;<span style={{ fontFamily: "Georgia, serif", fontStyle: "italic" }}>{post.type}</span>&nbsp; <a href="#" style={{ color: "#555", textDecoration: "none", cursor: "pointer" }}>{post.category}</a>
+              <div style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontWeight: "bold", color: "#222" }}>{post.date}</span>
+                <span style={{ color: "#555" }}>{post.type}</span>
+                <a href="#" className="ak-pill">{post.category}</a>
               </div>
               {post.content}
             </div>
