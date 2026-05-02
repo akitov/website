@@ -134,6 +134,7 @@ export function HomeDesktop() {
           display: "flex",
           alignItems: "center",
           gap: "10px",
+          paddingLeft: "20px",
         }}
       >
         <span style={{ color: "#888", fontSize: "16px" }}>🪶</span>
