@@ -100,6 +100,70 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
 
       {/* Main content */}
       <div>{children}</div>
+
+      {/* Footer card — mirrors header: white card with red BOTTOM stripe, rounded */}
+      <div
+        style={{
+          maxWidth: isMobile ? "100%" : "960px",
+          margin: isMobile ? "60px 0 0" : "60px auto 30px",
+          borderRadius: isMobile ? "0" : "6px",
+          overflow: "hidden",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
+          background: "#ffffff",
+        }}
+      >
+        <div
+          style={{
+            padding: isMobile ? "30px 16px 20px" : "36px 24px 24px",
+            textAlign: "center",
+            fontFamily: "Georgia, 'Times New Roman', serif",
+          }}
+        >
+          <div style={{ fontSize: isMobile ? "18px" : "20px", color: "#333", marginBottom: "16px" }}>
+            Alexander Kitov
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: isMobile ? "14px" : "20px",
+              flexWrap: "wrap",
+              marginBottom: "20px",
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: "13px",
+            }}
+          >
+            {[
+              { icon: "✉", label: "Email" },
+              { icon: "✎", label: "Medium" },
+              { icon: "in", label: "LinkedIn" },
+              { icon: "𝕏", label: "Twitter" },
+              { icon: "☏", label: "Skype" },
+            ].map((s) => (
+              <a
+                key={s.label}
+                href="#"
+                style={{
+                  color: "#cc0000",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  fontWeight: "bold",
+                }}
+              >
+                <span style={{ fontSize: "13px" }}>{s.icon}</span>
+                {s.label}
+              </a>
+            ))}
+          </div>
+          <div style={{ fontSize: "11px", color: "#999", fontFamily: "Arial, Helvetica, sans-serif" }}>
+            © 2024
+          </div>
+        </div>
+        {/* Red bottom stripe — mirror of the header's top stripe */}
+        <div style={{ height: "4px", background: "#cc0000" }} />
+      </div>
     </div>
   );
 }
