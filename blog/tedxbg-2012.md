@@ -1,9 +1,9 @@
 ---
 type: event
-date: 07.01.2013
+updated: 07.01.2013
 category: Life
 title: Speaker at TEDxBG 2012
-excerpt: Presenting the coworking phenomenon through the lens of betahaus | sofia.
+subtitle: Presenting the coworking phenomenon through the lens of betahaus | sofia.
 ---
 
 Speaking at TEDxBG in 2012 was the first time I tried to articulate the *why* behind betahaus to an audience that didn't already know the space. Twelve minutes is short — long enough to tell one story, not nearly long enough to defend it.

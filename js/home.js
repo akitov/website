@@ -1,4 +1,9 @@
-/* home.js — render the homepage post grid + category pill filter. */
+/* home.js — render the homepage post grid + category pill filter.
+ *
+ * Filtering is fully in-place: clicking a pill toggles a `data-active-cat`
+ * attribute on the grid, hides cards that don't match, and re-runs
+ * Masonry's layout() so the remaining cards reflow without a page navigation.
+ */
 
 import { fetchAll, sortByDateDesc, esc } from '/js/md.js';
 
@@ -8,9 +13,24 @@ const TYPE_LABELS = {
   event: 'an Event in',
 };
 
+let masonryInstance = null;
+
+function fmDate(fm) {
+  return fm.updated || fm.date || '';
+}
+
+function fmSubtitle(fm) {
+  return fm.subtitle || fm.excerpt || '';
+}
+
+function fmHeroImage(fm) {
+  if (Array.isArray(fm.images) && fm.images.length > 0) return fm.images[0];
+  return fm.image || '';
+}
+
 function postCardHtml(item) {
   const fm = item.frontmatter;
-  const date = esc(fm.date || '');
+  const date = esc(fmDate(fm));
   const type = esc(TYPE_LABELS[fm.type] || `a ${fm.type || 'Note'} in`);
   const category = esc(fm.category || 'Notes');
   const slug = esc(item.slug);
@@ -19,7 +39,7 @@ function postCardHtml(item) {
     <div class="ak-post-meta">
       <span class="ak-date">${date}</span>
       <span class="ak-type">${type}</span>
-      <a class="ak-pill" href="/?cat=${encodeURIComponent(fm.category || '')}">${category}</a>
+      <button type="button" class="ak-pill" data-cat-pill="${esc(fm.category || '')}">${category}</button>
     </div>
   `;
 
@@ -28,7 +48,7 @@ function postCardHtml(item) {
     const author = esc(fm.author || '');
     const source = fm.source ? esc(fm.source) : '';
     return `
-      <article class="ak-post-grid-item" data-cat="${esc(fm.category || '')}">
+      <article class="ak-post-grid-item" data-cat="${esc(fm.category || '')}" data-slug="${slug}">
         ${meta}
         <div class="ak-quote">
           <div class="ak-quote-text">${quote}</div>
@@ -42,17 +62,18 @@ function postCardHtml(item) {
   }
 
   const title = esc(fm.title || item.slug);
-  const excerpt = esc(fm.excerpt || '');
-  const image = fm.image
-    ? `<a href="/post.html?slug=${encodeURIComponent(item.slug)}"><img class="ak-post-image" src="${esc(fm.image)}" alt="${title}" /></a>`
+  const subtitle = esc(fmSubtitle(fm));
+  const hero = fmHeroImage(fm);
+  const image = hero
+    ? `<a href="/post.html?slug=${encodeURIComponent(item.slug)}"><img class="ak-post-image" src="${esc(hero)}" alt="${title}" /></a>`
     : '';
 
   return `
-    <article class="ak-post-grid-item" data-cat="${esc(fm.category || '')}">
+    <article class="ak-post-grid-item" data-cat="${esc(fm.category || '')}" data-slug="${slug}">
       ${meta}
       ${image}
       <h2 class="ak-post-title"><a href="/post.html?slug=${encodeURIComponent(item.slug)}">${title}</a></h2>
-      <p class="ak-post-excerpt">${excerpt}</p>
+      <p class="ak-post-excerpt">${subtitle}</p>
       <a class="ak-arrow-link" href="/post.html?slug=${encodeURIComponent(item.slug)}">
         Read More <span class="ak-arrow">›</span>
       </a>
@@ -60,31 +81,52 @@ function postCardHtml(item) {
   `;
 }
 
-function renderPills(posts, activeCat) {
+function renderPills(posts) {
   const counts = new Map();
   for (const p of posts) {
     const cat = p.frontmatter.category || 'Notes';
     counts.set(cat, (counts.get(cat) || 0) + 1);
   }
   const cats = [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  const all = `<a class="ak-pill ${!activeCat ? 'is-active' : ''}" href="/">All (${posts.length})</a>`;
+  const all = `<button type="button" class="ak-pill is-active" data-cat-pill="">All (${posts.length})</button>`;
   const pills = cats
-    .map(
-      ([name, n]) =>
-        `<a class="ak-pill ${activeCat === name ? 'is-active' : ''}" href="/?cat=${encodeURIComponent(name)}">${esc(name)} (${n})</a>`
-    )
+    .map(([name, n]) => `<button type="button" class="ak-pill" data-cat-pill="${esc(name)}">${esc(name)} (${n})</button>`)
     .join('');
   return all + pills;
 }
 
-function splitColumns(items) {
-  // Two columns rendered as a CSS grid via two .col wrappers, so order is
-  // left/right/left/right matching the mockup's masonry feel without needing
-  // an actual masonry layout library.
-  const left = [];
-  const right = [];
-  items.forEach((it, i) => (i % 2 === 0 ? left : right).push(it));
-  return { left, right };
+function applyFilter(grid, pillsEl, activeCat) {
+  // Toggle pill highlight
+  pillsEl.querySelectorAll('.ak-pill').forEach((p) => {
+    p.classList.toggle('is-active', (p.getAttribute('data-cat-pill') || '') === activeCat);
+  });
+  // Show/hide cards
+  grid.querySelectorAll('.ak-post-grid-item').forEach((card) => {
+    const cat = card.getAttribute('data-cat') || '';
+    const match = !activeCat || cat === activeCat;
+    card.style.display = match ? '' : 'none';
+  });
+  // Re-layout masonry against the now-visible items
+  if (masonryInstance) {
+    masonryInstance.reloadItems();
+    masonryInstance.layout();
+  }
+}
+
+function initMasonry(grid) {
+  if (typeof window.Masonry === 'undefined') return;
+  // Disable masonry below the breakpoint (single column on mobile).
+  if (window.matchMedia('(max-width: 720px)').matches) return;
+  masonryInstance = new window.Masonry(grid, {
+    itemSelector: '.ak-post-grid-item',
+    columnWidth: '.ak-post-grid-item',
+    percentPosition: true,
+    gutter: 32,
+    transitionDuration: 0,
+  });
+  if (typeof window.imagesLoaded !== 'undefined') {
+    window.imagesLoaded(grid, () => masonryInstance && masonryInstance.layout());
+  }
 }
 
 async function init() {
@@ -92,30 +134,31 @@ async function init() {
   const pillsEl = document.querySelector('[data-pills]');
   if (!grid || !pillsEl) return;
 
-  const url = new URL(window.location.href);
-  const activeCat = url.searchParams.get('cat') || '';
-
   const all = sortByDateDesc(await fetchAll('blog'));
-  pillsEl.innerHTML = renderPills(all, activeCat);
 
-  const filtered = activeCat
-    ? all.filter((p) => (p.frontmatter.category || '') === activeCat)
-    : all;
+  pillsEl.innerHTML = renderPills(all);
 
-  if (filtered.length === 0) {
+  if (all.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; padding: 60px 0; text-align: center; color: #888; font-family: var(--sans); font-size: 13px;">
-        No posts yet${activeCat ? ` in “${esc(activeCat)}”` : ''}.
-      </div>
-    `;
+        No posts yet.
+      </div>`;
     return;
   }
 
-  const { left, right } = splitColumns(filtered);
-  grid.innerHTML = `
-    <div>${left.map(postCardHtml).join('')}</div>
-    <div>${right.map(postCardHtml).join('')}</div>
-  `;
+  grid.innerHTML = all.map(postCardHtml).join('');
+  initMasonry(grid);
+
+  // Pills (in pillsEl) and category badges inside cards both filter in place.
+  const onClick = (e) => {
+    const btn = e.target.closest('[data-cat-pill]');
+    if (!btn) return;
+    e.preventDefault();
+    const cat = btn.getAttribute('data-cat-pill') || '';
+    applyFilter(grid, pillsEl, cat);
+  };
+  pillsEl.addEventListener('click', onClick);
+  grid.addEventListener('click', onClick);
 }
 
 init();

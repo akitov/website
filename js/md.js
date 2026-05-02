@@ -163,7 +163,8 @@ export async function fetchAll(dir) {
 }
 
 /**
- * Sort posts by `date` (DD.MM.YYYY) descending. Items without a date go last.
+ * Sort posts by `updated` (DD.MM.YYYY) descending, falling back to the legacy
+ * `date` field. Items without either go last.
  */
 export function sortByDateDesc(items) {
   const toMs = (s) => {
@@ -172,9 +173,10 @@ export function sortByDateDesc(items) {
     if (!m) return -Infinity;
     return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1])).getTime();
   };
+  const dateOf = (fm) => fm.updated || fm.date || '';
   return items
     .slice()
-    .sort((a, b) => toMs(b.frontmatter.date) - toMs(a.frontmatter.date));
+    .sort((a, b) => toMs(dateOf(b.frontmatter)) - toMs(dateOf(a.frontmatter)));
 }
 
 /** Tiny HTML escaper for safe insertion. */

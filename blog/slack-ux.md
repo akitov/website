@@ -1,10 +1,10 @@
 ---
 type: lesson
-date: 01.03.2015
+updated: 01.03.2015
 category: UX
 title: How did the Slack UX convince our team?
-excerpt: See which parts of Slack's onboarding made an impression and what was the magic moment for me. It is rare that a user's first experience with a product is so easy and rewarding.
-image: /blog/images/argyle.png
+subtitle: See which parts of Slack's onboarding made an impression and what was the magic moment for me. It is rare that a user's first experience with a product is so easy and rewarding.
+images: [/blog/images/argyle.png]
 ---
 
 How does a software convince us users to use it? It's a subjective and complex process, but in my case I'd say it's almost always by:
