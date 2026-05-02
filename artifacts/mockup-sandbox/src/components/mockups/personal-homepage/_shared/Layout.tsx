@@ -30,16 +30,16 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
       {/* Red top stripe */}
       <div style={{ height: "4px", background: "#cc0000" }} />
 
-      {/* Nav bar — constrained to content width with breathing room above */}
+      {/* Nav bar — white card with subtle shadow, constrained to content width */}
       <nav
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: isMobile ? "0 14px" : "0 8px 0 16px",
-          background: "#e8e8e8",
+          padding: isMobile ? "0 14px" : "0 16px",
+          background: "#ffffff",
           height: isMobile ? "52px" : "60px",
-          borderBottom: "1px solid #c8c8c8",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
           position: "relative",
           maxWidth: isMobile ? "100%" : "960px",
           margin: isMobile ? "0" : "30px auto 0",
@@ -68,39 +68,22 @@ export function Layout({ children, activeNav, pageTitle, isMobile = false }: Lay
           {pageTitle}
         </div>
 
-        {/* Right: avatar (with vertical separator on desktop) */}
+        {/* Right: avatar */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: isMobile ? "0" : "20px",
+            width: isMobile ? "36px" : "44px",
+            height: isMobile ? "36px" : "44px",
+            borderRadius: "50%",
+            overflow: "hidden",
+            flexShrink: 0,
             zIndex: 1,
           }}
         >
-          {!isMobile && (
-            <div
-              style={{
-                width: "1px",
-                height: "44px",
-                background: "#c8c8c8",
-              }}
-            />
-          )}
-          <div
-            style={{
-              width: isMobile ? "36px" : "44px",
-              height: isMobile ? "36px" : "44px",
-              borderRadius: "50%",
-              overflow: "hidden",
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src="https://i.pravatar.cc/88?img=52"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              alt="Profile"
-            />
-          </div>
+          <img
+            src="https://i.pravatar.cc/88?img=52"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            alt="Profile"
+          />
         </div>
       </nav>
 
