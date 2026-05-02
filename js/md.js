@@ -28,20 +28,40 @@ export function parseFrontmatter(raw) {
   let currentKey = null;
   let buffer = [];
 
+  const unquote = (s) => {
+    s = s.trim();
+    if (
+      (s.startsWith('"') && s.endsWith('"')) ||
+      (s.startsWith("'") && s.endsWith("'"))
+    ) {
+      return s.slice(1, -1);
+    }
+    return s;
+  };
+
   const flush = () => {
     if (currentKey === null) return;
     let value = buffer.join('\n').trim();
     if (value.startsWith('[') && value.endsWith(']')) {
+      // Inline list: `key: [a, b, c]`
       value = value
         .slice(1, -1)
         .split(',')
-        .map((v) => v.trim().replace(/^['"]|['"]$/g, ''))
+        .map((v) => unquote(v))
         .filter(Boolean);
-    } else if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
-      value = value.slice(1, -1);
+    } else if (value.includes('\n') || value.startsWith('- ')) {
+      // YAML block-list:
+      //   key:
+      //     - a
+      //     - b
+      const lines = value.split('\n').map((l) => l.trim()).filter(Boolean);
+      if (lines.length > 0 && lines.every((l) => l.startsWith('- '))) {
+        value = lines.map((l) => unquote(l.slice(2)));
+      } else {
+        value = unquote(value);
+      }
+    } else {
+      value = unquote(value);
     }
     fm[currentKey] = value;
     currentKey = null;
