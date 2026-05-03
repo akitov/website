@@ -157,7 +157,216 @@ async function writeIfChanged(filePath, content) {
   }
 }
 
-const POST_SHIM = (slug, fm) => `<!doctype html>
+// ---------------------------------------------------------------------------
+// Tiny markdown renderer (Node stdlib only).
+//
+// Mirrors the subset of CommonMark used in our content: ATX headings,
+// paragraphs, blockquotes, ordered/unordered lists, fenced code blocks,
+// horizontal rules, inline emphasis (* and **), inline code (`…`), images
+// `![alt](src)` and links `[text](href)`. Produced HTML is what bots and
+// link-preview crawlers see in View Source; once the runtime JS boots in a
+// real browser it overwrites the same containers via `marked`, so any minor
+// formatting drift between the two renderers is invisible to end users.
+// ---------------------------------------------------------------------------
+function renderInline(s) {
+  // Pull out code spans, images, and links first so their contents are not
+  // mutated by emphasis or HTML escaping.
+  const codes = [];
+  s = s.replace(/`([^`]+)`/g, (_, c) => {
+    codes.push(c);
+    return `\u0000C${codes.length - 1}\u0000`;
+  });
+  const imgs = [];
+  s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+    imgs.push({ alt, src });
+    return `\u0000I${imgs.length - 1}\u0000`;
+  });
+  const links = [];
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, href) => {
+    links.push({ text, href });
+    return `\u0000L${links.length - 1}\u0000`;
+  });
+  s = escapeHtml(s);
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+  s = s.replace(/\u0000L(\d+)\u0000/g, (_, n) => {
+    const { text, href } = links[+n];
+    return `<a href="${escapeAttr(href)}">${escapeHtml(text)}</a>`;
+  });
+  s = s.replace(/\u0000I(\d+)\u0000/g, (_, n) => {
+    const { alt, src } = imgs[+n];
+    return `<img src="${escapeAttr(src)}" alt="${escapeAttr(alt)}" />`;
+  });
+  s = s.replace(/\u0000C(\d+)\u0000/g, (_, n) => `<code>${escapeHtml(codes[+n])}</code>`);
+  return s;
+}
+
+function renderMarkdown(src) {
+  const lines = String(src || '').replace(/\r\n/g, '\n').split('\n');
+  const out = [];
+  let i = 0;
+  const blockStart = /^(#{1,6}\s|>\s?|[-*]\s|\d+\.\s|```|---+\s*$)/;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (!line.trim()) { i++; continue; }
+    const h = /^(#{1,6})\s+(.*)$/.exec(line);
+    if (h) {
+      out.push(`<h${h[1].length}>${renderInline(h[2])}</h${h[1].length}>`);
+      i++; continue;
+    }
+    if (/^---+\s*$/.test(line)) { out.push('<hr />'); i++; continue; }
+    if (/^```/.test(line)) {
+      i++;
+      const buf = [];
+      while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; }
+      if (i < lines.length) i++;
+      out.push(`<pre><code>${escapeHtml(buf.join('\n'))}</code></pre>`);
+      continue;
+    }
+    if (/^>\s?/.test(line)) {
+      const buf = [];
+      while (i < lines.length && /^>\s?/.test(lines[i])) {
+        buf.push(lines[i].replace(/^>\s?/, ''));
+        i++;
+      }
+      // Recursively render so nested lists/quotes inside blockquotes work.
+      out.push(`<blockquote>\n${renderMarkdown(buf.join('\n'))}\n</blockquote>`);
+      continue;
+    }
+    if (/^[-*]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^[-*]\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^[-*]\s+/, ''));
+        i++;
+      }
+      out.push('<ul>\n' + items.map((it) => `<li>${renderInline(it)}</li>`).join('\n') + '\n</ul>');
+      continue;
+    }
+    if (/^\d+\.\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^\d+\.\s+/, ''));
+        i++;
+      }
+      out.push('<ol>\n' + items.map((it) => `<li>${renderInline(it)}</li>`).join('\n') + '\n</ol>');
+      continue;
+    }
+    const buf = [];
+    while (i < lines.length && lines[i].trim() && !blockStart.test(lines[i])) {
+      buf.push(lines[i]);
+      i++;
+    }
+    out.push(`<p>${renderInline(buf.join(' '))}</p>`);
+  }
+  return out.join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Render helpers — these mirror the runtime renderers in js/post.js and
+// js/project.js, so the static HTML in the shim looks identical to what JS
+// would produce. Any future change to the runtime renderers needs a matching
+// update here (and vice versa) to keep View Source and the live page aligned.
+// ---------------------------------------------------------------------------
+const TYPE_LABELS = { quote: 'A Quote', lesson: 'A Lesson', event: 'An Event' };
+
+function fmDate(fm) { return fm.updated || fm.date || ''; }
+function fmSubtitle(fm) { return fm.subtitle || fm.slug || fm.excerpt || ''; }
+function fmHeroImage(fm) {
+  if (Array.isArray(fm.images) && fm.images.length > 0) return fm.images[0];
+  return fm.image || '';
+}
+
+function renderPostNav(prev, next) {
+  const link = (item, dir) => {
+    if (!item) return '<span></span>';
+    const fm = item.frontmatter;
+    const label = `${TYPE_LABELS[fm.type] || 'A Note'} in ${escapeHtml(fm.category || 'Notes')}`;
+    const href = `/post.html?slug=${encodeURIComponent(item.slug)}`;
+    return dir === 'prev'
+      ? `<a class="ak-arrow-link ak-arrow-prev" href="${href}"><span class="ak-arrow">‹</span> ${label}</a>`
+      : `<a class="ak-arrow-link" href="${href}">${label} <span class="ak-arrow">›</span></a>`;
+  };
+  return `${link(prev, 'prev')}\n${link(next, 'next')}`;
+}
+
+function renderPostHead(slug, fm) {
+  const date = fmDate(fm);
+  if (fm.type === 'quote') {
+    return `<h1>${escapeHtml(fm.author || 'A Quote')}</h1>\n<p>${fm.category ? `In ${escapeHtml(fm.category)}` : ''}${date ? ` — ${escapeHtml(date)}` : ''}</p>`;
+  }
+  const subtitle = fmSubtitle(fm);
+  return `<h1>${escapeHtml(fm.title || slug)}</h1>\n${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ''}`;
+}
+
+function renderPostSide(fm) {
+  const typeLabel = `${TYPE_LABELS[fm.type] || 'A Note'} in ${escapeHtml(fm.category || 'Notes')}`;
+  const hero = fmHeroImage(fm);
+  const date = fmDate(fm);
+  return `${hero ? `<img src="${escapeAttr(hero)}" alt="${escapeAttr(fm.title || '')}" />` : ''}
+<div style="margin-bottom:12px"><span class="ak-arrow-link">${typeLabel} <span class="ak-arrow">›</span></span></div>
+${date ? `<div class="ak-side-date">${escapeHtml(date)}</div>` : ''}
+<hr />`;
+}
+
+function renderPostBody(item) {
+  const fm = item.frontmatter;
+  if (fm.type === 'quote') {
+    return `<div class="ak-quote" style="margin-top:8px">
+  <div class="ak-quote-text">${escapeHtml(fm.quote || '')}</div>
+  <div class="ak-quote-author">
+    <span class="ak-feather">🪶</span>
+    <span>${escapeHtml(fm.author || '')}${fm.source ? `, <a href="${escapeAttr(fm.source)}">Source</a>` : ''}</span>
+  </div>
+</div>`;
+  }
+  const main = renderMarkdown(item.body || '');
+  const extra = Array.isArray(fm.images) ? fm.images.slice(1) : [];
+  const gallery = extra
+    .map((src) => `<img src="${escapeAttr(src)}" alt="${escapeAttr(fm.title || '')}" />`)
+    .join('');
+  return main + (gallery ? `\n<div class="ak-post-gallery">${gallery}</div>` : '');
+}
+
+function renderProjectTopnav(next) {
+  if (!next) return '';
+  const href = `/project.html?slug=${encodeURIComponent(next.slug)}`;
+  return `<a class="ak-arrow-link" href="${href}">${escapeHtml(next.frontmatter.title || next.slug)} <span class="ak-arrow">›</span></a>`;
+}
+
+function renderProjectHead(slug, fm) {
+  return `<h1>${escapeHtml(fm.title || slug)}</h1>\n${(fm.subtitle || fm.slug) ? `<p>${escapeHtml(fm.subtitle || fm.slug)}</p>` : ''}`;
+}
+
+function renderProjectMain(item) {
+  const fm = item.frontmatter;
+  const hero = fmHeroImage(fm);
+  const heroHtml = hero ? `<img src="${escapeAttr(hero)}" alt="${escapeAttr(fm.title || '')}" />` : '';
+  const body = renderMarkdown(item.body || '');
+  const gallery = (Array.isArray(fm.images) ? fm.images.slice(1) : [])
+    .map((src) => `<img src="${escapeAttr(src)}" alt="${escapeAttr(fm.title || '')}" />`)
+    .join('');
+  return `${heroHtml}
+<div class="ak-project-body">${body}</div>
+${gallery ? `<div class="ak-project-gallery">${gallery}</div>` : ''}`;
+}
+
+function renderProjectSide(fm) {
+  const subtitleish = String(fm.title || '').toLowerCase();
+  const dl = [];
+  if (fm.client) dl.push(`<dt>Client:</dt><dd>${escapeHtml(fm.client)}</dd>`);
+  if (fm.position) dl.push(`<dt>Position:</dt><dd>${escapeHtml(fm.position)}</dd>`);
+  if (fm.achievements) dl.push(`<dt>Achievements:</dt><dd>${escapeHtml(fm.achievements)}</dd>`);
+  const dateField = fm.updated || fm.date;
+  if (dateField) dl.push(`<dt>Date:</dt><dd>${escapeHtml(dateField)}</dd>`);
+  const link = fm.link
+    ? `<a class="ak-project-link" href="${escapeAttr(fm.link)}" target="_blank" rel="noopener">View Project</a>`
+    : '';
+  return `<h3>${escapeHtml(subtitleish)}</h3>\n<dl>${dl.join('')}</dl>\n${link}`;
+}
+
+const POST_SHIM = (item, prev, next) => {
+  const { slug, frontmatter: fm } = item;
+  return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -171,13 +380,11 @@ const POST_SHIM = (slug, fm) => `<!doctype html>
   <body data-active-nav="home" data-page-title="BLOG">
     <div data-header></div>
     <main class="ak-post-page" data-post-page>
-      <div class="ak-postnav" data-postnav></div>
-      <div class="ak-post-head" data-post-head></div>
+      <div class="ak-postnav" data-postnav>${renderPostNav(prev, next)}</div>
+      <div class="ak-post-head" data-post-head>${renderPostHead(slug, fm)}</div>
       <div class="ak-post-body-wrap" data-post-body-wrap>
-        <aside class="ak-post-side" data-post-side></aside>
-        <article class="ak-post-body" data-post-body>
-          <p style="text-align:center;color:#888;font-family:var(--sans);font-size:13px;padding:40px 0;">Loading…</p>
-        </article>
+        <aside class="ak-post-side" data-post-side>${renderPostSide(fm)}</aside>
+        <article class="ak-post-body" data-post-body>${renderPostBody(item)}</article>
       </div>
     </main>
     <div data-footer></div>
@@ -188,8 +395,11 @@ const POST_SHIM = (slug, fm) => `<!doctype html>
   </body>
 </html>
 `;
+};
 
-const PROJECT_SHIM = (slug, fm) => `<!doctype html>
+const PROJECT_SHIM = (item, next) => {
+  const { slug, frontmatter: fm } = item;
+  return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -203,13 +413,11 @@ const PROJECT_SHIM = (slug, fm) => `<!doctype html>
   <body data-active-nav="work" data-page-title="WORK">
     <div data-header></div>
     <main class="ak-project-page" data-project-page>
-      <div class="ak-project-topnav" data-project-topnav></div>
-      <div class="ak-project-head" data-project-head></div>
+      <div class="ak-project-topnav" data-project-topnav>${renderProjectTopnav(next)}</div>
+      <div class="ak-project-head" data-project-head>${renderProjectHead(slug, fm)}</div>
       <div class="ak-project-body-wrap">
-        <div class="ak-project-main" data-project-main>
-          <p style="text-align:center;color:#888;font-family:var(--sans);font-size:13px;padding:40px 0;">Loading…</p>
-        </div>
-        <aside class="ak-project-side" data-project-side></aside>
+        <div class="ak-project-main" data-project-main>${renderProjectMain(item)}</div>
+        <aside class="ak-project-side" data-project-side>${renderProjectSide(fm)}</aside>
       </div>
     </main>
     <div data-footer></div>
@@ -220,6 +428,7 @@ const PROJECT_SHIM = (slug, fm) => `<!doctype html>
   </body>
 </html>
 `;
+};
 
 function escapeHtml(s) {
   return String(s ?? '')
@@ -383,19 +592,41 @@ async function main() {
     return (a.frontmatter.title || a.slug).localeCompare(b.frontmatter.title || b.slug);
   });
 
-  // Per-slug HTML for posts in repo root.
-  const blogSlugs = new Set(blogItems.map((i) => i.slug));
+  // For each post, we need its full markdown body so the shim can include the
+  // rendered HTML inline (View Source must show the post body even without JS).
+  const blogFull = await Promise.all(blogItems.map(async (i) => {
+    const raw = await fs.readFile(path.join(ROOT, 'blog', `${i.slug}.md`), 'utf8');
+    const { body } = parseFrontmatter(raw);
+    return { ...i, body };
+  }));
+  const projectFull = await Promise.all(projectItems.map(async (i) => {
+    const raw = await fs.readFile(path.join(ROOT, 'projects', `${i.slug}.md`), 'utf8');
+    const { body } = parseFrontmatter(raw);
+    return { ...i, body };
+  }));
+
+  // Per-slug HTML for posts in repo root. Prev/next mirror post.js: blogItems
+  // is already sorted date-desc, so prev = older-listed neighbour at idx-1,
+  // next = newer-listed neighbour at idx+1.
+  const blogSlugs = new Set(blogFull.map((i) => i.slug));
   await clearGenerated(ROOT, (n) => /^[\w.-]+\.html$/.test(n) && !RESERVED_ROOT_HTML.has(n) && !blogSlugs.has(n.replace(/\.html$/, '')));
-  for (const item of blogItems) {
-    await writeIfChanged(path.join(ROOT, `${item.slug}.html`), POST_SHIM(item.slug, item.frontmatter));
+  for (let idx = 0; idx < blogFull.length; idx++) {
+    const item = blogFull[idx];
+    const prev = idx > 0 ? blogFull[idx - 1] : null;
+    const next = idx < blogFull.length - 1 ? blogFull[idx + 1] : null;
+    await writeIfChanged(path.join(ROOT, `${item.slug}.html`), POST_SHIM(item, prev, next));
   }
 
-  // Per-slug HTML for projects under /work/.
-  const projSlugs = new Set(projectItems.map((i) => i.slug));
+  // Per-slug HTML for projects under /work/. project.js shows only a "next"
+  // link, wrapping back to the first project when at the end of the list.
+  const projSlugs = new Set(projectFull.map((i) => i.slug));
   const workDir = path.join(ROOT, 'work');
   await clearGenerated(workDir, (n) => /^[\w.-]+\.html$/.test(n) && n !== 'index.html' && !projSlugs.has(n.replace(/\.html$/, '')));
-  for (const item of projectItems) {
-    await writeIfChanged(path.join(workDir, `${item.slug}.html`), PROJECT_SHIM(item.slug, item.frontmatter));
+  for (let idx = 0; idx < projectFull.length; idx++) {
+    const item = projectFull[idx];
+    let next = idx < projectFull.length - 1 ? projectFull[idx + 1] : null;
+    if (!next && projectFull.length > 1) next = projectFull[0];
+    await writeIfChanged(path.join(workDir, `${item.slug}.html`), PROJECT_SHIM(item, next));
   }
 
   // RSS feed of blog posts and sitemap of every public URL. Both are
