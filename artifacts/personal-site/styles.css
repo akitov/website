@@ -266,21 +266,32 @@ a { color: inherit; }
 
 /* ----------------------------- POST GRID (HOME) ----------------------------- */
 
-/* Plain block container so Masonry can absolutely-position the children.
- * Two columns are configured by Masonry (gutter:40, percentPosition:true)
- * combined with .ak-post-grid-item width below. The mobile media query
- * widens items to 100% so they stack into a single column. */
+/* Default layout = a real two-column CSS grid. This guarantees a sane
+ * two-column layout even when Masonry's CDN script can't load (e.g.
+ * inside a sandboxed preview iframe with strict CSP).
+ *
+ * When Masonry does load, js/home.js adds the `.is-masonry` class which
+ * switches the container to a plain block context so Masonry can
+ * absolute-position items (`display: grid` would otherwise fight
+ * Masonry's positioning and force everything into row alignment). */
 .ak-post-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+  align-items: flex-start;
   padding-top: 30px;
 }
-.ak-post-grid::after {
+.ak-post-grid.is-masonry {
+  display: block;
+}
+.ak-post-grid.is-masonry::after {
   content: '';
   display: block;
   clear: both;
 }
-.ak-post-grid-item {
+.ak-post-grid-item { padding-bottom: 44px; }
+.ak-post-grid.is-masonry .ak-post-grid-item {
   width: calc(50% - 20px);
-  padding-bottom: 44px;
   box-sizing: border-box;
 }
 
@@ -772,12 +783,12 @@ a { color: inherit; }
   .ak-page-h1 { font-size: 28px; }
 
   .ak-post-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
     padding-top: 20px;
   }
-  .ak-post-grid-item {
-    width: 100%;
-    padding-bottom: 34px;
-  }
+  .ak-post-grid-item { padding-bottom: 34px; }
+  .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
   .ak-post-title { font-size: 19px; }
   .ak-post-excerpt { font-size: 13px; }
   .ak-quote-text { font-size: 18px; }
