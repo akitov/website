@@ -57,15 +57,15 @@ function renderMain(item) {
     ? `<img src="${esc(hero)}" alt="${esc(fm.title || '')}" />`
     : '';
   // Render markdown via marked, then sanitize through DOMPurify before it
-  // hits the DOM so any raw HTML in the markdown source can never execute
-  // scripts (defense in depth for future guest authors / external sources).
-  const rawBody =
-    typeof window.marked !== 'undefined'
-      ? window.marked.parse(item.body || '')
-      : `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body)}</pre>`;
-  const body = typeof window.DOMPurify !== 'undefined'
-    ? window.DOMPurify.sanitize(rawBody)
-    : rawBody;
+  // hits the DOM so raw HTML in the markdown source can never execute
+  // scripts. Fail closed: if either CDN script is unavailable, fall back
+  // to plaintext rendering rather than injecting unsanitized HTML.
+  let body;
+  if (typeof window.marked === 'undefined' || typeof window.DOMPurify === 'undefined') {
+    body = `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body || '')}</pre>`;
+  } else {
+    body = window.DOMPurify.sanitize(window.marked.parse(item.body || ''));
+  }
   const gallery = fmGallery(fm)
     .map((src) => `<img src="${esc(src)}" alt="${esc(fm.title || '')}" />`)
     .join('');
