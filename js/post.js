@@ -91,9 +91,15 @@ function renderBody(item) {
       </div>
     `;
   }
-  const main = typeof window.marked === 'undefined'
+  // Render markdown via marked, then sanitize through DOMPurify before it
+  // hits the DOM so any raw HTML in the markdown source can never execute
+  // scripts (defense in depth for future guest authors / external sources).
+  const rawHtml = typeof window.marked === 'undefined'
     ? `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body)}</pre>`
     : window.marked.parse(item.body || '');
+  const main = typeof window.DOMPurify !== 'undefined'
+    ? window.DOMPurify.sanitize(rawHtml)
+    : rawHtml;
   // Trailing inline gallery for any extra images beyond the hero.
   const extra = Array.isArray(fm.images) ? fm.images.slice(1) : [];
   const gallery = extra

@@ -56,10 +56,16 @@ function renderMain(item) {
   const heroHtml = hero
     ? `<img src="${esc(hero)}" alt="${esc(fm.title || '')}" />`
     : '';
-  const body =
+  // Render markdown via marked, then sanitize through DOMPurify before it
+  // hits the DOM so any raw HTML in the markdown source can never execute
+  // scripts (defense in depth for future guest authors / external sources).
+  const rawBody =
     typeof window.marked !== 'undefined'
       ? window.marked.parse(item.body || '')
       : `<pre style="white-space:pre-wrap;font-family:var(--serif)">${esc(item.body)}</pre>`;
+  const body = typeof window.DOMPurify !== 'undefined'
+    ? window.DOMPurify.sanitize(rawBody)
+    : rawBody;
   const gallery = fmGallery(fm)
     .map((src) => `<img src="${esc(src)}" alt="${esc(fm.title || '')}" />`)
     .join('');
