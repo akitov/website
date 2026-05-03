@@ -113,15 +113,19 @@ function applyFilter(grid, pillsEl, activeCat) {
   }
 }
 
+// Mobile breakpoint for the homepage post grid. Must match the
+// `max-width: 760px` media query in styles.css so there is no width range
+// where Masonry runs against a single-column CSS layout.
+const MOBILE_QUERY = '(max-width: 760px)';
+
 function initMasonry(grid) {
   if (typeof window.Masonry === 'undefined') return;
-  // Disable masonry below the breakpoint (single column on mobile).
-  if (window.matchMedia('(max-width: 720px)').matches) return;
+  if (window.matchMedia(MOBILE_QUERY).matches) return;
   masonryInstance = new window.Masonry(grid, {
     itemSelector: '.ak-post-grid-item',
     columnWidth: '.ak-post-grid-item',
     percentPosition: true,
-    gutter: 32,
+    gutter: 40,
     transitionDuration: 0,
   });
   if (typeof window.imagesLoaded !== 'undefined') {
