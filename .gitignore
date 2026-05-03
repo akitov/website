@@ -1,8 +1,17 @@
+# Replit / agent internals
 .replit
 .replit-artifact/
-node_modules/
+.local/
 __pycache__/
 *.pyc
+
+# Node (only used by scripts/regenerate.mjs locally)
+node_modules/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Secrets
 .env
 .env.local
