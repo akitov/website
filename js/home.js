@@ -144,7 +144,7 @@ async function init() {
 
   if (all.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; padding: 60px 0; text-align: center; color: #888; font-family: var(--sans); font-size: 13px;">
+      <div style="width: 100%; padding: 60px 0; text-align: center; color: #888; font-family: var(--sans); font-size: 13px;">
         No posts yet.
       </div>`;
     return;
