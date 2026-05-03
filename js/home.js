@@ -121,6 +121,10 @@ const MOBILE_QUERY = '(max-width: 760px)';
 function initMasonry(grid) {
   if (typeof window.Masonry === 'undefined') return;
   if (window.matchMedia(MOBILE_QUERY).matches) return;
+  // Switch the container off CSS grid so Masonry's absolute positioning
+  // wins. The fallback CSS keeps a plain two-column grid for the case
+  // where the Masonry CDN script can't load.
+  grid.classList.add('is-masonry');
   masonryInstance = new window.Masonry(grid, {
     itemSelector: '.ak-post-grid-item',
     columnWidth: '.ak-post-grid-item',
@@ -144,7 +148,7 @@ async function init() {
 
   if (all.length === 0) {
     grid.innerHTML = `
-      <div style="width: 100%; padding: 60px 0; text-align: center; color: #888; font-family: var(--sans); font-size: 13px;">
+      <div style="grid-column: 1 / -1; width: 100%; padding: 60px 0; text-align: center; color: #888; font-family: var(--sans); font-size: 13px;">
         No posts yet.
       </div>`;
     return;
