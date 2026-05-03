@@ -14,6 +14,9 @@
  *        /<slug>.html               (mirrors /post.html?slug=<slug>)
  *        /work/<slug>.html          (mirrors /project.html?slug=<slug>)
  *      so users (and search engines) can land on clean URLs.
+ *   5. Writes /feed.xml (RSS 2.0) listing all blog posts and
+ *      /sitemap.xml listing every public URL on the site.
+ *      Site origin is taken from $SITE_URL (default: https://alexanderkitov.com).
  *
  * The per-slug HTML files are thin shims: they include the same scripts
  * as post.html / project.html but inject the correct ?slug= via
@@ -246,6 +249,131 @@ function dateOf(fm) {
   return fm.updated || fm.date || '';
 }
 
+const SITE_URL = (process.env.SITE_URL || 'https://alexanderkitov.com').replace(/\/+$/, '');
+
+function escapeXml(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function toRfc822(dateStr) {
+  const ms = dateMs(dateStr);
+  if (!Number.isFinite(ms)) return '';
+  return new Date(ms).toUTCString();
+}
+
+function toIsoDate(dateStr) {
+  const ms = dateMs(dateStr);
+  if (!Number.isFinite(ms)) return '';
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
+function postDescription(fm) {
+  if (fm.type === 'quote' && fm.quote) {
+    const author = fm.author ? ` — ${fm.author}` : '';
+    return `"${fm.quote}"${author}`;
+  }
+  return fm.subtitle || fm.excerpt || '';
+}
+
+function postTitle(slug, fm) {
+  if (fm.title) return fm.title;
+  if (fm.type === 'quote' && fm.quote) {
+    const truncated = fm.quote.length > 80 ? fm.quote.slice(0, 77) + '…' : fm.quote;
+    return truncated;
+  }
+  return slug;
+}
+
+function buildFeed(blogItems) {
+  // Keep output deterministic: derive lastBuildDate from the latest post date,
+  // never from `Date.now()`, so re-running the script with no content change
+  // produces zero diff (matches the same idempotency contract as manifests).
+  const latestMs = blogItems.reduce(
+    (max, i) => Math.max(max, dateMs(dateOf(i.frontmatter))),
+    -Infinity
+  );
+  const lastBuild = Number.isFinite(latestMs)
+    ? new Date(latestMs).toUTCString()
+    : 'Thu, 01 Jan 1970 00:00:00 GMT';
+
+  const items = blogItems
+    .map((i) => {
+      const fm = i.frontmatter;
+      const url = `${SITE_URL}/${i.slug}.html`;
+      const pubDate = toRfc822(dateOf(fm));
+      return [
+        '    <item>',
+        `      <title>${escapeXml(postTitle(i.slug, fm))}</title>`,
+        `      <link>${escapeXml(url)}</link>`,
+        `      <guid isPermaLink="true">${escapeXml(url)}</guid>`,
+        pubDate ? `      <pubDate>${pubDate}</pubDate>` : '',
+        fm.category ? `      <category>${escapeXml(fm.category)}</category>` : '',
+        `      <description>${escapeXml(postDescription(fm))}</description>`,
+        '    </item>',
+      ]
+        .filter(Boolean)
+        .join('\n');
+    })
+    .join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alexander Kitov</title>
+    <link>${escapeXml(SITE_URL)}/</link>
+    <atom:link href="${escapeXml(SITE_URL)}/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Notes on product, life, and people.</description>
+    <language>en</language>
+    <lastBuildDate>${lastBuild}</lastBuildDate>
+${items}
+  </channel>
+</rss>
+`;
+}
+
+function buildSitemap(blogItems, projectItems) {
+  // Keep output deterministic: only emit <lastmod> when we have a real date
+  // from frontmatter. Static pages (home, work, about) intentionally omit it
+  // so that running the script on a different day doesn't churn the file.
+  const urls = [];
+
+  urls.push({ loc: `${SITE_URL}/` });
+  urls.push({ loc: `${SITE_URL}/work/` });
+  urls.push({ loc: `${SITE_URL}/about.html` });
+
+  for (const i of blogItems) {
+    urls.push({
+      loc: `${SITE_URL}/${i.slug}.html`,
+      lastmod: toIsoDate(dateOf(i.frontmatter)),
+    });
+  }
+  for (const i of projectItems) {
+    urls.push({
+      loc: `${SITE_URL}/work/${i.slug}.html`,
+      lastmod: toIsoDate(dateOf(i.frontmatter)),
+    });
+  }
+
+  const body = urls
+    .map((u) => {
+      const parts = [`    <loc>${escapeXml(u.loc)}</loc>`];
+      if (u.lastmod) parts.push(`    <lastmod>${u.lastmod}</lastmod>`);
+      return `  <url>\n${parts.join('\n')}\n  </url>`;
+    })
+    .join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>
+`;
+}
+
 async function main() {
   const blogItems = await buildManifest('blog', (a, b) => dateMs(dateOf(b.frontmatter)) - dateMs(dateOf(a.frontmatter)));
   const projectItems = await buildManifest('projects', (a, b) => {
@@ -270,8 +398,14 @@ async function main() {
     await writeIfChanged(path.join(workDir, `${item.slug}.html`), PROJECT_SHIM(item.slug, item.frontmatter));
   }
 
+  // RSS feed of blog posts and sitemap of every public URL. Both are
+  // deterministic (no `Date.now()`), so unchanged content yields zero diff.
+  await writeIfChanged(path.join(ROOT, 'feed.xml'), buildFeed(blogItems));
+  await writeIfChanged(path.join(ROOT, 'sitemap.xml'), buildSitemap(blogItems, projectItems));
+
   console.log(`Wrote blog/manifest.json (${blogItems.length} posts) and projects/manifest.json (${projectItems.length} projects).`);
   console.log(`Wrote ${blogItems.length} per-post HTML pages and ${projectItems.length} per-project HTML pages.`);
+  console.log(`Wrote feed.xml and sitemap.xml (site: ${SITE_URL}).`);
 }
 
 const RESERVED_ROOT_HTML = new Set(['index.html', 'post.html', 'project.html', 'about.html', '404.html']);

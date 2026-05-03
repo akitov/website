@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alexander Kitov</title>
+    <link>https://alexanderkitov.com/</link>
+    <atom:link href="https://alexanderkitov.com/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Notes on product, life, and people.</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 03 Feb 2018 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Be harsh, in the interest of being excellent.</title>
+      <link>https://alexanderkitov.com/slack-be-harsh.html</link>
+      <guid isPermaLink="true">https://alexanderkitov.com/slack-be-harsh.html</guid>
+      <pubDate>Sat, 03 Feb 2018 00:00:00 GMT</pubDate>
+      <category>Product</category>
+      <description>&quot;Be harsh, in the interest of being excellent.&quot; — Stewart Butterfield, Slack</description>
+    </item>
+    <item>
+      <title>How did the Slack UX convince our team?</title>
+      <link>https://alexanderkitov.com/slack-ux.html</link>
+      <guid isPermaLink="true">https://alexanderkitov.com/slack-ux.html</guid>
+      <pubDate>Sun, 01 Mar 2015 00:00:00 GMT</pubDate>
+      <category>UX</category>
+      <description>See which parts of Slack&apos;s onboarding made an impression and what was the magic moment for me. It is rare that a user&apos;s first experience with a product is so easy and rewarding.</description>
+    </item>
+    <item>
+      <title>First principles reasoning</title>
+      <link>https://alexanderkitov.com/first-principles.html</link>
+      <guid isPermaLink="true">https://alexanderkitov.com/first-principles.html</guid>
+      <pubDate>Thu, 21 Mar 2013 00:00:00 GMT</pubDate>
+      <category>Life</category>
+      <description>Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.</description>
+    </item>
+    <item>
+      <title>You lose less by trusting more</title>
+      <link>https://alexanderkitov.com/trust-more.html</link>
+      <guid isPermaLink="true">https://alexanderkitov.com/trust-more.html</guid>
+      <pubDate>Sat, 23 Feb 2013 00:00:00 GMT</pubDate>
+      <category>People</category>
+      <description>Managing a business is not about asserting control to minimize costs and risks, but about working collaboratively to achieve an agreed goal.</description>
+    </item>
+    <item>
+      <title>Once you make a decision, the universe conspires to make it happen.</title>
+      <link>https://alexanderkitov.com/emerson-decision.html</link>
+      <guid isPermaLink="true">https://alexanderkitov.com/emerson-decision.html</guid>
+      <pubDate>Mon, 07 Jan 2013 00:00:00 GMT</pubDate>
+      <category>Life</category>
+      <description>&quot;Once you make a decision, the universe conspires to make it happen.&quot; — Ralph Waldo Emerson</description>
+    </item>
+    <item>
+      <title>Speaker at TEDxBG 2012</title>
+      <link>https://alexanderkitov.com/tedxbg-2012.html</link>
+      <guid isPermaLink="true">https://alexanderkitov.com/tedxbg-2012.html</guid>
+      <pubDate>Mon, 07 Jan 2013 00:00:00 GMT</pubDate>
+      <category>Life</category>
+      <description>Presenting the coworking phenomenon through the lens of betahaus | sofia.</description>
+    </item>
+  </channel>
+</rss>
