@@ -26,11 +26,12 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python3 -m http.server 5000 --bind 0.0.0.0 --directory artifacts/personal-site"
+args = "python3 artifacts/personal-site/server.py"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
+isCanvasWorkflow = true
 
 [agent]
 stack = "PNPM_WORKSPACE"
