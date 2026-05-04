@@ -16,7 +16,7 @@
   --border: #c8c8c8;
   --border-2: #cfcfcf;
   --pill-bg: #efefef;
-  --max-w: 1200px;
+  --max-w: 77vw;
   --card-radius-d: 6px;
   --card-radius-m: 8px;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -54,7 +54,7 @@ a { color: inherit; }
 
 .ak-header,
 .ak-footer {
-  max-width: var(--max-w);
+  max-width: calc(var(--max-w) + 3vw);
   margin: 30px auto 0;
   border-radius: var(--card-radius-d);
   overflow: hidden;
@@ -240,7 +240,7 @@ a { color: inherit; }
 
 /* ----------------------------- PAGE WRAPPER ----------------------------- */
 
-.ak-content { padding: 40px 24px 0; max-width: 1200px; margin: 0 auto; }
+.ak-content { padding: 40px 24px 0; max-width: var(--max-w); margin: 0 auto; }
 .ak-page-h1 {
   font-family: var(--serif);
   font-size: 2.5rem;
