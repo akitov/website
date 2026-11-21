@@ -141,7 +141,8 @@ from somewhere.
 
 ## 6. Preview: `scripts/serve.mjs`
 
-`node scripts/serve.mjs` (port 8000, or `PORT=…`). Every page load reruns
+`node scripts/serve.mjs` (port 8000, or `PORT=…`), from any folder. On
+macOS it opens the browser (`NO_OPEN=1` skips that). Every page load reruns
 the build. Edit, refresh, and you see the result. It behaves like a static
 host: `/blog/ux` redirects to `/blog/ux/`, and unknown URLs show the 404 page.
 

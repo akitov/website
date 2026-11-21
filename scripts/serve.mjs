@@ -3,6 +3,9 @@
  *   node scripts/serve.mjs          → http://localhost:8000
  *   PORT=3000 node scripts/serve.mjs
  *
+ * Works from any folder. On macOS it opens the browser for you
+ * (NO_OPEN=1 node scripts/serve.mjs to skip that).
+ *
  * Rebuilds _site/ with the same build the deploy workflow uses every time
  * you load a page, then serves it. Edit a .md file, refresh the browser,
  * and you see what the live site will show.
@@ -11,6 +14,7 @@
  */
 
 import http from 'node:http';
+import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { build, OUT } from './build.mjs';
@@ -103,5 +107,11 @@ const server = http.createServer(async (req, res) => {
 });
 
 rebuild().then(() => {
-  server.listen(PORT, () => console.log(`Preview: http://localhost:${PORT}  (Ctrl+C to stop)`));
+  server.listen(PORT, () => {
+    const url = `http://localhost:${PORT}/`;
+    console.log(`Preview: ${url}  (Ctrl+C to stop)`);
+    if (process.platform === 'darwin' && !process.env.NO_OPEN) {
+      spawn('open', [url], { stdio: 'ignore' }).on('error', () => {});
+    }
+  });
 });

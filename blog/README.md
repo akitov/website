@@ -67,5 +67,7 @@ Put them in their own HTML file in the folder and embed it:
 
 ## Preview and publish
 
-- Preview: `node scripts/serve.mjs`, then open http://localhost:8000/blog/my-post/
+- Preview: run `node scripts/serve.mjs` in Terminal. It opens
+  http://localhost:8000 in your browser; go to `/blog/my-post/`. Save, refresh,
+  see the change. Ctrl+C stops it.
 - Publish: commit and push the folder to `main`.
