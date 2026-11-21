@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
+{{meta}}
+    <link rel="stylesheet" href="/styles.css" />
+{{styles}}
+    <link rel="icon" type="image/svg+xml" href="/assets/avatar.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Alexander Kitov" href="/feed.xml" />
+  </head>
+  <body>
+    <header class="ak-header">
+      <div class="ak-stripe"></div>
+      <nav class="ak-nav">
+        <button type="button" class="ak-hamburger" aria-label="Open menu" data-drawer-toggle>
+          <span></span><span></span><span></span>
+        </button>
+        <div class="ak-nav-links">
+          <a class="ak-nav-link{{active_home}}" href="/" data-nav="home">HOME</a>
+          <a class="ak-nav-link{{active_work}}" href="/work/" data-nav="work">WORK</a>
+          <a class="ak-nav-link{{active_about}}" href="/about/" data-nav="about">RESUMÉ</a>
+        </div>
+        <div class="ak-page-title" data-page-title-slot>{{section}}</div>
+        <a href="/about/" class="ak-avatar" aria-label="About">
+          <img src="/assets/avatar.svg" alt="Alexander Kitov" />
+        </a>
+      </nav>
+    </header>
+
+    <div class="ak-drawer-backdrop" data-drawer-backdrop></div>
+    <aside class="ak-drawer" data-drawer aria-hidden="true">
+      <a class="ak-drawer-tile{{active_home}}" href="/" data-nav="home">HOME</a>
+      <a class="ak-drawer-tile{{active_work}}" href="/work/" data-nav="work">WORK</a>
+      <a class="ak-drawer-tile{{active_about}}" href="/about/" data-nav="about">RESUMÉ</a>
+    </aside>
+
+{{main}}
+
+    <footer class="ak-footer">
+      <div class="ak-footer-inner">
+        <div class="ak-footer-name">Alexander Kitov</div>
+        <div class="ak-footer-links">
+          <a class="ak-footer-link" href="mailto:hello@example.com"><span>✉</span> Email</a>
+          <a class="ak-footer-link" href="#"><span>✎</span> Medium</a>
+          <a class="ak-footer-link" href="#"><span>in</span> LinkedIn</a>
+          <a class="ak-footer-link" href="#"><span>𝕏</span> Twitter</a>
+          <a class="ak-footer-link" href="#"><span>☏</span> Skype</a>
+        </div>
+        <div class="ak-footer-copy">© 2024</div>
+      </div>
+      <div class="ak-stripe"></div>
+    </footer>
+
+    <script type="module" src="/js/main.js"></script>
+{{scripts}}
+  </body>
+</html>

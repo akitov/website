@@ -1,0 +1,6 @@
+# Old URLs that should send visitors (and Google) to a new page.
+# One per line: <old path> <new path>
+
+/resume /about/
+/blog /
+/ux/slack-ux /blog/slack-ux/

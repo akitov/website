@@ -1,9 +1,0 @@
-# The format of this file is identical to `.dockerignore`.
-# It is used to reduce the size of deployed images to make the process of publishing faster.
-
-# Not part of the public website or its deployment.
-.local
-.git
-.cache
-node_modules
-attached_assets

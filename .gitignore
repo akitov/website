@@ -1,5 +1,10 @@
-.cache/
-.local/
-node_modules/
+# Build output (scripts/build.mjs)
+_site/
+
+# OS
 .DS_Store
 Thumbs.db
+
+# Secrets
+.env
+.env.local

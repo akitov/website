@@ -1,28 +1,16 @@
 # Alexander Kitov — personal site
 
-This is a static website built with plain HTML, CSS, and browser JavaScript.
-It has no framework, package installation, or build step.
+Plain HTML, CSS and a little JS. Posts and projects are Markdown files.
+No framework and no dependencies to install. You only need Node 22+.
 
-## Run the preview
-
-Use the Replit **Run** button. It starts a small Python server for local
-preview; the server uses only Python's standard library.
-
-## Publish
-
-The project is configured as a Replit Static Deployment. It serves the files
-in `artifacts/personal-site` directly, without running a server in production.
-
-## Site content
-
-The site's pages, styles, JavaScript, images, and Markdown content are in
-`artifacts/personal-site`. To regenerate content manifests, clean URLs, the
-RSS feed, and the sitemap after editing Markdown, run:
-
-```sh
-cd artifacts/personal-site
-node scripts/regenerate.mjs
+```bash
+node scripts/serve.mjs     # preview at http://localhost:8000 (refresh to see edits)
+node scripts/build.mjs     # build the site into _site/ (the deploy does this)
 ```
 
-The GitHub Actions workflow also regenerates these files when blog or project
-content changes.
+**Write:** make a folder `blog/my-post/` with one `.md` file and its images.
+**Preview:** `node scripts/serve.mjs` → http://localhost:8000/blog/my-post/
+**Publish:** push to `main`. GitHub Actions builds the site and deploys it.
+
+Frontmatter: [`blog/README.md`](blog/README.md), [`projects/README.md`](projects/README.md).
+How it works: [`ARCHITECTURE.md`](ARCHITECTURE.md).
