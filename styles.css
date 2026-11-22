@@ -521,6 +521,7 @@ a { color: inherit; }
 }
 .ak-side-cat { margin-bottom: 12px; }
 .ak-side-cat .ak-arrow-link {
+  color: #000;
   font-size: clamp(12px, calc(12px + 0.15 * var(--t)), 0.75rem);
   margin-top: clamp(0px, calc(14 * var(--t)), 14px);
 }
@@ -679,7 +680,7 @@ a { color: inherit; }
   float: left;
   font-size: 5.625rem;
   font-weight: bold;
-  color: #ccc;
+  color: #000;
   line-height: 60px;
   padding-top: 10px;
   margin-right: 8px;
