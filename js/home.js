@@ -17,4 +17,6 @@ if (grid && window.Masonry && !window.matchMedia(MOBILE_QUERY).matches) {
     transitionDuration: 0,
   });
   if (window.imagesLoaded) window.imagesLoaded(grid, () => masonry.layout());
+  // Text reflows when the web font swaps in; re-measure the cards then.
+  document.fonts?.ready.then(() => masonry.layout());
 }
