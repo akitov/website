@@ -554,9 +554,12 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--fs-body);
   color: var(--text-2);
-  line-height: clamp(24px, calc(24px + 3.54 * var(--t)), 1.7rem);
+  line-height: 1.7;
   min-width: 60%;
 }
+/* Length, not a ratio, so it can interpolate (1.6 -> 1.7 x 16.2px); headings keep 1.7. */
+.ak-post-body p,
+.ak-post-body li { line-height: clamp(24px, calc(24px + 3.54 * var(--t)), 1.7rem); }
 .ak-post-body > :first-child { margin-top: 0; }
 .ak-post-body > p:first-of-type::first-letter {
   float: left;
