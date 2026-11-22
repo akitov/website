@@ -319,7 +319,7 @@ function postPage(p, prev, next) {
       <div class="ak-post-body-wrap">
         <aside class="ak-post-side">
           ${p.images[0] ? img(p.images[0], title) : ''}
-          <div style="margin-bottom:12px"><a class="ak-arrow-link" href="${categoryUrl(p.category)}">${typeLabel(p)} <span class="ak-arrow">›</span></a></div>
+          <div class="ak-side-cat"><a class="ak-arrow-link" href="${categoryUrl(p.category)}">${typeLabel(p)} <span class="ak-arrow">›</span></a></div>
           ${p.date ? `<time class="ak-side-date" datetime="${isoDate(p.date)}">${esc(p.date)}</time>` : ''}
           <hr />
         </aside>
