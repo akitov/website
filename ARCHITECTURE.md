@@ -85,11 +85,10 @@ next to the page. `blog/slack-ux/argyle.png` becomes
 | `*.html`, `*.js`, models… | Copied as they are. Embed with `<iframe src="scene.html" loading="lazy" …>`. Put `<meta name="robots" content="noindex, indexifembedded">` in the embedded file so Google doesn't list it on its own |
 | `index.html` | Not allowed. That's the generated page |
 
-Site-wide assets (avatar, favicon) live in `assets/`. The site font, About Beige
-(a commercial variable font by Krista Radoeva, abouttype.com, used under the site
-owner's license and not covered by the repo's other licenses), is
-`assets/fonts/AboutBeige.woff2`, declared with `@font-face` in `styles.css`. Design references live
-in `_materials/`, which is gitignored: they stay on your computer only.
+Site-wide assets live in `assets/`: the avatar, the favicon and the site font
+(see "Fonts" below). `assets/` is published as it is, so put only files there
+that visitors should be able to download. Design references live in
+`_materials/`, which is gitignored: they stay on your computer only.
 
 ## 3. Build: `scripts/build.mjs`
 
@@ -102,12 +101,8 @@ in `_materials/`, which is gitignored: they stay on your computer only.
 3. Writes complete HTML for every page in the URL table above. Each page
    gets its title, description, canonical URL and link-preview tags. Posts
    also get structured data (`BlogPosting`) for Google.
-4. Replaces `{{icon:name}}` (in the layout and `pages/*.html`) with the inline
-   SVG `scripts/vendor/fontawesome/<name>.svg` from Font Awesome Free 7.3.1
-   (CC BY 4.0; the license comment inside each SVG must stay). To add an
-   icon, copy its SVG from the `@fortawesome/fontawesome-free` package
-   (`npm pack @fortawesome/fontawesome-free@7.3.1`, then `package/svgs/`)
-   into that folder. An unknown name stops the build with `Unknown icon`.
+4. Replaces `{{icon:name}}` (in the layout and `pages/*.html`) with an inline
+   SVG. See "Icons" below.
 5. Writes `feed.xml`, `sitemap.xml`, `404.html`, and a redirect page for each
    line in `redirects.txt`.
 6. Copies `styles.css`, `js/`, `assets/` and each folder's own files as they
@@ -128,7 +123,7 @@ The preview shows that message in the browser.
 The pages are complete without JavaScript. Three small scripts add
 behaviour:
 
-- `js/main.js`: opens and closes the mobile menu (every page)
+- `js/main.js`: opens and closes the mobile menu (every page). See "Mobile menu" below
 - `js/home.js`: masonry layout of the post cards (home and category pages)
 - `js/work.js`: the project pills on `/work/`, which filter without leaving
   the page
@@ -163,6 +158,67 @@ build command `node scripts/build.mjs`, output folder `_site`.
 
 The site must be served from the root of its domain (`alexkitov.com/`),
 because all links start with `/`.
+
+## 8. Look: fonts, icons, fluid sizes, mobile menu
+
+### Fonts
+
+All text uses one font, About Beige, a variable font. The file is
+`assets/fonts/AboutBeige.woff2` and `styles.css` declares it with `@font-face`
+(`font-weight: 100 1000`, because the font's default weight is hairline and a
+narrower range would render it that way). `--serif`, `--sans` and
+`--title-font` all resolve to the same stack, so changing the font means
+changing those three variables.
+
+**License:** About Beige is a commercial font by Krista Radoeva
+(abouttype.com). It is used under the site owner's license and is not covered
+by the repo's other licenses.
+
+### Icons
+
+Icons are Font Awesome Free 7.3.1 (CC BY 4.0), kept as SVG files in
+`scripts/vendor/fontawesome/` with the license in `LICENSE.txt`. They are not
+in `assets/`, so they are never published as files. Write `{{icon:envelope}}`
+in `templates/layout.html` or `pages/*.html`; the build replaces it with that
+SVG inline (`<svg class="ak-icon" aria-hidden="true">`), sized and colored by
+CSS. To add an icon:
+
+1. Download the package: `npm pack @fortawesome/fontawesome-free@7.3.1`, then
+   unpack it.
+2. Copy `package/svgs/<style>/<name>.svg` into `scripts/vendor/fontawesome/`.
+   Keep the license comment inside the SVG.
+3. Use `{{icon:<name>}}`. An unknown name stops the build with `Unknown icon`.
+
+### Fluid sizes
+
+There is one layout for all widths, not a set of breakpoints. `:root` in
+`styles.css` defines `--t: calc((100vw - 390px) / 890)`, which is 0 at a 390px
+viewport and 1px at 1280px. A value that is A at 390px and B at 1280px is:
+
+```css
+clamp(A, calc(A + (B - A) * var(--t)), B)
+```
+
+It stays A below 390px, grows evenly between, and stays B above 1280px. Where
+the value is in `rem`, keep `rem` for A and B but use `px` inside the `calc()`
+(the root font size is itself fluid). Shared values (`--gutter`,
+`--gutter-frame`, `--space-*` and so on) are tokens at the top of
+`styles.css`.
+
+To change a size, change the token's 390px value (and its 1280px value if the
+desktop size changes too). Don't add breakpoints. The one `@media
+(max-width: 760px)` query is for things that switch (the menu, one-column
+grids); `MOBILE_QUERY` in `js/home.js` repeats it and must stay the same.
+
+### Mobile menu
+
+At 760px and below the inline nav is replaced by a hamburger button.
+`templates/layout.html` holds both the button (`data-menu-toggle`) and a
+`<nav data-menu hidden>` with HOME, WORK and RESUMÉ tiles inside the header
+card, so opening it grows the card and pushes the page down. `js/main.js`
+toggles the nav's `hidden` attribute and `aria-expanded` on the button. It
+closes on a tap on a menu link, on Escape (focus returns to the button) and
+when the viewport grows past 760px. Without JavaScript the menu stays closed.
 
 ## File map
 
