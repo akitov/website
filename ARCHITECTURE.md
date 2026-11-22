@@ -86,7 +86,7 @@ next to the page. `blog/slack-ux/argyle.png` becomes
 | `index.html` | Not allowed. That's the generated page |
 
 Site-wide assets (avatar, favicon) live in `assets/`. Design references live
-in `_materials/` and are never published.
+in `_materials/`, which is gitignored: they stay on your computer only.
 
 ## 3. Build: `scripts/build.mjs`
 
@@ -170,6 +170,6 @@ scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
 .github/workflows/deploy.yml   build + deploy on push
-_materials/                    design references (not published)
+_materials/                    design references (gitignored, local only)
 _site/                         build output (not committed)
 ```

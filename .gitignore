@@ -8,3 +8,6 @@ Thumbs.db
 # Secrets
 .env
 .env.local
+
+# Local design references, screenshots and plans (never committed)
+_materials/
