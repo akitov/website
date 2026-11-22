@@ -215,6 +215,9 @@ function page({ url, title, description, image, section, nav, main, scripts = ''
     active_home: nav === 'home' ? ' is-active' : '',
     active_work: nav === 'work' ? ' is-active' : '',
     active_about: nav === 'about' ? ' is-active' : '',
+    current_home: nav === 'home' ? ' aria-current="page"' : '',
+    current_work: nav === 'work' ? ' aria-current="page"' : '',
+    current_about: nav === 'about' ? ' aria-current="page"' : '',
   };
   return withIcons(LAYOUT.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? ''));
 }
