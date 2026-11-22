@@ -85,7 +85,10 @@ next to the page. `blog/slack-ux/argyle.png` becomes
 | `*.html`, `*.js`, models… | Copied as they are. Embed with `<iframe src="scene.html" loading="lazy" …>`. Put `<meta name="robots" content="noindex, indexifembedded">` in the embedded file so Google doesn't list it on its own |
 | `index.html` | Not allowed. That's the generated page |
 
-Site-wide assets (avatar, favicon) live in `assets/`. Design references live
+Site-wide assets (avatar, favicon) live in `assets/`. The site font, About Beige
+(a commercial variable font by Krista Radoeva, abouttype.com, used under the site
+owner's license and not covered by the repo's other licenses), is
+`assets/fonts/AboutBeige.woff2`, declared with `@font-face` in `styles.css`. Design references live
 in `_materials/`, which is gitignored: they stay on your computer only.
 
 ## 3. Build: `scripts/build.mjs`
@@ -165,7 +168,7 @@ projects/<slug>/               one folder per project
 redirects.txt                  old URL → new URL
 styles.css                     all styles
 js/main.js home.js work.js     small browser scripts
-assets/                        avatar / favicon
+assets/                        avatar / favicon / fonts/AboutBeige.woff2
 scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)

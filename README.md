@@ -14,3 +14,5 @@ node scripts/build.mjs     # build the site into _site/ (the deploy does this)
 
 Frontmatter: [`blog/README.md`](blog/README.md), [`projects/README.md`](projects/README.md).
 How it works: [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+**Font license:** the site font, About Beige (`assets/fonts/AboutBeige.woff2`), is a commercial variable font by Krista Radoeva (abouttype.com). It is used under the site owner's license and is not covered by the repo's other licenses.

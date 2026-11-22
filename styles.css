@@ -1,8 +1,16 @@
 /* ============================================================
    Alexander Kitov — Personal Site
    Pure CSS, no preprocessor, no framework.
-   Two font families only: Georgia (serif) + Arial (sans).
+   One font family only: About Beige (variable, self-hosted) for all text.
    ============================================================ */
+
+@font-face {
+  font-family: "About Beige";
+  src: url("/assets/fonts/AboutBeige.woff2") format("woff2");
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg: #e8e8e8;
@@ -17,9 +25,9 @@
   --border-2: #cfcfcf;
   --pill-bg: #efefef;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --serif: Georgia, "Times New Roman", serif;
-  --sans: Arial, Helvetica, sans-serif;
-  --title-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --sans: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --title-font: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Fluid values. --t is 0 at a 390px viewport and 1px at 1280px, so a
@@ -86,6 +94,7 @@ html, body {
   padding: 0;
   background: var(--bg);
   font-family: var(--serif);
+  font-weight: 400;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -122,7 +131,7 @@ a { color: inherit; }
   z-index: 1;
 }
 .ak-nav-link {
-  font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--text-3);
