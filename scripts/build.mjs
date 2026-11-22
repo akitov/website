@@ -353,7 +353,7 @@ function workPage(projects) {
         </div>`
     )
     .join('');
-  const main = `    <main>
+  const main = `    <main class="ak-work-page">
       <h1 class="ak-work-h1">Building products people love</h1>
       <div class="ak-pills" data-pills>
         ${pills}

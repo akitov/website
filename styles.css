@@ -16,13 +16,57 @@
   --border: #c8c8c8;
   --border-2: #cfcfcf;
   --pill-bg: #efefef;
-  --max-w: 77vw;
-  --card-radius-d: 6px;
-  --card-radius-m: 8px;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   --serif: Georgia, "Times New Roman", serif;
   --sans: Arial, Helvetica, sans-serif;
   --title-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Fluid values. --t is 0 at a 390px viewport and 1px at 1280px, so a
+ * value that is A px at 390 and B px at 1280 is written
+ *   clamp(A, calc(A + (B - A) * var(--t)), B)
+ * and the clamp holds A below 390 and B above 1280. Where the old value
+ * was in rem, the clamp ends stay in rem (rem px = rem x 14 at 390 and
+ * x 16.2 at 1280) so sizes keep growing with the fluid root font size;
+ * the calc() never uses rem, because the root size is fluid already. */
+:root {
+  --t: calc((100vw - 390px) / 890);
+
+  /* Side gutters: 14px on phones. */
+  --gutter: clamp(14px, calc(14px + 10 * var(--t)), 24px);
+  --gutter-frame: clamp(14px, calc(14px + 114 * var(--t)), 10vw);
+  --gutter-content: clamp(14px, calc(14px + 157.2 * var(--t)), calc(11.5vw + 24px));
+  --gutter-project: clamp(14px, calc(14px + 26 * var(--t)), 40px);
+
+  /* Spacing, 390 -> 1280 */
+  --space-1: clamp(8px, calc(8px + 8 * var(--t)), 16px);     /* post nav gap */
+  --space-2: clamp(16px, calc(16px + 8 * var(--t)), 24px);   /* post nav padding */
+  --space-3: clamp(16px, calc(16px + 14 * var(--t)), 30px);  /* header top, footer bottom */
+  --space-4: clamp(20px, calc(20px + 10 * var(--t)), 30px);  /* post grid top */
+  --space-5: clamp(24px, calc(24px + 16 * var(--t)), 40px);  /* content top, post nav bottom, post body gap */
+  --space-6: clamp(30px, calc(30px + 10 * var(--t)), 40px);  /* work tile bottom, about top */
+  --space-7: clamp(34px, calc(34px + 10 * var(--t)), 44px);  /* post card bottom */
+  --space-8: clamp(40px, calc(40px + 20 * var(--t)), 60px);  /* work title top, project bottom */
+  --space-9: clamp(40px, calc(40px + 24 * var(--t)), 64px);  /* post page bottom */
+
+  /* Font sizes, 390 -> 1280 */
+  --fs-page-h1: clamp(1.75rem, calc(24.5px + 16 * var(--t)), 2.5rem);
+  --fs-h1: clamp(1.625rem, calc(22.75px + 9.65 * var(--t)), 2rem);
+  --fs-post-h1: clamp(1.5rem, calc(21px + 11.4 * var(--t)), 2rem);
+  --fs-project-h1: clamp(1.625rem, calc(22.75px + 13.7 * var(--t)), 2.25rem);
+  --fs-post-title: clamp(1.1875rem, calc(16.625px + 9.7 * var(--t)), 1.625rem);
+  --fs-quote: clamp(1.125rem, calc(15.75px + 8.55 * var(--t)), 1.5rem);
+  --fs-body: clamp(0.9375rem, calc(13.125px + 3.075 * var(--t)), 1rem);
+  --fs-lede: clamp(0.875rem, calc(12.25px + 3.95 * var(--t)), 1rem);
+  --fs-tile: clamp(1.125rem, calc(15.75px + 6.525 * var(--t)), 1.375rem);
+  --fs-h3: clamp(1.0625rem, calc(14.875px + 5.375 * var(--t)), 1.25rem);
+  --fs-small: clamp(0.75rem, calc(10.5px + 2.6625 * var(--t)), 0.8125rem);
+
+  /* Sizes, 390 -> 1280 */
+  --nav-pad-block: clamp(8px, calc(12px - 4 * var(--t)), 12px);
+  --radius: 6px; /* header and footer cards; one value (phones had 8px) */
+  --photo: clamp(120px, calc(120px + 30 * var(--t)), 150px);
+  --circle: clamp(70px, calc(70px + 20 * var(--t)), 90px);
 }
 
 * { box-sizing: border-box; }
@@ -31,8 +75,8 @@
  * (~360px viewport) to 18px on large desktops (~1600px+). All other
  * font sizes in this stylesheet are expressed in rem so they scale
  * with this value automatically -- no per-breakpoint size overrides
- * needed for typography. The mobile media query at 760px below still
- * adjusts a few sizes for hierarchy, but in rem so it remains fluid. */
+ * needed for typography. Sizes that differ between phone and desktop
+ * interpolate through the fluid tokens on :root (see --t). */
 html {
   font-size: clamp(14px, calc(13px + 0.25vw), 18px);
 }
@@ -54,9 +98,8 @@ a { color: inherit; }
 
 .ak-header,
 .ak-footer {
-  max-width: calc(var(--max-w) + 3vw);
-  margin: 30px auto 0;
-  border-radius: var(--card-radius-d);
+  margin: var(--space-3) var(--gutter-frame) 0;
+  border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
   background: var(--card);
@@ -68,9 +111,8 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: var(--nav-pad-block) clamp(14px, calc(14px + 2 * var(--t)), 16px);
   background: var(--card);
-  height: 60px;
   position: relative;
 }
 
@@ -203,21 +245,23 @@ a { color: inherit; }
 
 /* ----------------------------- FOOTER ----------------------------- */
 
-.ak-footer { margin: 60px auto 30px; }
+.ak-footer { margin: 60px var(--gutter-frame) var(--space-3); }
 .ak-footer-inner {
-  padding: 36px 24px 24px;
+  padding: clamp(30px, calc(30px + 6 * var(--t)), 36px)
+    clamp(16px, calc(16px + 8 * var(--t)), 24px)
+    clamp(20px, calc(20px + 4 * var(--t)), 24px);
   text-align: center;
   font-family: var(--serif);
 }
 .ak-footer-name {
-  font-size: 1.25rem;
+  font-size: clamp(1.125rem, calc(15.75px + 4.5 * var(--t)), 1.25rem);
   color: var(--text-2);
   margin-bottom: 16px;
 }
 .ak-footer-links {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: clamp(14px, calc(14px + 6 * var(--t)), 20px);
   flex-wrap: wrap;
   margin-bottom: 20px;
   font-family: var(--sans);
@@ -240,10 +284,10 @@ a { color: inherit; }
 
 /* ----------------------------- PAGE WRAPPER ----------------------------- */
 
-.ak-content { padding: 40px 24px 0; max-width: var(--max-w); margin: 0 auto; }
+.ak-content { padding: var(--space-5) var(--gutter-content) 0; }
 .ak-page-h1 {
   font-family: var(--serif);
-  font-size: 2.5rem;
+  font-size: var(--fs-page-h1);
   color: #222;
   margin: 0 0 22px;
   font-weight: bold;
@@ -289,7 +333,7 @@ a { color: inherit; }
   grid-template-columns: 1fr 1fr;
   gap: 0 40px;
   align-items: flex-start;
-  padding-top: 30px;
+  padding-top: var(--space-4);
 }
 .ak-post-grid.is-masonry {
   display: block;
@@ -299,7 +343,7 @@ a { color: inherit; }
   display: block;
   clear: both;
 }
-.ak-post-grid-item { padding-bottom: 44px; }
+.ak-post-grid-item { padding-bottom: var(--space-7); }
 .ak-post-grid.is-masonry .ak-post-grid-item {
   width: calc(50% - 20px);
   box-sizing: border-box;
@@ -319,7 +363,7 @@ a { color: inherit; }
 
 .ak-post-title {
   font-family: var(--serif);
-  font-size: 1.625rem;
+  font-size: var(--fs-post-title);
   font-weight: normal;
   color: var(--text-2);
   margin: 0 0 12px;
@@ -380,7 +424,7 @@ a { color: inherit; }
   line-height: 1;
 }
 .ak-quote-text {
-  font-size: 1.5rem;
+  font-size: var(--fs-quote);
   color: var(--text-3);
   font-family: var(--sans);
   font-style: italic;
@@ -412,20 +456,24 @@ a { color: inherit; }
 .ak-post-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px 64px;
+  padding: 0 var(--gutter) var(--space-9);
 }
+/* Prev and next share a row while they fit; otherwise next wraps onto its
+ * own line and stays right-aligned. */
 .ak-postnav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  padding: 24px 0;
-  margin-bottom: 40px;
-  gap: 16px;
+  padding: var(--space-2) 0;
+  margin-bottom: var(--space-5);
+  gap: var(--space-1);
 }
 .ak-postnav a { font-size: 0.75rem; }
+.ak-postnav .ak-arrow-link:not(.ak-arrow-prev) { margin-left: auto; }
 .ak-post-head { text-align: center; margin-bottom: 50px; }
 .ak-post-head h1 {
   font-family: var(--serif);
-  font-size: 2rem;
+  font-size: var(--fs-post-h1);
   font-weight: bold;
   color: #222;
   margin: 0 0 20px;
@@ -433,20 +481,25 @@ a { color: inherit; }
 }
 .ak-post-head p {
   font-family: var(--serif);
-  font-size: 1rem;
+  font-size: var(--fs-lede);
   color: var(--text-3);
   max-width: 700px;
   margin: 0 auto;
   line-height: 1.6;
 }
+/* Sidebar (220px) beside the body while the body keeps at least 60% of
+ * the row; on narrower screens the sidebar wraps above it at full width.
+ * The body's grow factor is 999999, not the usual 999: in a row the
+ * sidebar gets 1/(1 + grow) of the free space, which with 999 would make
+ * it 0.9px wider than 220px on desktop. */
 .ak-post-body-wrap {
   display: flex;
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: var(--space-5);
   align-items: flex-start;
 }
 .ak-post-side {
-  width: 220px;
-  flex-shrink: 0;
+  flex: 1 1 220px;
 }
 .ak-post-side img {
   width: 100%;
@@ -469,12 +522,12 @@ a { color: inherit; }
   margin: 0;
 }
 .ak-post-body {
-  flex-grow: 1;
+  flex: 999999 1 0;
   font-family: var(--serif);
-  font-size: 1rem;
+  font-size: var(--fs-body);
   color: var(--text-2);
   line-height: 1.7;
-  min-width: 0;
+  min-width: 60%;
 }
 .ak-post-body p:first-of-type::first-letter {
   float: left;
@@ -519,29 +572,32 @@ a { color: inherit; }
 
 /* ----------------------------- WORK PAGE ----------------------------- */
 
+.ak-work-page { padding-inline: var(--gutter); }
 .ak-work-h1 {
   font-family: var(--serif);
   font-weight: bold;
-  font-size: 2rem;
+  font-size: var(--fs-h1);
   color: #222;
   text-align: center;
-  margin: 60px 0 30px;
+  margin: var(--space-8) 0 30px;
 }
+/* Two columns while each can be at least 320px wide, else one. auto-fill
+ * (not auto-fit) keeps the column width when work.js hides tiles. */
 .ak-work-grid {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(320px, 50%)), 1fr));
   gap: 0;
 }
 .ak-work-tile { display: flex; flex-direction: column; }
 .ak-work-tile a { text-decoration: none; color: inherit; }
 .ak-work-tile img { width: 100%; height: auto; display: block; }
 .ak-work-tile-title {
-  padding: 12px 0 40px;
+  padding: clamp(10px, calc(10px + 2 * var(--t)), 12px) 0 var(--space-6);
   text-align: center;
   font-family: var(--serif);
-  font-size: 1.375rem;
+  font-size: var(--fs-tile);
   color: var(--text-2);
 }
 
@@ -550,7 +606,7 @@ a { color: inherit; }
 .ak-project-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 40px 60px;
+  padding: clamp(16px, calc(16px + 4 * var(--t)), 20px) var(--gutter-project) var(--space-8);
   font-family: var(--serif);
 }
 .ak-project-topnav {
@@ -564,22 +620,25 @@ a { color: inherit; }
   margin-bottom: 60px;
 }
 .ak-project-head h1 {
-  font-size: 2.25rem;
+  font-size: var(--fs-project-h1);
   font-weight: bold;
   margin: 0 0 10px;
   color: var(--text-2);
 }
 .ak-project-head p {
-  font-size: 1.125rem;
+  font-size: clamp(1rem, calc(14px + 4.225 * var(--t)), 1.125rem);
   color: var(--text-3);
   margin: 0;
   font-style: italic;
 }
+/* Main column and sidebar share the row 65:30 while both fit their base
+ * widths; on narrower screens the sidebar wraps below at full width. */
 .ak-project-body-wrap {
   display: flex;
-  gap: 5%;
+  flex-wrap: wrap;
+  gap: clamp(30px, calc(30px + 26 * var(--t)), 56px);
 }
-.ak-project-main { width: 65%; min-width: 0; }
+.ak-project-main { flex: 65 1 455px; min-width: 0; }
 .ak-project-main img { width: 100%; height: auto; margin-bottom: 30px; }
 .ak-project-body {
   line-height: 1.8;
@@ -607,7 +666,7 @@ a { color: inherit; }
   border-top: 1px dotted #ccc;
   margin-bottom: 30px;
 }
-.ak-project-side { width: 30%; }
+.ak-project-side { flex: 30 1 210px; }
 .ak-project-side h3 {
   font-size: 1.75rem;
   font-style: italic;
@@ -641,7 +700,8 @@ a { color: inherit; }
 .ak-about {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px 80px;
+  padding: var(--space-6) clamp(14px, calc(14px + 6 * var(--t)), 20px)
+    clamp(60px, calc(60px + 20 * var(--t)), 80px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -655,8 +715,8 @@ a { color: inherit; }
   margin-right: auto;
 }
 .ak-about-photo {
-  width: 150px;
-  height: 150px;
+  width: var(--photo);
+  height: var(--photo);
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
@@ -664,7 +724,7 @@ a { color: inherit; }
 }
 .ak-about h1 {
   font-family: var(--serif);
-  font-size: 2rem;
+  font-size: var(--fs-h1);
   font-weight: bold;
   color: #222;
   margin: 0 0 18px;
@@ -727,8 +787,8 @@ a { color: inherit; }
   gap: 20px;
 }
 .ak-endorse-circle {
-  width: 90px;
-  height: 90px;
+  width: var(--circle);
+  height: var(--circle);
   border-radius: 50%;
   display: flex;
   flex-direction: column;
@@ -738,18 +798,18 @@ a { color: inherit; }
   flex-shrink: 0;
   font-family: var(--sans);
 }
-.ak-endorse-circle .num { font-size: 1.625rem; line-height: 1; }
+.ak-endorse-circle .num { font-size: clamp(1.375rem, calc(19.25px + 7.075 * var(--t)), 1.625rem); line-height: 1; }
 .ak-endorse-circle .lbl { font-size: 0.5625rem; letter-spacing: 1px; margin-top: 2px; }
 .ak-endorse-item h3 {
   font-family: var(--serif);
-  font-size: 1.25rem;
+  font-size: var(--fs-h3);
   color: var(--text-2);
   font-weight: normal;
   margin: 0 0 6px;
 }
 .ak-endorse-item p {
   font-family: var(--sans);
-  font-size: 0.8125rem;
+  font-size: var(--fs-small);
   color: var(--muted);
   line-height: 1.5;
   margin: 0;
@@ -759,7 +819,7 @@ a { color: inherit; }
 .ak-strive-list {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: clamp(18px, calc(18px + 2 * var(--t)), 20px);
 }
 .ak-strive-item {
   flex: 1;
@@ -782,70 +842,20 @@ a { color: inherit; }
 
 /* ----------------------------- MOBILE ----------------------------- */
 
+/* Sizes and spacing scale through the fluid tokens on :root. This query
+ * only flips what can't scale: inline nav vs hamburger, one post column
+ * (also for Masonry), the side image shape and the strive list
+ * orientation. js/home.js repeats the query in MOBILE_QUERY. */
 @media (max-width: 760px) {
-  .ak-header,
-  .ak-footer {
-    max-width: none;
-    margin-left: 14px;
-    margin-right: 14px;
-    border-radius: var(--card-radius-m);
-  }
-  .ak-header { margin-top: 16px; }
-  .ak-footer { margin-bottom: 16px; }
-  .ak-nav {
-    padding: 12px 14px;
-    height: auto;
-  }
   .ak-nav-links { display: none; }
   .ak-hamburger { display: inline-flex; }
-  .ak-content { padding: 24px 14px 0; }
-  .ak-page-h1 { font-size: 1.75rem; }
 
-  .ak-post-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
-    padding-top: 20px;
-  }
-  .ak-post-grid-item { padding-bottom: 34px; }
+  .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
-  .ak-post-title { font-size: 1.1875rem; }
-  .ak-post-excerpt { font-size: 0.8125rem; }
-  .ak-quote-text { font-size: 1.125rem; }
 
-  .ak-post-page { padding: 0 14px 40px; }
-  .ak-postnav { padding: 16px 0; margin-bottom: 24px; flex-direction: column; gap: 8px; }
-  .ak-postnav .ak-arrow-link.ak-arrow-prev { align-self: flex-start; }
-  .ak-postnav .ak-arrow-link:not(.ak-arrow-prev) { align-self: flex-end; }
-  .ak-post-head h1 { font-size: 1.5rem; }
-  .ak-post-head p { font-size: 0.875rem; }
-  .ak-post-body-wrap { flex-direction: column; gap: 24px; }
-  .ak-post-side { width: 100%; }
   .ak-post-side img { aspect-ratio: 16/10; }
-  .ak-post-body { font-size: 0.9375rem; }
 
-  .ak-work-grid { grid-template-columns: 1fr; }
-  .ak-work-tile-title { padding: 10px 0 30px; font-size: 1.125rem; }
-  .ak-work-h1 { margin-top: 40px; font-size: 1.625rem; }
-
-  .ak-project-page { padding: 16px 14px 40px; }
-  .ak-project-head h1 { font-size: 1.625rem; }
-  .ak-project-head p { font-size: 1rem; }
-  .ak-project-body-wrap { flex-direction: column; gap: 30px; }
-  .ak-project-main { width: 100%; }
-  .ak-project-side { width: 100%; }
-
-  .ak-about { padding: 30px 14px 60px; }
-  .ak-about-photo { width: 120px; height: 120px; }
-  .ak-about h1 { font-size: 1.625rem; }
-  .ak-strive-list { flex-direction: column; gap: 18px; }
+  .ak-strive-list { flex-direction: column; }
   .ak-strive-item { flex-direction: row; gap: 16px; text-align: left; }
   .ak-strive-item .ico { margin-bottom: 0; }
-  .ak-endorse-circle { width: 70px; height: 70px; }
-  .ak-endorse-circle .num { font-size: 1.375rem; }
-  .ak-endorse-item h3 { font-size: 1.0625rem; }
-  .ak-endorse-item p { font-size: 0.75rem; }
-
-  .ak-footer-inner { padding: 30px 16px 20px; }
-  .ak-footer-name { font-size: 1.125rem; }
-  .ak-footer-links { gap: 14px; }
 }
