@@ -102,9 +102,15 @@ in `_materials/`, which is gitignored: they stay on your computer only.
 3. Writes complete HTML for every page in the URL table above. Each page
    gets its title, description, canonical URL and link-preview tags. Posts
    also get structured data (`BlogPosting`) for Google.
-4. Writes `feed.xml`, `sitemap.xml`, `404.html`, and a redirect page for each
+4. Replaces `{{icon:name}}` (in the layout and `pages/*.html`) with the inline
+   SVG `scripts/vendor/fontawesome/<name>.svg` from Font Awesome Free 7.3.1
+   (CC BY 4.0; the license comment inside each SVG must stay). To add an
+   icon, copy its SVG from the `@fortawesome/fontawesome-free` package
+   (`npm pack @fortawesome/fontawesome-free@7.3.1`, then `package/svgs/`)
+   into that folder. An unknown name stops the build with `Unknown icon`.
+5. Writes `feed.xml`, `sitemap.xml`, `404.html`, and a redirect page for each
    line in `redirects.txt`.
-5. Copies `styles.css`, `js/`, `assets/` and each folder's own files as they
+6. Copies `styles.css`, `js/`, `assets/` and each folder's own files as they
    are.
 
 The build stops with a plain-English message if:
@@ -172,6 +178,7 @@ assets/                        avatar / favicon / fonts/AboutBeige.woff2
 scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
+scripts/vendor/fontawesome/    icon SVGs + LICENSE.txt (Font Awesome Free 7.3.1)
 .github/workflows/deploy.yml   build + deploy on push
 _materials/                    design references (gitignored, local only)
 _site/                         build output (not committed)
