@@ -14,21 +14,21 @@
   <body>
     <header class="ak-header">
       <div class="ak-stripe"></div>
-      <nav class="ak-nav">
+      <nav class="ak-nav" aria-label="Main">
         <button type="button" class="ak-hamburger" aria-label="Menu" aria-expanded="false" aria-controls="ak-menu" data-menu-toggle>
           <span></span><span></span><span></span>
         </button>
         <div class="ak-nav-links">
-          <a class="ak-nav-link{{active_home}}" href="/" data-nav="home">HOME</a>
-          <a class="ak-nav-link{{active_work}}" href="/work/" data-nav="work">WORK</a>
-          <a class="ak-nav-link{{active_about}}" href="/about/" data-nav="about">RESUMÉ</a>
+          <a class="ak-nav-link{{active_home}}"{{current_home}} href="/" data-nav="home">HOME</a>
+          <a class="ak-nav-link{{active_work}}"{{current_work}} href="/work/" data-nav="work">WORK</a>
+          <a class="ak-nav-link{{active_about}}"{{current_about}} href="/about/" data-nav="about">RESUMÉ</a>
         </div>
         <div class="ak-page-title" data-page-title-slot>{{section}}</div>
         <a href="/about/" class="ak-avatar" aria-label="About">
           <img src="/assets/avatar.svg" alt="Alexander Kitov" />
         </a>
       </nav>
-      <nav class="ak-menu" id="ak-menu" aria-label="Main" data-menu hidden>
+      <nav class="ak-menu" id="ak-menu" aria-label="Main menu" data-menu hidden>
         <a class="ak-menu-tile{{active_home}}"{{current_home}} href="/">HOME</a>
         <a class="ak-menu-tile{{active_work}}"{{current_work}} href="/work/">WORK</a>
         <a class="ak-menu-tile{{active_about}}"{{current_about}} href="/about/">RESUMÉ</a>

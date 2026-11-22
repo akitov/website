@@ -13,8 +13,10 @@ if (menu && toggle) {
   menu.addEventListener('click', (e) => e.target.closest('a') && setOpen(false));
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || menu.hidden) return;
+    const focusInMenu = menu.contains(document.activeElement) || document.activeElement === toggle;
     setOpen(false);
-    toggle.focus();
+    // Return focus to the toggle only if it was inside the menu; never steal it from the page.
+    if (focusInMenu) toggle.focus();
   });
   // The menu only exists on mobile; close it when the inline nav returns.
   matchMedia('(min-width: 761px)').addEventListener('change', (e) => e.matches && setOpen(false));
