@@ -217,19 +217,18 @@ a { color: inherit; }
 .ak-footer-links {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 25px;
   flex-wrap: wrap;
   margin-bottom: 20px;
   font-family: var(--sans);
-  font-size: 0.8125rem;
+  font-size: 14px;
 }
 .ak-footer-link {
   color: var(--accent);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-weight: bold;
+  gap: 0.35em;
 }
 .ak-footer-copy {
   font-size: 0.6875rem;
@@ -368,18 +367,19 @@ a { color: inherit; }
   padding-left: 30px;
   border-left: 1px solid var(--border);
 }
-.ak-quote::before {
+.ak-quote-text::before {
   content: "\201C";
   position: absolute;
-  left: 20px;
+  left: -10px;
   top: -2px;
-  font-size: 2.625rem;
+  font-size: 1.35em;
   color: var(--text-3);
   font-family: var(--serif);
-  font-style: italic;
-  line-height: 1;
+  font-style: normal;
+  line-height: 0;
 }
 .ak-quote-text {
+  position: relative;
   font-size: 1.5rem;
   color: var(--text-3);
   font-family: var(--sans);
@@ -390,7 +390,9 @@ a { color: inherit; }
 .ak-quote-text::after {
   content: "\201D";
   color: var(--text-3);
-  font-style: italic;
+  font-style: normal;
+  font-size: 1.35em;
+  line-height: 0;
   font-family: var(--serif);
   margin-left: 2px;
 }
@@ -406,6 +408,15 @@ a { color: inherit; }
 }
 .ak-quote-author .ak-feather { color: #888; font-size: 1rem; }
 .ak-quote-author a { color: var(--accent); text-decoration: none; }
+
+/* Font Awesome icons (inlined by scripts/build.mjs, see {{icon:name}}) */
+.ak-icon { height: 1em; width: auto; vertical-align: -0.125em; fill: currentColor; }
+.ak-quote-author { gap: 5px; }
+.ak-feather { display: inline-flex; align-items: center; }
+.ak-feather .ak-icon { height: 1.25em; }
+.ak-about-social a { gap: 0.35em; }
+.ak-strive-item .ico { min-width: 40px; justify-content: center; }
+.ak-strive-item .ico .ak-icon { height: 32px; fill: #222; }
 
 /* ----------------------------- BLOG POST PAGE ----------------------------- */
 

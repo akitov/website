@@ -18,7 +18,7 @@
  *   + home (/), work (/work/), feed.xml, sitemap.xml
  */
 
-import { promises as fs } from 'node:fs';
+import { promises as fs, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { marked } from './vendor/marked.js';
@@ -170,6 +170,24 @@ const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" />`;
 
 let LAYOUT = '';
 
+// Font Awesome Free icons: {{icon:name}} becomes the inline SVG from
+// scripts/vendor/fontawesome/<name>.svg (the license comment inside stays).
+const ICON_DIR = path.join(ROOT, 'scripts', 'vendor', 'fontawesome');
+const iconCache = new Map();
+function icon(name) {
+  if (!iconCache.has(name)) {
+    let svg;
+    try {
+      svg = readFileSync(path.join(ICON_DIR, `${name}.svg`), 'utf8').trim();
+    } catch {
+      throw new Error(`Unknown icon: ${name}`);
+    }
+    iconCache.set(name, svg.replace('<svg ', '<svg class="ak-icon" aria-hidden="true" focusable="false" '));
+  }
+  return iconCache.get(name);
+}
+const withIcons = (html) => html.replace(/\{\{icon:([\w-]+)\}\}/g, (_, name) => icon(name));
+
 /* Wrap a page's <main> in templates/layout.html. */
 function page({ url, title, description, image, section, nav, main, scripts = '', stylesheet = '', extraMeta = [], noindex = false }) {
   const meta = [
@@ -198,7 +216,7 @@ function page({ url, title, description, image, section, nav, main, scripts = ''
     active_work: nav === 'work' ? ' is-active' : '',
     active_about: nav === 'about' ? ' is-active' : '',
   };
-  return LAYOUT.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '');
+  return withIcons(LAYOUT.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? ''));
 }
 
 // ================================================================ blog
@@ -216,7 +234,7 @@ function postCard(p) {
         <div class="ak-quote">
           <div class="ak-quote-text"><a href="${postUrl(p)}" style="color:inherit;text-decoration:none">${esc(p.fm.quote)}</a></div>
           <div class="ak-quote-author">
-            <span class="ak-feather">🪶</span>
+            <span class="ak-feather">{{icon:feather}}</span>
             <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
           </div>
         </div>
@@ -280,7 +298,7 @@ function postPage(p, prev, next) {
     ? `<div class="ak-quote" style="margin-top:8px">
             <div class="ak-quote-text">${esc(p.fm.quote)}</div>
             <div class="ak-quote-author">
-              <span class="ak-feather">🪶</span>
+              <span class="ak-feather">{{icon:feather}}</span>
               <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
             </div>
           </div>${p.body.trim() ? '\n' + marked.parse(p.body) : ''}`
