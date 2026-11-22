@@ -13,9 +13,9 @@
 }
 
 :root {
-  --bg: #e8e8e8;
+  --bg: #ededed;
   --card: #ffffff;
-  --accent: #cc0000;
+  --accent: #e10000;
   --text: #1a1a1a;
   --text-2: #333;
   --text-3: #555;
@@ -23,7 +23,7 @@
   --muted-2: #999;
   --border: #c8c8c8;
   --border-2: #cfcfcf;
-  --pill-bg: #efefef;
+  --pill-bg: #f5f5f5;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   --serif: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --sans: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -121,7 +121,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   padding: var(--nav-pad-block) clamp(14px, calc(14px + 2 * var(--t)), 16px);
-  background: var(--card);
+  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
   position: relative;
 }
 
@@ -134,7 +134,7 @@ a { color: inherit; }
   font-family: var(--sans);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  color: var(--text-3);
+  color: #333;
   text-decoration: none;
   user-select: none;
 }
@@ -245,10 +245,11 @@ a { color: inherit; }
     clamp(20px, calc(20px + 4 * var(--t)), 24px);
   text-align: center;
   font-family: var(--serif);
+  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
 }
 .ak-footer-name {
   font-size: clamp(1.125rem, calc(15.75px + 4.5 * var(--t)), 1.25rem);
-  color: var(--text-2);
+  color: #222;
   margin-bottom: 16px;
 }
 .ak-footer-links {
@@ -269,7 +270,7 @@ a { color: inherit; }
 }
 .ak-footer-copy {
   font-size: 0.6875rem;
-  color: var(--muted-2);
+  color: #808080;
   font-family: var(--sans);
 }
 .ak-footer .ak-stripe { height: 4px; }
@@ -280,7 +281,7 @@ a { color: inherit; }
 .ak-page-h1 {
   font-family: var(--serif);
   font-size: var(--fs-page-h1);
-  color: #222;
+  color: #000;
   margin: 0 0 22px;
   font-weight: bold;
   text-align: center;
@@ -302,7 +303,7 @@ a { color: inherit; }
   padding: 3px 10px;
   font-family: var(--sans);
   font-size: 0.75rem;
-  color: #222;
+  color: #000;
   text-decoration: none;
   cursor: pointer;
   display: inline-block;
@@ -350,14 +351,14 @@ a { color: inherit; }
   gap: 8px;
   flex-wrap: wrap;
 }
-.ak-post-meta .ak-date { font-weight: bold; color: #222; }
+.ak-post-meta .ak-date { font-weight: bold; color: #000; }
 .ak-post-meta .ak-type { color: var(--text-3); font-weight: normal; }
 
 .ak-post-title {
   font-family: var(--serif);
   font-size: var(--fs-post-title);
   font-weight: normal;
-  color: var(--text-2);
+  color: #000;
   margin: 0 0 12px;
   line-height: 1.25;
 }
@@ -365,7 +366,7 @@ a { color: inherit; }
 .ak-post-excerpt {
   font-family: var(--serif);
   font-size: 0.8125rem;
-  color: var(--muted);
+  color: #555;
   line-height: 1.6;
   margin: 0;
 }
@@ -387,6 +388,9 @@ a { color: inherit; }
   font-size: 0.75rem;
   margin-top: 14px;
 }
+/* "Read More..." on cards and prev/next on posts are red; the sidebar category link stays dark. */
+.ak-post-grid .ak-arrow-link,
+.ak-postnav .ak-arrow-link { color: var(--accent); }
 .ak-arrow-link .ak-arrow {
   color: var(--accent);
   margin-left: 6px;
@@ -402,7 +406,7 @@ a { color: inherit; }
 .ak-quote {
   position: relative;
   padding-left: 30px;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid #969696;
 }
 .ak-quote-text::before {
   content: "\201C";
@@ -410,7 +414,7 @@ a { color: inherit; }
   left: -10px;
   top: -2px;
   font-size: 1.35em;
-  color: var(--text-3);
+  color: #222;
   font-family: var(--serif);
   font-style: normal;
   line-height: 0;
@@ -418,7 +422,7 @@ a { color: inherit; }
 .ak-quote-text {
   position: relative;
   font-size: var(--fs-quote);
-  color: var(--text-3);
+  color: #222;
   font-family: var(--sans);
   font-style: italic;
   line-height: 1.4;
@@ -426,7 +430,7 @@ a { color: inherit; }
 }
 .ak-quote-text::after {
   content: "\201D";
-  color: var(--text-3);
+  color: #222;
   font-style: normal;
   font-size: 1.35em;
   line-height: 0;
@@ -437,13 +441,13 @@ a { color: inherit; }
   margin-top: 18px;
   font-size: 0.875rem;
   font-family: var(--sans);
-  color: var(--muted);
+  color: #555;
   display: flex;
   align-items: center;
   gap: 10px;
   padding-left: 20px;
 }
-.ak-quote-author .ak-feather { color: #888; font-size: 1rem; }
+.ak-quote-author .ak-feather { color: #555; font-size: 1rem; }
 .ak-quote-author a { color: var(--accent); text-decoration: none; }
 
 /* Font Awesome icons (inlined by scripts/build.mjs, see {{icon:name}}) */
@@ -482,7 +486,7 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--fs-post-h1);
   font-weight: bold;
-  color: #222;
+  color: #000;
   margin: 0 0 clamp(16px, calc(16px + 4 * var(--t)), 20px);
   line-height: 1.2;
 }
@@ -525,19 +529,19 @@ a { color: inherit; }
   font-family: var(--sans);
   font-weight: bold;
   font-size: clamp(11px, calc(11px + 0.1375 * var(--t)), 0.6875rem);
-  color: var(--muted-2);
+  color: #000;
   margin-bottom: clamp(18px, calc(18px + 2 * var(--t)), 20px);
 }
 .ak-post-side hr {
   border: none;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #aaa;
   margin: 0;
 }
 .ak-post-body {
   flex: 999999 1 0;
   font-family: var(--serif);
   font-size: var(--fs-body);
-  color: var(--text-2);
+  color: #555;
   line-height: 1.7;
   min-width: 60%;
 }
@@ -556,7 +560,7 @@ a { color: inherit; }
   font-size: 4em;
   line-height: 0.9333;
   font-weight: bold;
-  color: #ccc;
+  color: #000;
   margin-right: 0.1em;
   font-family: var(--serif);
 }
@@ -602,7 +606,7 @@ a { color: inherit; }
   font-family: var(--serif);
   font-weight: bold;
   font-size: var(--fs-h1);
-  color: #222;
+  color: #000;
   text-align: center;
   margin: var(--space-8) 0 30px;
 }
@@ -648,7 +652,7 @@ a { color: inherit; }
   font-size: var(--fs-project-h1);
   font-weight: bold;
   margin: 0 0 10px;
-  color: var(--text-2);
+  color: #000;
 }
 .ak-project-head p {
   font-size: clamp(1rem, calc(14px + 4.225 * var(--t)), 1.125rem);
@@ -751,7 +755,7 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--fs-h1);
   font-weight: bold;
-  color: #222;
+  color: #000;
   margin: 0 0 18px;
 }
 .ak-about-social {
