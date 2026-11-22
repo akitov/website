@@ -179,9 +179,11 @@ function icon(name) {
     let svg;
     try {
       svg = readFileSync(path.join(ICON_DIR, `${name}.svg`), 'utf8').trim();
-    } catch {
-      throw new Error(`Unknown icon: ${name}`);
+    } catch (err) {
+      if (err.code === 'ENOENT') throw new Error(`Unknown icon: ${name}`);
+      throw err;
     }
+    if (!svg.startsWith('<svg ')) throw new Error(`Icon ${name}.svg does not start with "<svg "`);
     iconCache.set(name, svg.replace('<svg ', '<svg class="ak-icon" aria-hidden="true" focusable="false" '));
   }
   return iconCache.get(name);
@@ -219,7 +221,7 @@ function page({ url, title, description, image, section, nav, main, scripts = ''
     current_work: nav === 'work' ? ' aria-current="page"' : '',
     current_about: nav === 'about' ? ' aria-current="page"' : '',
   };
-  return withIcons(LAYOUT.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? ''));
+  return LAYOUT.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '');
 }
 
 // ================================================================ blog
@@ -237,7 +239,7 @@ function postCard(p) {
         <div class="ak-quote">
           <div class="ak-quote-text"><a href="${postUrl(p)}" style="color:inherit;text-decoration:none">${esc(p.fm.quote)}</a></div>
           <div class="ak-quote-author">
-            <span class="ak-feather">{{icon:feather}}</span>
+            <span class="ak-feather">${icon('feather')}</span>
             <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
           </div>
         </div>
@@ -301,7 +303,7 @@ function postPage(p, prev, next) {
     ? `<div class="ak-quote" style="margin-top:8px">
             <div class="ak-quote-text">${esc(p.fm.quote)}</div>
             <div class="ak-quote-author">
-              <span class="ak-feather">{{icon:feather}}</span>
+              <span class="ak-feather">${icon('feather')}</span>
               <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
             </div>
           </div>${p.body.trim() ? '\n' + marked.parse(p.body) : ''}`
@@ -438,7 +440,7 @@ function projectPage(p, next) {
 
 async function readFragment(name) {
   const html = await fs.readFile(path.join(ROOT, 'pages', name), 'utf8');
-  return html.replace(/^\s*<!--[\s\S]*?-->\s*\n/, '').replace(/\s+$/, '');
+  return withIcons(html.replace(/^\s*<!--[\s\S]*?-->\s*\n/, '').replace(/\s+$/, ''));
 }
 
 function redirectPage(to) {
@@ -523,7 +525,7 @@ ${body}
 // ================================================================ build
 
 export async function build() {
-  LAYOUT = await fs.readFile(path.join(ROOT, 'templates', 'layout.html'), 'utf8');
+  LAYOUT = withIcons(await fs.readFile(path.join(ROOT, 'templates', 'layout.html'), 'utf8'));
 
   const posts = (await readContent('blog', '/blog/')).sort((a, b) => (dateMs(b.date) || 0) - (dateMs(a.date) || 0));
   const projects = (await readContent('projects', '/work/')).sort(
