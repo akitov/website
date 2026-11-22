@@ -540,7 +540,7 @@ a { color: inherit; }
   display: block;
   font-family: var(--sans);
   font-weight: bold;
-  font-size: clamp(11px, calc(11px + 0.1 * var(--t)), 0.6875rem);
+  font-size: clamp(11px, calc(11px + 0.1375 * var(--t)), 0.6875rem);
   color: var(--muted-2);
   margin-bottom: clamp(18px, calc(18px + 2 * var(--t)), 20px);
 }
@@ -559,8 +559,14 @@ a { color: inherit; }
 }
 /* Length, not a ratio, so it can interpolate (1.6 -> 1.7 x 16.2px); headings keep 1.7. */
 .ak-post-body p,
-.ak-post-body li { line-height: clamp(24px, calc(24px + 3.54 * var(--t)), 1.7rem); }
-.ak-post-body > :first-child { margin-top: 0; }
+.ak-post-body li { line-height: clamp(24px, calc(24px + 3.53 * var(--t)), 1.7rem); }
+/* First child: no top margin at 390, back to its own desktop margin at 1280
+ * (1em for p/ul/ol, 40 h2, 32 h3, 20 blockquote, 24 img). */
+.ak-post-body > :first-child { margin-top: clamp(0px, calc(16.2 * var(--t)), 1em); }
+.ak-post-body > h2:first-child { margin-top: clamp(0px, calc(40 * var(--t)), 40px); }
+.ak-post-body > h3:first-child { margin-top: clamp(0px, calc(32 * var(--t)), 32px); }
+.ak-post-body > blockquote:first-child { margin-top: clamp(0px, calc(20 * var(--t)), 20px); }
+.ak-post-body > img:first-child { margin-top: clamp(0px, calc(24 * var(--t)), 24px); }
 .ak-post-body > p:first-of-type::first-letter {
   float: left;
   font-size: 4em;
