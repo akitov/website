@@ -183,9 +183,10 @@ a { color: inherit; }
   z-index: 1;
 }
 .ak-hamburger:active,
-.ak-hamburger.is-open {
-  background: linear-gradient(180deg, #e8e8e8 0%, #f3f3f3 100%);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.18);
+.ak-hamburger[aria-expanded="true"] {
+  background: #e6e6e6;
+  border-color: #c5c5c5;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.13), inset 0 -1px 0 rgba(255, 255, 255, 0.3);
 }
 .ak-hamburger span {
   display: block;
@@ -194,63 +195,46 @@ a { color: inherit; }
   background: #999;
   border-radius: 1px;
 }
-
-/* ----------------------------- MOBILE DRAWER ----------------------------- */
-
-.ak-drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  z-index: 1000;
+.ak-hamburger[aria-expanded="true"] span { background: #7a7a7a; }
+.ak-hamburger:focus-visible,
+.ak-menu-tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
-.ak-drawer-backdrop.is-open {
-  opacity: 1;
-  visibility: visible;
+
+/* ----------------------------- MOBILE MENU ----------------------------- */
+/* Inside the header card, so opening it grows the card and pushes the page down. */
+
+.ak-menu { display: none; }
+@media (max-width: 760px) {
+  .ak-menu:not([hidden]) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 20px 14px;
+  }
 }
-.ak-drawer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 78%;
-  max-width: 320px;
-  background: var(--bg);
-  transform: translateX(-100%);
-  transition: transform 0.25s ease;
-  z-index: 1001;
+.ak-menu-tile {
   display: flex;
-  flex-direction: column;
-  padding: 18px 14px;
-  gap: 14px;
-}
-.ak-drawer.is-open { transform: translateX(0); }
-.ak-drawer-tile {
-  background: var(--card);
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 120px;
+  border: 1px solid #d0d0d0;
   border-radius: 8px;
-  padding: 18px 16px;
-  font-family: var(--title-font);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text-2);
+  background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  font: 300 clamp(24px, calc(8.571vw - 3.43px), 30px) / 1 var(--title-font);
+  letter-spacing: 0.04em;
+  color: #9a9a9a;
   text-decoration: none;
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
 }
-.ak-drawer-tile::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--accent);
+.ak-menu-tile.is-active {
+  background: #e6e6e6;
+  border-color: #c5c5c5;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.13), inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+  color: #7a7a7a;
 }
-.ak-drawer-tile.is-active { color: var(--accent); }
 
 /* ----------------------------- FOOTER ----------------------------- */
 

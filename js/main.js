@@ -1,20 +1,21 @@
 /* main.js — every page. Opens and closes the mobile menu. */
 
-const drawer = document.querySelector('[data-drawer]');
-const backdrop = document.querySelector('[data-drawer-backdrop]');
-const toggle = document.querySelector('[data-drawer-toggle]');
+const menu = document.querySelector('[data-menu]');
+const toggle = document.querySelector('[data-menu-toggle]');
 
-if (drawer && backdrop && toggle) {
+if (menu && toggle) {
   const setOpen = (open) => {
-    drawer.classList.toggle('is-open', open);
-    backdrop.classList.toggle('is-open', open);
-    toggle.classList.toggle('is-open', open);
-    drawer.setAttribute('aria-hidden', String(!open));
-    document.body.style.overflow = open ? 'hidden' : '';
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
   };
-  toggle.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
-  backdrop.addEventListener('click', () => setOpen(false));
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+  toggle.addEventListener('click', () => setOpen(menu.hidden));
   // Close when a menu link is tapped (also covers links to the current page).
-  drawer.addEventListener('click', (e) => e.target.closest('a') && setOpen(false));
+  menu.addEventListener('click', (e) => e.target.closest('a') && setOpen(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || menu.hidden) return;
+    setOpen(false);
+    toggle.focus();
+  });
+  // The menu only exists on mobile; close it when the inline nav returns.
+  matchMedia('(min-width: 761px)').addEventListener('change', (e) => e.matches && setOpen(false));
 }
