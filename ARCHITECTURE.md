@@ -199,6 +199,11 @@ viewport and 1px at 1280px. A value that is A at 390px and B at 1280px is:
 clamp(A, calc(A + (B - A) * var(--t)), B)
 ```
 
+`--t` is itself a length (1px of `--t` is the whole 390 to 1280 range), so
+write `(B - A)` as a plain number, not with a unit: for 14px to 24px that is
+`clamp(14px, calc(14px + 10 * var(--t)), 24px)`. Writing `10px * var(--t)` is
+length times length, which is invalid, and the declaration is silently dropped.
+
 It stays A below 390px, grows evenly between, and stays B above 1280px. Where
 the value is in `rem`, keep `rem` for A and B but use `px` inside the `calc()`
 (the root font size is itself fluid). Shared values (`--gutter`,

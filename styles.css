@@ -20,8 +20,6 @@
   --text-2: #333;
   --text-3: #555;
   --muted: #666;
-  --muted-2: #999;
-  --border: #c8c8c8;
   --border-2: #cfcfcf;
   --pill-bg: #f5f5f5;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -80,7 +78,7 @@
 * { box-sizing: border-box; }
 
 /* Fluid root font size: 1rem grows smoothly from 14px on small phones
- * (~360px viewport) to 18px on large desktops (~1600px+). All other
+ * (~400px viewport) to 18px on large desktops (~2000px+). All other
  * font sizes in this stylesheet are expressed in rem so they scale
  * with this value automatically -- no per-breakpoint size overrides
  * needed for typography. Sizes that differ between phone and desktop
@@ -206,14 +204,6 @@ a { color: inherit; }
 /* Inside the header card, so opening it grows the card and pushes the page down. */
 
 .ak-menu { display: none; }
-@media (max-width: 760px) {
-  .ak-menu:not([hidden]) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 20px 14px;
-  }
-}
 .ak-menu-tile {
   display: flex;
   align-items: center;
@@ -310,6 +300,8 @@ a { color: inherit; }
   transition: background 0.15s ease;
 }
 .ak-pill:hover, .ak-pill.is-active { background: #ffffff; }
+/* Inset ring (no size change) keeps the active pill >= 3:1 against the inactive ones. */
+.ak-pill.is-active { box-shadow: inset 0 0 0 1px #7a7a7a; }
 
 /* ----------------------------- POST GRID (HOME) ----------------------------- */
 
@@ -412,12 +404,12 @@ a { color: inherit; }
   content: "\201C";
   position: absolute;
   left: -10px;
-  top: -2px;
+  top: 0;
   font-size: 1.35em;
   color: #222;
   font-family: var(--serif);
   font-style: normal;
-  line-height: 0;
+  line-height: calc(1.4 / 1.35);
 }
 .ak-quote-text {
   position: relative;
@@ -444,20 +436,18 @@ a { color: inherit; }
   color: #555;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   padding-left: 20px;
 }
 .ak-quote-author .ak-feather { color: #555; font-size: 1rem; }
 .ak-quote-author a { color: var(--accent); text-decoration: none; }
 
 /* Font Awesome icons (inlined by scripts/build.mjs, see {{icon:name}}) */
-.ak-icon { height: 1em; width: auto; vertical-align: -0.125em; fill: currentColor; }
-.ak-quote-author { gap: 5px; }
+.ak-icon { height: 1em; width: auto; vertical-align: -0.125em; }
 .ak-feather { display: inline-flex; align-items: center; }
 .ak-feather .ak-icon { height: 1.25em; }
-.ak-about-social a { gap: 0.35em; }
 .ak-strive-item .ico { min-width: 40px; justify-content: center; }
-.ak-strive-item .ico .ak-icon { height: 32px; fill: #222; }
+.ak-strive-item .ico .ak-icon { height: 32px; }
 
 /* ----------------------------- BLOG POST PAGE ----------------------------- */
 
@@ -555,7 +545,6 @@ a { color: inherit; }
 .ak-post-body > h2:first-child { margin-top: clamp(0px, calc(40 * var(--t)), 40px); }
 .ak-post-body > h3:first-child { margin-top: clamp(0px, calc(32 * var(--t)), 32px); }
 .ak-post-body > blockquote:first-child { margin-top: clamp(0px, calc(20 * var(--t)), 20px); }
-.ak-post-body > img:first-child { margin-top: clamp(0px, calc(24 * var(--t)), 24px); }
 .ak-post-body > p:first-of-type::first-letter {
   float: left;
   font-size: 4em;
@@ -594,6 +583,13 @@ a { color: inherit; }
 .ak-post-body img {
   margin: 24px 0;
 }
+/* Long words, wide code and wide tables must not widen the page. */
+.ak-post-body { overflow-wrap: anywhere; }
+.ak-post-body pre { overflow-x: auto; }
+.ak-post-body table { display: block; overflow-x: auto; }
+.ak-project-body { overflow-wrap: anywhere; }
+.ak-project-body pre { overflow-x: auto; }
+.ak-project-body table { display: block; overflow-x: auto; }
 .ak-post-body a {
   color: var(--accent);
   text-decoration: none;
@@ -772,10 +768,9 @@ a { color: inherit; }
   font-size: 0.875rem;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.35em;
   text-decoration: none;
 }
-.ak-about-social .icn { font-weight: bold; }
 .ak-about-bio {
   width: 100%;
   margin-bottom: 50px;
@@ -879,6 +874,12 @@ a { color: inherit; }
 @media (max-width: 760px) {
   .ak-nav-links { display: none; }
   .ak-hamburger { display: inline-flex; }
+  .ak-menu:not([hidden]) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 20px 14px;
+  }
 
   .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
