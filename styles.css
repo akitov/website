@@ -619,7 +619,9 @@ a { color: inherit; }
   font-weight: 800;
   color: #555;
   margin-left: 0.14em;
-  vertical-align: clamp(0px, calc(-0.3px + 2.587 * var(--t)), 2.8px);
+  /* .1em lower than the original's raise: with 85% leading the raised mark
+   * reached the descenders of the line above. */
+  vertical-align: calc(clamp(0px, calc(-0.3px + 2.587 * var(--t)), 2.8px) - .1em);
 }
 .ak-post-grid .ak-quote-author {
   font-size: clamp(0.875rem, calc(12.25px + 9.54 * var(--t)), 16.8px);
