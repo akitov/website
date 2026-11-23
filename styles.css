@@ -681,7 +681,7 @@ a { color: inherit; }
 .ak-post-head h1 {
   font-family: var(--serif);
   font-size: var(--fs-post-h1);
-  font-weight: var(--w-heading);
+  font-weight: 500;
   /* 1.2 on phones (as before), 1.25 from 789 (CSS 1.2 x 3rem = 57.6 / 54) */
   --lh: calc(1.2em + clamp(0px, calc(2.16 * var(--tp)), 2.16px) + clamp(0px, calc(.14 * var(--t2)), .14px));
   color: #000;
