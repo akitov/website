@@ -50,6 +50,7 @@
   /* Weights: every bold/semibold heading, and every light text. */
   --w-heading: 650;
   --w-light: 270;
+  --w-subhead: 500; /* section headings (h2-h4); page h1s stay --w-heading */
 
   /* Side gutters: 14px on phones. */
   --gutter: clamp(14px, calc(14px + 10 * var(--t)), 24px);
@@ -782,21 +783,21 @@ a { color: inherit; }
 }
 .ak-post-body h2 {
   font-size: var(--fs-post-h2);
-  font-weight: var(--w-heading);
+  font-weight: var(--w-subhead);
   line-height: 1.2424;
   color: #000;
   margin: calc(2.2222 * var(--post-em)) 0 calc(1.3333 * var(--post-em)); /* CSS 2.5rem 0 1.5rem */
 }
 .ak-post-body h3 {
   font-size: var(--fs-post-h3);
-  font-weight: var(--w-heading);
+  font-weight: var(--w-subhead);
   line-height: 1.24;
   color: #000;
   margin: calc(2.2222 * var(--post-em)) 0 calc(1.3333 * var(--post-em));
 }
 .ak-post-body h4 {
   font-size: var(--fs-post-h4);
-  font-weight: var(--w-heading);
+  font-weight: var(--w-subhead);
   line-height: 1.576;
   color: #222;
   margin: calc(1.7778 * var(--post-em)) 0 calc(.8889 * var(--post-em)); /* CSS 2rem 0 1rem */
@@ -967,6 +968,7 @@ a { color: inherit; }
 .ak-project-body p { margin: 0 0 16px; }
 .ak-project-body h2 {
   font-size: 1.375rem;
+  font-weight: var(--w-subhead);
   margin: 28px 0 12px;
 }
 .ak-project-divider {
