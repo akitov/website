@@ -251,7 +251,7 @@ function postCard(p) {
         ${p.images[0] ? `<a href="${postUrl(p)}"><img class="ak-post-image" src="${esc(p.images[0])}" alt="${esc(title)}" /></a>` : ''}
         <h2 class="ak-post-title"><a href="${postUrl(p)}">${esc(title)}</a></h2>
         <p class="ak-post-excerpt">${esc(p.subtitle)}</p>
-        <a class="ak-arrow-link" href="${postUrl(p)}">Read More <span class="ak-arrow">›</span></a>
+        <a class="ak-arrow-link" href="${postUrl(p)}">Read More...</a>
       </article>`;
 }
 

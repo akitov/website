@@ -83,7 +83,7 @@
   --fs-h1: clamp(1.625rem, calc(22.75px + 9.65 * var(--t)), 2rem);
   --fs-post-h1: clamp(24px, calc(24px + 8.4 * var(--t)), 2rem);
   --fs-project-h1: clamp(1.625rem, calc(22.75px + 13.7 * var(--t)), 2.25rem);
-  --fs-post-title: clamp(1.1875rem, calc(16.625px + 9.7 * var(--t)), 1.625rem);
+  --fs-post-title: clamp(1.1875rem, calc(16.625px + 53.39 * var(--t)), 41.6px); /* 39.3 / 41.6 */
   --fs-quote: clamp(1.125rem, calc(15.75px + 8.55 * var(--t)), 1.5rem);
   --fs-body: clamp(15px, calc(15px + 1.2 * var(--t)), 1rem);
   --fs-lede: clamp(14px, calc(14px + 2.2 * var(--t)), 1rem);
@@ -430,26 +430,38 @@ a { color: inherit; }
 .ak-post-meta .ak-date { font-weight: 610; color: #000; }
 .ak-post-meta .ak-type { color: #555; font-weight: 415; }
 
+/* Original h2.entry-title: Source Sans Pro 300, 2.75rem / 1.2. */
 .ak-post-title {
   font-family: var(--serif);
   font-size: var(--fs-post-title);
-  font-weight: normal;
+  font-weight: var(--w-light);
   color: #000;
-  margin: 0 0 12px;
-  line-height: 1.25;
+  margin: 0 0 min(17.6px, max(calc(12px - 8.594 * var(--t)), calc(3.268px + 11.966 * var(--t))));
+  line-height: clamp(20.78px, calc(20.78px + 67.6 * var(--t)), 52.8px);
+}
+/* No image: chip bottom -> title baseline 48 / 58.1 (collapses with the meta's 14px). */
+.ak-post-meta + .ak-post-title {
+  margin-top: min(16.1px, max(calc(-11.77 * var(--t)), calc(-16.59px + 27.3 * var(--t))));
 }
 .ak-post-title a { color: inherit; text-decoration: none; }
+/* Original body text: Helvetica 1rem / 1.6rem, #555. */
 .ak-post-excerpt {
   font-family: var(--serif);
-  font-size: 0.8125rem;
+  font-size: clamp(0.8125rem, calc(11.375px + 10.18 * var(--t)), 16.2px);
+  font-weight: 360;
   color: #555;
-  line-height: 1.6;
+  line-height: clamp(18.2px, calc(18.2px + 13.66 * var(--t)), 25.6px);
   margin: 0;
 }
 .ak-post-image {
   width: 100%;
   display: block;
   margin-bottom: 16px;
+}
+/* Chip bottom -> image 16 / 17 (collapses with the meta's 14px), image -> title. */
+.ak-post-grid .ak-post-image {
+  margin-top: clamp(14px, calc(14px + 4.709 * var(--t)), 17px);
+  margin-bottom: clamp(16px, calc(13.31px + 12.1 * var(--t)), 27.8px);
 }
 
 .ak-arrow-link {
@@ -467,6 +479,20 @@ a { color: inherit; }
 /* "Read More..." on cards and prev/next on posts are red; the sidebar category link stays dark. */
 .ak-post-grid .ak-arrow-link,
 .ak-postnav .ak-arrow-link { color: var(--accent); }
+/* "Read More..." on cards: original .btn.btn-link, bold, padding 4px 12px,
+ * 1px border, red underline. */
+.ak-post-grid .ak-arrow-link {
+  display: block;
+  width: fit-content;
+  font-size: clamp(0.75rem, calc(10.5px + 12.01 * var(--t)), 16.1px);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: normal;
+  margin-top: clamp(14px, calc(14px + 12.48 * var(--t)), 19.4px);
+  padding: 0 13px clamp(0px, calc(14.83 * var(--t)), 7.15px);
+  border-bottom: 1px solid var(--accent);
+}
 .ak-arrow-link .ak-arrow {
   color: var(--accent);
   margin-left: 6px;
