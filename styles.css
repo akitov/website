@@ -38,9 +38,30 @@
 :root {
   --t: calc((100vw - 390px) / 890);
 
+  /* Helpers anchored at the original captures (768 tablet, 1456 desktop).
+   * --tp is 0 at 390 and 1px at 768; --t2 is 0 at 768 and 1px at 1456.
+   *   tablet -> desktop:        clamp(T, calc(T + (D - T) * var(--t2)), D)
+   *   phone -> tablet -> desktop:
+   *     calc(clamp(P, calc(P + (T - P) * var(--tp)), T)
+   *          + clamp(0px, calc((D - T) * var(--t2)), D - T))
+   * When a value shrinks, swap that clamp's bounds (min first). */
+  --tp: calc((100vw - 390px) / 378);
+  --t2: calc((100vw - 768px) / 688);
+
+  /* Weights: every bold/semibold heading, and every light text. */
+  --w-heading: 650;
+  --w-light: 270;
+
   /* Side gutters: 14px on phones. */
   --gutter: clamp(14px, calc(14px + 10 * var(--t)), 24px);
-  --gutter-frame: clamp(14px, calc(14px + 114 * var(--t)), 10vw);
+  /* Header and footer card inset: 14 at 390, 4vw at 768-789, 8vw at >=1456
+   * (the original's .navbar / .footer widths 92% and 84%). */
+  --gutter-frame: min(8vw, max(clamp(14px, calc(14px + 16.72 * var(--tp)), 4vw), calc(12.732vw - 68.9px)));
+  /* Page content inset: 14 at 390, 5vw at 768-789, 9.5vw at >=1456
+   * (the original's #wrap widths 90% and 81%). */
+  --gutter-page: min(9.5vw, max(clamp(14px, calc(14px + 24.4 * var(--tp)), 5vw), calc(14.823vw - 77.5px)));
+  /* Space above the footer card (the original's .footer margin-top). */
+  --footer-gap: 60px;
   --gutter-content: clamp(14px, calc(14px + 157.2 * var(--t)), calc(11.5vw + 24px));
   --gutter-project: clamp(14px, calc(14px + 26 * var(--t)), 40px);
 
@@ -866,6 +887,11 @@ a { color: inherit; }
 }
 
 /* ----------------------------- MOBILE ----------------------------- */
+
+/* Original fluid-grid tablet range (768-979). Page plans put their tablet
+ * grid percentages here; nothing else goes in this block. */
+@media (min-width: 761px) and (max-width: 979px) {
+}
 
 /* Sizes and spacing scale through the fluid tokens on :root. This query
  * only flips what can't scale: inline nav vs hamburger, one post column
