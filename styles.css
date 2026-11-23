@@ -90,8 +90,8 @@
   --fs-small: clamp(0.75rem, calc(10.5px + 2.6625 * var(--t)), 0.8125rem);
 
   /* Sizes, 390 -> 1280 */
-  --nav-pad-block: clamp(8px, calc(12px - 4 * var(--t)), 12px);
-  --radius: 6px; /* header and footer cards; one value (phones had 8px) */
+  --nav-pad-block: clamp(12px, calc(12px + .6 * var(--tp)), 12.6px);
+  --radius: clamp(4px, calc(6px - 2 * var(--tp)), 6px); /* header and footer cards: 6 on phones, 4 from 768 */
   --photo: clamp(120px, calc(120px + 30 * var(--t)), 150px);
   --circle: clamp(70px, calc(70px + 20 * var(--t)), 90px);
 }
@@ -126,39 +126,49 @@ a { color: inherit; }
 
 .ak-header,
 .ak-footer {
-  margin: var(--space-3) var(--gutter-frame) 0;
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: var(--shadow);
   background: var(--card);
 }
+/* Original: .navbar { margin: 30px auto 0 }, 6px red top border, 4px radius,
+ * 0 2px 6px shadow. Card 6 + 67.2 = 73.2 tall from 768 up. */
+.ak-header {
+  margin: clamp(16px, calc(16px + 14 * var(--tp)), 30px) var(--gutter-frame) 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.125);
+}
 
-.ak-stripe { height: 4px; background: var(--accent); }
+.ak-stripe { background: var(--accent); }
+.ak-header .ak-stripe { height: clamp(4px, calc(4px + 2 * var(--tp)), 6px); }
 
+/* 12.6 + 42 (avatar) + 12.6 = 67.2. Left: padding 20 + the links' .25em. */
 .ak-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--nav-pad-block) clamp(14px, calc(14px + 2 * var(--t)), 16px);
+  padding: var(--nav-pad-block) clamp(14px, calc(14px + 6 * var(--tp)), 20px)
+    var(--nav-pad-block) clamp(14px, calc(14px + 10.4 * var(--tp)), 24.4px);
   background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
   position: relative;
 }
 
 .ak-nav-links {
   display: flex;
-  gap: 18px;
+  gap: 14px;
+  margin-top: clamp(.5px, calc(1.45px - .95 * var(--t2)), 1.45px); /* baseline 76.3 / 76.4 */
   z-index: 1;
 }
 .ak-nav-link {
   font-family: var(--sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: #333;
+  font-size: clamp(15.3px, calc(15.3px + 1.6 * var(--t2)), 16.9px);
+  font-weight: var(--w-light);
+  letter-spacing: normal;
+  color: #000;
   text-decoration: none;
   user-select: none;
 }
+.ak-nav-link:hover { color: var(--accent); }
 .ak-nav-link.is-active {
-  font-weight: bold;
+  font-weight: var(--w-heading);
   color: var(--accent);
 }
 
@@ -167,15 +177,19 @@ a { color: inherit; }
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--title-font);
-  font-size: 1.3125rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--text);
+  font-size: clamp(18.375px, calc(18.375px + 8.025 * var(--tp)), 26.4px);
+  font-weight: var(--w-heading);
+  letter-spacing: normal;
+  color: #000;
 }
 
 .ak-avatar {
-  width: 44px;
-  height: 44px;
+  /* 42 from 768 (original .brand); phones keep 44 to match the hamburger row.
+   * The 1.5px shift puts the centre at y 71.1 like the original. */
+  width: clamp(42px, calc(44px - 2 * var(--tp)), 44px);
+  height: clamp(42px, calc(44px - 2 * var(--tp)), 44px);
+  margin-top: clamp(0px, calc(1.5 * var(--tp)), 1.5px);
+  margin-bottom: clamp(-1.5px, calc(-1.5 * var(--tp)), 0px);
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;

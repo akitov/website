@@ -347,7 +347,7 @@ function postPage(p, prev, next) {
     description: postDescription(p),
     image: p.images[0],
     section: 'BLOG',
-    nav: 'home',
+    nav: '', // the original marks no nav link on a post
     main,
     stylesheet: p.stylesheet,
     extraMeta: [
