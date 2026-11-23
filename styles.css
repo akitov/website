@@ -92,8 +92,6 @@
   /* Sizes, 390 -> 1280 */
   --nav-pad-block: clamp(12px, calc(12px + .6 * var(--tp)), 12.6px);
   --radius: clamp(4px, calc(6px - 2 * var(--tp)), 6px); /* header and footer cards: 6 on phones, 4 from 768 */
-  --photo: clamp(120px, calc(120px + 30 * var(--t)), 150px);
-  --circle: clamp(70px, calc(70px + 20 * var(--t)), 90px);
 
   /* post: blog post page, 390 -> 789 -> >=1280 (phone / tablet / desktop
    * in the comments). k = (tablet - phone) / 0.448315, the value of --t at 789. */
@@ -638,8 +636,6 @@ a { color: inherit; }
 .ak-icon { height: 1em; width: auto; vertical-align: -0.125em; }
 .ak-feather { display: inline-flex; align-items: center; }
 .ak-feather .ak-icon { height: 1.25em; }
-.ak-strive-item .ico { min-width: 40px; justify-content: center; }
-.ak-strive-item .ico .ak-icon { height: 32px; }
 
 /* ----------------------------- BLOG POST PAGE ----------------------------- */
 
@@ -1021,128 +1017,157 @@ a { color: inherit; }
 
 /* ----------------------------- ABOUT PAGE ----------------------------- */
 
+/* Targets: the original at 1456 (desktop) and 767 (its phone layout: 14px
+ * root, full-width column), plan _materials/plans/2026-11-24-fidelity-about.md.
+ * Values are phone / tablet / desktop = 390 / 767 / 1456:
+ *   calc(clamp(P, calc(P + (T - P) * var(--tp)), T) + clamp(0px, calc((D - T) * var(--t2)), D - T))
+ * Sizes: About Beige x-height = the original's. Vertical gaps put each
+ * baseline where the original's is (baseline = box top + L/2 + .375em). */
 .ak-about {
-  max-width: 1200px;
+  --ab-h1:   calc(clamp(24.5px, calc(24.5px + 15.13 * var(--tp)), 39.63px) + clamp(0px, calc(6.37 * var(--t2)), 6.37px));  /* 39.6 / 46 */
+  --ab-body: calc(clamp(12.92px, calc(12.92px + .99 * var(--tp)), 13.91px) + clamp(0px, calc(2.02 * var(--t2)), 2.02px)); /* 13.9 / 15.9 */
+  --ab-lh:   calc(clamp(20.75px, calc(20.75px + 1.58 * var(--tp)), 22.33px) + clamp(0px, calc(3.17 * var(--t2)), 3.17px)); /* 22.3 / 25.5 */
+  --ab-h6:   calc(clamp(12.07px, calc(12.07px + .93 * var(--tp)), 13px) + clamp(0px, calc(1.34 * var(--t2)), 1.34px));       /* 13 / 14.3 */
+  --ab-name: calc(clamp(20px, calc(20px + 1.55 * var(--tp)), 21.55px) + clamp(0px, calc(2.83 * var(--t2)), 2.83px));        /* 21.6 / 24.4 */
+  --ab-lbl:  calc(clamp(17.4px, calc(17.4px + 1.33 * var(--tp)), 18.73px) + clamp(0px, calc(1.82 * var(--t2)), 1.82px));    /* 18.7 / 20.6 */
+  --ab-lbl-lh: calc(clamp(25.35px, calc(25.35px + 1.95 * var(--tp)), 27.3px) + clamp(0px, calc(3.75 * var(--t2)), 3.75px)); /* 27.3 / 31.05 */
+
+  --ab-top:       calc(clamp(30px, calc(30px + 22.5 * var(--tp)), 52.5px) + clamp(0px, calc(7.4 * var(--t2)), 7.4px));     /* header -> photo 52.5 / 59.9 */
+  --ab-h1-mt:     calc(clamp(12px, calc(12px + 3.08 * var(--tp)), 15.08px) + clamp(0px, calc(1.54 * var(--t2)), 1.54px));  /* photo -> h1 baseline 53.8 / 61.6 */
+  --ab-h1-mb:     calc(clamp(12px, calc(12px + 3.58 * var(--tp)), 15.58px) + clamp(0px, calc(1.85 * var(--t2)), 1.85px));  /* h1 -> links baseline 40.8 / 46.4 */
+  --ab-social-mb: calc(clamp(40px, calc(40px + 12.76 * var(--tp)), 52.76px) + clamp(0px, calc(8.04 * var(--t2)), 8.04px)); /* links -> bio baseline 75.1 / 86.3 */
+  --ab-sec1-mt:   calc(clamp(50px, calc(50px + 15.82 * var(--tp)), 65.82px) + clamp(0px, calc(9.37 * var(--t2)), 9.37px)); /* Alex -> "Most endorsed" 86.4 / 98.1 */
+  --ab-h6-mb:     calc(clamp(8px, calc(8px + .37 * var(--tp)), 8.37px) + clamp(0px, calc(1.25 * var(--t2)), 1.25px));      /* baseline -> row top 13.25 / 15 */
+  --ab-name-mt:   calc(clamp(10px, calc(10px + 1.02 * var(--tp)), 11.02px) + clamp(0px, calc(1.65 * var(--t2)), 1.65px));  /* row top -> name baseline 35.3 / 40.1 */
+  --ab-name-mb:   calc(clamp(6px, calc(6px + 1.23 * var(--tp)), 7.23px) + clamp(0px, calc(1.81 * var(--t2)), 1.81px));     /* name -> text baseline 31.7 / 36.9 */
+  --ab-sec2-mt:   calc(clamp(40px, calc(40px + 13.82 * var(--tp)), 53.82px) + clamp(0px, calc(8.05 * var(--t2)), 8.05px)); /* last circle -> "I strive" 68.5 / 78 */
+  --ab-ico-mt:    calc(clamp(14px, calc(14px + 1.72 * var(--tp)), 15.72px) + clamp(0px, calc(.9 * var(--t2)), .9px));      /* baseline -> icon top 20.6 / 22 */
+  --ab-lbl-mt:    calc(clamp(10px, calc(10px + 1.73 * var(--tp)), 11.73px) + clamp(0px, calc(2.27 * var(--t2)), 2.27px));  /* icon -> label baseline 32.4 / 37.2 */
+  --ab-bottom:    calc(clamp(0px, calc(7.47 * var(--tp)), 7.47px) + clamp(0px, calc(11.41 * var(--t2)), 11.41px));         /* label -> footer 74.1 / 86.7, minus --footer-gap */
+  --ab-endr-gap:  calc(clamp(3.4px, calc(3.4px + .26 * var(--tp)), 3.66px) + clamp(0px, calc(2.44 * var(--t2)), 2.44px));  /* number -> ENDR baseline 17 / 19.8 */
+  --ab-num-shift: calc(clamp(2px, calc(2px + .17 * var(--tp)), 2.17px) + clamp(0px, calc(.63 * var(--t2)), .63px));        /* number baseline above centre 2.2 / 2.8 */
+
   margin: 0 auto;
-  padding: var(--space-6) clamp(14px, calc(14px + 6 * var(--t)), 20px)
-    clamp(60px, calc(60px + 20 * var(--t)), 80px);
+  padding: var(--ab-top) var(--gutter-page) var(--ab-bottom);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-/* Reading measure: keep inner text columns narrow even though the
- * page wrapper participates in the 1200px container model. */
+/* Text column: the original's .span8 (65.812% of #wrap) on desktop and the
+ * full #wrap at 767; 690.3px holds between, then the percentage takes over. */
 .ak-about-bio,
-.ak-about-section {
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-}
+.ak-about-section { width: min(100%, max(65.812%, 690.3px)); margin: 0; }
+
+/* Photo: .span2 (14.5299% of #wrap) on desktop, 150px max at 767 (120 on
+ * phones), plus the original's 1px grey ring and 0 2px 2px shadow. */
 .ak-about-photo {
-  width: var(--photo);
-  height: var(--photo);
+  width: max(calc(clamp(120px, calc(120px + 30 * var(--tp)), 150px) + 2px), calc(14.5299% + 2px));
+  aspect-ratio: 1;
+  height: auto;
+  border: 1px solid grey;
   border-radius: 50%;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   object-fit: cover;
-  margin-bottom: 20px;
   background: #ddd;
 }
 .ak-about h1 {
   font-family: var(--serif);
-  font-size: var(--fs-h1);
-  font-weight: bold;
+  font-size: var(--ab-h1);
+  --lh: 1.1957em;
+  font-weight: var(--w-heading);
   color: #000;
-  margin: 0 0 18px;
+  text-align: center;
+  margin: var(--ab-h1-mt) 0 var(--ab-h1-mb);
 }
 .ak-about-social {
   display: flex;
-  gap: 22px;
-  margin-bottom: 40px;
   flex-wrap: wrap;
   justify-content: center;
+  column-gap: 24px; /* li padding-right 20px + the inline-block space */
+  font-size: var(--ab-body);
+  line-height: var(--ab-lh);
+  margin-bottom: var(--ab-social-mb);
 }
 .ak-about-social a {
   color: var(--accent);
   font-family: var(--sans);
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
+  font-weight: var(--w-regular);
   text-decoration: none;
+  white-space: nowrap;
 }
-.ak-about-bio {
-  width: 100%;
-  margin-bottom: 50px;
-}
-.ak-about-bio p {
+.ak-about-social .ak-icon { height: 1.1em; vertical-align: -.2em; margin-right: .3em; }
+
+/* Body copy: Helvetica 1rem / 1.6rem #555 in the original; paragraphs were
+ * <br><br>, so one blank line between them. */
+.ak-about-bio p,
+.ak-endorse-item p {
   font-family: var(--sans);
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: #444;
-  margin: 0 0 16px;
+  font-size: var(--ab-body);
+  font-weight: var(--w-regular);
+  line-height: var(--ab-lh);
+  color: #555;
+  margin: 0 0 var(--ab-lh);
 }
-.ak-about-section { width: 100%; margin-bottom: 50px; }
+.ak-about-bio p:last-child,
+.ak-endorse-item p { margin-bottom: 0; }
+.ak-about-bio strong,
+.ak-endorse-item p strong { font-weight: var(--w-bold); color: #555; }
+
+/* "Most endorsed in:" / "I strive to:" (original h6: SSP 600, #222, 150%). */
 .ak-about-section-h {
   font-family: var(--sans);
-  font-size: 0.8125rem;
-  font-weight: bold;
-  color: var(--text-2);
-  margin-bottom: 28px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  font-size: var(--ab-h6);
+  font-weight: var(--w-heading);
+  --lh: 1.5em;
+  color: #222;
+  margin: var(--ab-sec1-mt) 0 var(--ab-h6-mb);
 }
-.ak-about-badge {
-  background: #0077b5;
-  color: white;
-  padding: 1px 5px;
-  border-radius: 2px;
-  font-size: 0.6875rem;
-  font-weight: bold;
-}
-.ak-endorse-list {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
+.ak-about-section + .ak-about-section .ak-about-section-h { margin: var(--ab-sec2-mt) 0 0; }
+.ak-about-section-h .ak-icon { height: 1.115em; vertical-align: -.07em; } /* LinkedIn "in", ink 14 / 13 tall */
+
+/* Endorsements: circle column .span3 (23.0769% desktop, 32.43% at 767),
+ * gap 2.6%, text column ends 2.11% short at 767 (.span9 62.86%). Each row is
+ * as tall as its circle block, as in the original. */
 .ak-endorse-item {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  display: grid;
+  grid-template-columns:
+    max(23.0769%, min(32.43%, clamp(179.1px, calc(223.9px - 44.8 * var(--t2)), 223.9px)))
+    minmax(0, 1fr);
+  column-gap: 2.58%;
+  align-items: start;
+  font-size: var(--ab-body);
 }
+.ak-endorse-item > div:last-child { padding-right: clamp(0px, calc(14.6px - 14.6 * var(--t2)), 14.6px); }
+/* Diameter --d = 75 / 70 / 65% of the column (the original's .circle.big / normal / small). */
 .ak-endorse-circle {
-  width: var(--circle);
-  height: var(--circle);
+  width: var(--d);
+  aspect-ratio: 1;
+  margin: .5em auto 0;
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-2);
-  flex-shrink: 0;
+  padding-bottom: calc(2 * var(--ab-num-shift));
+  color: #000;
   font-family: var(--sans);
 }
-.ak-endorse-circle .num { font-size: clamp(1.375rem, calc(19.25px + 7.075 * var(--t)), 1.625rem); line-height: 1; }
-.ak-endorse-circle .lbl { font-size: 0.5625rem; letter-spacing: 1px; margin-top: 2px; }
+.ak-endorse-circle .num { font-size: var(--ab-name); font-weight: var(--w-light); line-height: 1; }
+.ak-endorse-circle .lbl { font-size: 12.17px; font-weight: var(--w-regular); line-height: 1; margin-top: var(--ab-endr-gap); }
 .ak-endorse-item h3 {
   font-family: var(--serif);
-  font-size: var(--fs-h3);
-  color: var(--text-2);
-  font-weight: normal;
-  margin: 0 0 6px;
+  font-size: var(--ab-name);
+  font-weight: var(--w-light);
+  --lh: 1.5em;
+  color: #222;
+  margin: var(--ab-name-mt) 0 var(--ab-name-mb);
 }
-.ak-endorse-item p {
-  font-family: var(--sans);
-  font-size: var(--fs-small);
-  color: var(--muted);
-  line-height: 1.5;
-  margin: 0;
-}
-.ak-endorse-item p strong { color: #444; }
 
+/* I strive to: three .span4 columns, 34px icons, h5.description labels. */
 .ak-strive-list {
   display: flex;
-  justify-content: space-between;
-  gap: clamp(18px, calc(18px + 2 * var(--t)), 20px);
+  gap: 2.56%;
+  margin-top: var(--ab-ico-mt);
 }
 .ak-strive-item {
   flex: 1;
@@ -1152,15 +1177,23 @@ a { color: inherit; }
   text-align: center;
 }
 .ak-strive-item .ico {
-  margin-bottom: 14px;
-  height: 40px;
+  height: 34px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  color: #000;
 }
+/* Ink 34px tall: user-group fills 97% of its box, square-check 87.5%. */
+.ak-strive-item .ico .ak-icon { height: 35px; vertical-align: 0; }
+.ak-strive-item:nth-child(2) .ico .ak-icon { height: 34px; }
+.ak-strive-item:nth-child(3) .ico .ak-icon { height: 38.9px; }
 .ak-strive-item .lbl {
   font-family: var(--sans);
-  font-size: 0.875rem;
-  color: var(--text-2);
+  font-size: var(--ab-lbl);
+  font-weight: var(--w-light);
+  line-height: var(--ab-lbl-lh);
+  color: #222;
+  margin-top: var(--ab-lbl-mt);
 }
 
 /* ----------------------------- MOBILE ----------------------------- */
@@ -1202,9 +1235,10 @@ a { color: inherit; }
   .ak-post-head p { max-width: none; }
   .ak-side-box img { aspect-ratio: 4/3; object-fit: cover; }
 
-  .ak-strive-list { flex-direction: column; }
+  .ak-strive-list { flex-direction: column; gap: 18px; }
   .ak-strive-item { flex-direction: row; gap: 16px; text-align: left; }
-  .ak-strive-item .ico { margin-bottom: 0; }
+  .ak-strive-item .ico { min-width: 40px; }
+  .ak-strive-item .lbl { margin-top: 0; }
 }
 
 /* ------------------------- TYPE REFINEMENTS ------------------------- */
@@ -1241,5 +1275,8 @@ h1, h2, h3, h4, h5, h6 {
   .ak-footer-link,
   .ak-post-body blockquote p { font-weight: 380; }
   .ak-footer-name,
-  .ak-post-head:not(.is-quote) p { font-weight: 330; }
+  .ak-post-head:not(.is-quote) p,
+  .ak-endorse-item h3,
+  .ak-endorse-circle .num,
+  .ak-strive-item .lbl { font-weight: 330; }
 }
