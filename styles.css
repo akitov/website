@@ -357,7 +357,7 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--fs-page-h1);
   color: #000;
-  line-height: normal;
+  --lh: 1.1957em; /* About Beige's normal: 55px at 46px */
   margin: 0 0 clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
   font-weight: var(--w-heading);
   text-align: center;
@@ -597,7 +597,11 @@ a { color: inherit; }
   font-size: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px);
   font-weight: var(--w-light);
   color: #222;
-  line-height: clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px);
+  /* Headline leading at 85% like the headings; the padding keeps the first
+   * line (and the absolute opening mark) where it was. */
+  --lh: clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px);
+  line-height: calc(var(--lh) * .85);
+  padding-block: calc(var(--lh) * .075);
   padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
 }
 /* The marks are icon glyphs in the original, heavier than the text. */
@@ -905,14 +909,14 @@ a { color: inherit; }
 /* Baseline = image bottom + 46.7 / 44.1; next image = baseline + 41 / 38.2.
  * Long captions wrap (at 770 "ZEIT MAGAZIN iPad App" takes two lines). */
 .ak-work-tile-title {
-  padding: calc(clamp(10px, calc(10px + 3.84 * var(--t)), 12.26px) + var(--lh) * .15) 0
-    calc(clamp(29.01px, calc(29.01px + 2.699 * var(--t)), 32.24px) + var(--lh) * .15);
+  padding: calc(clamp(10px, calc(10px + 3.84 * var(--t)), 12.26px) + var(--lh) * .075) 0
+    calc(clamp(29.01px, calc(29.01px + 2.699 * var(--t)), 32.24px) + var(--lh) * .075);
   text-align: center;
   font-family: var(--serif);
   font-size: var(--fs-work-cap);
   font-weight: var(--w-light);
   --lh: clamp(19.06px, calc(19.06px + 50.25 * var(--t)), 43.2px);
-  line-height: calc(var(--lh) * .7);
+  line-height: calc(var(--lh) * .85);
   color: #000;
 }
 
@@ -1207,15 +1211,15 @@ a { color: inherit; }
 h1, h2, h3, h4, h5, h6,
 .ak-work-tile-title { letter-spacing: -0.025em; }
 
-/* Headline leading at 70% of each heading's own line height (--lh; About
+/* Headline leading at 85% of each heading's own line height (--lh; About
  * Beige's normal 1.21em unless the rule sets one). Half the removed height
  * comes back as padding above and below, so single-line headings keep their
  * box and position; only wrapped lines move closer. (The work caption folds
  * this into its own padding.) */
 h1, h2, h3, h4, h5, h6 {
   --lh: 1.21em;
-  line-height: calc(var(--lh) * .7);
-  padding-block: calc(var(--lh) * .15);
+  line-height: calc(var(--lh) * .85);
+  padding-block: calc(var(--lh) * .075);
 }
 
 /* Quote post headline: About Beige's own marks like the home quote tiles
