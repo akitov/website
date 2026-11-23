@@ -160,11 +160,30 @@ function postTitle(p) {
   return p.slug;
 }
 function postDescription(p) {
-  if (p.fm.type === 'quote' && p.fm.quote) return `"${p.fm.quote}"${p.fm.author ? ` — ${p.fm.author}` : ''}`;
+  if (p.fm.type === 'quote' && p.fm.quote) return `"${quotePlain(p.fm.quote)}"${p.fm.author ? ` — ${p.fm.author}` : ''}`;
   return p.subtitle;
 }
 
+/* `quote:` may mark its emphasised part with *stars*: shown semibold on the
+ * post page, stripped in plain-text places (meta description, feed). */
+const quoteHtml = (q) => esc(q).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+const quotePlain = (q) => String(q ?? '').replace(/\*([^*]+)\*/g, '$1');
+
 const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" />`;
+
+/* Markdown images with a title, ![alt](x.png "Caption"), become a captioned
+ * frame. Images without a title stay plain <img>. */
+marked.use({
+  renderer: {
+    image(href, title, text) {
+      if (!title) return false;
+      const tag = marked.Renderer.prototype.image.call(this, href, null, text);
+      return `<figure class="ak-figure">${tag}<figcaption>${title}</figcaption></figure>`;
+    },
+  },
+});
+// marked wraps a lone image in <p>; a <figure> can't sit inside a <p>.
+const markdown = (src) => marked.parse(src).replace(/<p>\s*(<figure class="ak-figure">[\s\S]*?<\/figure>)\s*<\/p>/g, '$1');
 
 // ================================================================ layout
 
@@ -237,7 +256,7 @@ function postCard(p) {
     return `
       <article class="ak-post-grid-item">${meta}
         <div class="ak-quote">
-          <div class="ak-quote-text"><a href="${postUrl(p)}" style="color:inherit;text-decoration:none">${esc(p.fm.quote)}</a></div>
+          <div class="ak-quote-text"><a href="${postUrl(p)}" style="color:inherit;text-decoration:none">${quoteHtml(p.fm.quote)}</a></div>
           <div class="ak-quote-author">
             <span class="ak-feather">${icon('feather')}</span>
             <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
@@ -286,48 +305,81 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
   });
 }
 
-function postPage(p, prev, next) {
+/* The original's outline chevron (15 x 28), drawn as a stroke; Font Awesome's
+ * angle icons are filled and much heavier. */
+const chevron = (dir) =>
+  `<svg class="ak-icon ak-chevron" viewBox="0 0 15 28" aria-hidden="true" focusable="false"><path d="${
+    dir === 'prev' ? 'M13.5 1 1.6 14l11.9 13' : 'M1.5 1l11.9 13L1.5 27'
+  }" fill="none" stroke="currentColor" stroke-width="2.4" /></svg>`;
+
+function postPage(p, prev, next, categories) {
   const navLink = (item, dir) => {
     if (!item) return '<span></span>';
     return dir === 'prev'
-      ? `<a class="ak-arrow-link ak-arrow-prev" href="${postUrl(item)}"><span class="ak-arrow">‹</span> ${typeLabel(item)}</a>`
-      : `<a class="ak-arrow-link" href="${postUrl(item)}">${typeLabel(item)} <span class="ak-arrow">›</span></a>`;
+      ? `<a class="ak-postnav-link" href="${postUrl(item)}">${chevron('prev')}${typeLabel(item)}</a>`
+      : `<a class="ak-postnav-link is-next" href="${postUrl(item)}">${typeLabel(item)}${chevron('next')}</a>`;
   };
-  const isQuote = p.fm.type === 'quote';
+  const type = p.fm.type;
+  const isQuote = type === 'quote';
   const title = postTitle(p);
   const head = isQuote
-    ? `<h1>${esc(p.fm.author || 'A Quote')}</h1>
-        <p>In ${esc(p.category)}${p.date ? ` — ${esc(p.date)}` : ''}</p>`
-    : `<h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}`;
+    ? `<div class="ak-post-head is-quote">
+        <h1>“${quoteHtml(p.fm.quote)}”</h1>${p.fm.author ? `
+        <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather')}</span> ${esc(p.fm.author)}</div>` : ''}
+      </div>`
+    : `<div class="ak-post-head">
+        <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
+      </div>`;
   const body = isQuote
-    ? `<div class="ak-quote" style="margin-top:8px">
-            <div class="ak-quote-text">${esc(p.fm.quote)}</div>
-            <div class="ak-quote-author">
-              <span class="ak-feather">${icon('feather')}</span>
-              <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
-            </div>
-          </div>${p.body.trim() ? '\n' + marked.parse(p.body) : ''}`
-    : marked.parse(p.body) +
+    ? (p.body.trim() ? markdown(p.body) : '')
+    : markdown(p.body) +
       (p.images.length > 1 ? `<div class="ak-post-gallery">${p.images.slice(1).map((s) => img(s, title)).join('')}</div>` : '');
+
+  // Sidebar: the items each post type shows, in the original's order.
+  const typeWord = (TYPE_LABELS[type] || 'A Note').replace(/^An?/, (m) => m.toLowerCase());
+  const side = {
+    author: !isQuote && p.fm.author
+      ? `<div class="ak-side-author"><span class="ak-feather">${icon('feather')}</span> ${esc(p.fm.author)}</div>` : '',
+    link: p.fm.source
+      ? `<div class="ak-side-link"><a href="${esc(p.fm.source)}" target="_blank" rel="noopener">Read more here</a></div>` : '',
+    type: `<div class="ak-side-type">${esc(typeWord)} in <a class="ak-side-chip" href="${categoryUrl(p.category)}">${esc(p.category)}</a></div>`,
+    date: p.date ? `<time class="ak-side-date" datetime="${isoDate(p.date)}">${esc(p.date)}</time>` : '',
+    loc: p.fm.location
+      ? `<div class="ak-side-loc"><a href="${esc(p.fm.location)}" target="_blank" rel="noopener">${icon('location-dot')} Location</a></div>` : '',
+  };
+  const order = { quote: ['link', 'type', 'date'], event: ['date', 'type', 'link', 'loc'] }[type] || ['author', 'link', 'type', 'date', 'loc'];
+  const sideMeta = order.map((k) => side[k]).filter(Boolean).join('\n              ');
+
+  const cats = categories
+    .map((c) => `<a class="ak-pill" href="${categoryUrl(c.name)}">${esc(`${c.name} (${c.posts.length})`)}</a>`)
+    .join('\n              ');
 
   const main = `    <main class="ak-post-page">
       <nav class="ak-postnav">
         ${navLink(prev, 'prev')}
         ${navLink(next, 'next')}
       </nav>
-      <div class="ak-post-head">
-        ${head}
-      </div>
+      ${head}
       <div class="ak-post-body-wrap">
         <aside class="ak-post-side">
-          ${p.images[0] ? img(p.images[0], title) : ''}
-          <div class="ak-side-cat"><a class="ak-arrow-link" href="${categoryUrl(p.category)}">${typeLabel(p)} <span class="ak-arrow">›</span></a></div>
-          ${p.date ? `<time class="ak-side-date" datetime="${isoDate(p.date)}">${esc(p.date)}</time>` : ''}
-          <hr />
+          <div class="ak-side-box">
+            ${p.images[0] ? img(p.images[0], title) : ''}
+            <div class="ak-side-meta">
+              ${sideMeta}
+            </div>
+          </div>
         </aside>
-        <article class="ak-post-body">
-          ${body}
-        </article>
+        <div class="ak-post-main">${body ? `
+          <article class="ak-post-body">
+            ${body}
+          </article>` : ''}
+          <section class="ak-post-cats">
+            <h2 class="ak-post-cats-h">Categories</h2>
+            <nav class="ak-pills" aria-label="Categories">
+              ${cats}
+            </nav>
+          </section>
+        </div>
       </div>
     </main>`;
 
@@ -551,7 +603,7 @@ export async function build() {
   for (const c of categories) {
     add(categoryUrl(c.name), listingPage({ posts: c.posts, allPosts: posts, categories, activeCategory: c.name }), `category "${c.name}"`);
   }
-  posts.forEach((p, i) => add(postUrl(p), postPage(p, posts[i - 1], posts[i + 1]), p.source));
+  posts.forEach((p, i) => add(postUrl(p), postPage(p, posts[i - 1], posts[i + 1], categories), p.source));
 
   add('/work/', workPage(projects), 'the work page');
   projects.forEach((p, i) => {

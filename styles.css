@@ -65,25 +65,19 @@
   --gutter-project: clamp(14px, calc(14px + 26 * var(--t)), 40px);
 
   /* Spacing, 390 -> 1280 */
-  --space-1: 16px;                                            /* post nav gap */
-  --space-2: clamp(18px, calc(18px + 6 * var(--t)), 24px);   /* post nav padding */
   --space-3: clamp(16px, calc(16px + 14 * var(--t)), 30px);
   --space-4: clamp(20px, calc(20px + 10 * var(--t)), 30px);  /* post grid top */
   --space-5: clamp(24px, calc(24px + 16 * var(--t)), 40px);  /* content top, post nav bottom, post body gap */
   --space-6: clamp(30px, calc(30px + 10 * var(--t)), 40px);  /* work tile bottom, about top */
   --space-7: clamp(34px, calc(34px + 10 * var(--t)), 44px);  /* post card bottom */
   --space-8: clamp(40px, calc(40px + 20 * var(--t)), 60px);  /* work title top, project bottom */
-  --space-9: clamp(40px, calc(40px + 24 * var(--t)), 64px);  /* post page bottom */
 
   /* Font sizes, 390 -> 1280 */
   --fs-page-h1: clamp(1.75rem, calc(24.5px + 16 * var(--t)), 2.5rem);
   --fs-h1: clamp(1.625rem, calc(22.75px + 9.65 * var(--t)), 2rem);
-  --fs-post-h1: clamp(24px, calc(24px + 8.4 * var(--t)), 2rem);
   --fs-project-h1: clamp(1.625rem, calc(22.75px + 13.7 * var(--t)), 2.25rem);
   --fs-post-title: clamp(1.1875rem, calc(16.625px + 9.7 * var(--t)), 1.625rem);
   --fs-quote: clamp(1.125rem, calc(15.75px + 8.55 * var(--t)), 1.5rem);
-  --fs-body: clamp(15px, calc(15px + 1.2 * var(--t)), 1rem);
-  --fs-lede: clamp(14px, calc(14px + 2.2 * var(--t)), 1rem);
   --fs-tile: clamp(1.125rem, calc(15.75px + 6.525 * var(--t)), 1.375rem);
   --fs-h3: clamp(1.0625rem, calc(14.875px + 5.375 * var(--t)), 1.25rem);
   --fs-small: clamp(0.75rem, calc(10.5px + 2.6625 * var(--t)), 0.8125rem);
@@ -93,6 +87,30 @@
   --radius: clamp(4px, calc(6px - 2 * var(--tp)), 6px); /* header and footer cards: 6 on phones, 4 from 768 */
   --photo: clamp(120px, calc(120px + 30 * var(--t)), 150px);
   --circle: clamp(70px, calc(70px + 20 * var(--t)), 90px);
+
+  /* post: blog post page, 390 -> 789 -> >=1280 (phone / tablet / desktop
+   * in the comments). k = (tablet - phone) / 0.448315, the value of --t at 789. */
+  --fs-body:      clamp(15px,   calc(15px   +  4.684 * var(--t)), 18.2px);  /* 15 / 17.1 / 18.2 */
+  --fs-post-nav:  clamp(10px,   calc(10px   + 10.62  * var(--t)), 15.75px); /* 10 / 14.76 / 15.75 */
+  --fs-post-h1:   clamp(24px,   calc(24px   + 42.83  * var(--t)), 46px);    /* 24 / 43.2 / 46 */
+  --fs-quote-h1:  clamp(24px,   calc(24px   + 42.38  * var(--t)), 45.9px);  /* 24 / 43 / 45.9 */
+  --fs-lede:      clamp(14px,   calc(14px   + 17.09  * var(--t)), 23.1px);  /* 14 / 21.66 / 23.1 */
+  --fs-attrib:    clamp(14px,   calc(14px   +  2.788 * var(--t)), 16.25px); /* 14 / 15.25 / 16.25 */
+  --fs-side:      clamp(12px,   calc(12px   +  4.461 * var(--t)), 15px);    /* 12 / 14 / 15 (= home meta) */
+  --fs-dropcap:   max(calc(60px - 16.51 * var(--t)), min(calc(51.22px + 3.069 * var(--t)), 54.9px)); /* 60 / 52.6 / 54.9 */
+  --fs-post-h2:   clamp(21px,   calc(21px   + 42.16  * var(--t)), 42.5px);  /* 21 / 39.9 / 42.5 */
+  --fs-post-h3:   clamp(16.6px, calc(16.6px + 35.69  * var(--t)), 34.8px);  /* 16.6 / 32.6 / 34.8 */
+  --fs-post-h4:   clamp(15px,   calc(15px   + 15.84  * var(--t)), 23.6px);  /* 15 / 22.1 / 23.6 */
+  --fs-bq:        clamp(15px,   calc(15px   +  9.145 * var(--t)), 20.4px);  /* 15 / 19.1 / 20.4 */
+  --fs-caption:   clamp(13px,   calc(13px   +  4.684 * var(--t)), 16.1px);  /* 13 / 15.1 / 16.1 */
+  --fs-cats:      clamp(21px,   calc(21px   + 24.54  * var(--t)), 34.1px);  /* 21 / 32 / 34.1 */
+  --post-nav-top:   clamp(18px, calc(18px +  40.15 * var(--t)), 38px);   /* header -> prev/next: 18 / 36 / 38 */
+  --post-nav-gap:   clamp(40.3px, calc(40.3px + 68.03 * var(--t)), 75.9px); /* prev/next -> title: 40.3 / 70.8 / 75.9 */
+  --post-head-gap:  clamp(30px, calc(30px + 134.95 * var(--t)), 96.5px); /* lede -> row: 30 / 90.5 / 96.5 (CSS 5.5em + .5333rem) */
+  --post-quote-gap: clamp(30px, calc(30px + 117.1 * var(--t)), 88px);    /* attribution -> row: 30 / 82.5 / 88 (CSS 5.5em) */
+  --post-em:        clamp(15px, calc(15px + 4.183 * var(--t)), 18px);    /* the original's 1em (1.125rem): 15 / 16.875 / 18 */
+  --w-regular: 385;  /* post body text */
+  --w-bold: 755;     /* post <strong>, body and blockquote */
 }
 
 * { box-sizing: border-box; }
@@ -446,18 +464,13 @@ a { color: inherit; }
   font-size: 0.75rem;
   margin-top: 14px;
 }
-/* "Read More..." on cards and prev/next on posts are red; the sidebar category link stays dark. */
-.ak-post-grid .ak-arrow-link,
-.ak-postnav .ak-arrow-link { color: var(--accent); }
+/* "Read More..." on cards is red. */
+.ak-post-grid .ak-arrow-link { color: var(--accent); }
 .ak-arrow-link .ak-arrow {
   color: var(--accent);
   margin-left: 6px;
   font-weight: normal;
   font-size: 1.15em;
-}
-.ak-arrow-link.ak-arrow-prev .ak-arrow {
-  margin-left: 0;
-  margin-right: 6px;
 }
 
 /* Quote post */
@@ -517,138 +530,193 @@ a { color: inherit; }
 
 /* ----------------------------- BLOG POST PAGE ----------------------------- */
 
+/* Original: #wrap 81% / 90% wide; content box x 138.3-1317.7 at 1456.
+ * Bottom: Categories pills -> footer card 87.6 / 85.9 (no Disqus space). */
 .ak-post-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--gutter) var(--space-9);
+  padding: 0 var(--gutter-page)
+    calc(clamp(25.9px, calc(40px - 14.1 * var(--tp)), 40px) + clamp(0px, calc(1.7 * var(--t2)), 1.7px));
 }
-/* Prev and next share a row while they fit; otherwise next wraps onto its
- * own line and stays right-aligned. */
+/* Prev / next: red mixed-case label beside the original's 15 x 28 chevron. */
 .ak-postnav {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: var(--space-2) 0;
-  margin-bottom: clamp(26px, calc(26px + 14 * var(--t)), 40px);
-  gap: var(--space-1);
+  align-items: flex-start;
+  gap: 16px;
+  margin: var(--post-nav-top) 0 var(--post-nav-gap);
+  padding: 0;
 }
-.ak-postnav a {
-  font-size: clamp(10px, calc(10px + 2.15 * var(--t)), 0.75rem);
-  margin-top: clamp(0px, calc(14 * var(--t)), 14px);
+.ak-postnav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .38em;
+  font-family: var(--sans);
+  font-size: var(--fs-post-nav);
+  font-weight: 440;
+  line-height: 1.77em;
+  color: var(--accent);
+  text-decoration: none;
 }
-.ak-postnav .ak-arrow-link:not(.ak-arrow-prev) { margin-left: auto; }
-.ak-post-head { text-align: center; margin-bottom: clamp(30px, calc(30px + 20 * var(--t)), 50px); }
+.ak-postnav-link .ak-icon { height: 1.77em; width: auto; vertical-align: top; } /* 28 / 26 px */
+.ak-postnav-link.is-next { margin-left: auto; }
+
+.ak-post-head { text-align: center; margin-bottom: var(--post-head-gap); }
 .ak-post-head h1 {
   font-family: var(--serif);
   font-size: var(--fs-post-h1);
-  font-weight: bold;
+  font-weight: var(--w-heading);
+  /* 1.2 on phones (as before), 1.25 from 789 (CSS 1.2 x 3rem = 57.6 / 54) */
+  line-height: calc(1.2em + clamp(0px, calc(2.16 * var(--tp)), 2.16px) + clamp(0px, calc(.14 * var(--t2)), .14px));
   color: #000;
-  margin: 0 0 clamp(16px, calc(16px + 4 * var(--t)), 20px);
-  line-height: 1.2;
+  margin: 0 0 max(calc(16px - 8.923 * var(--t)), min(calc(11.52px + 1.067 * var(--t)), 12.8px)); /* 16 / 12 / 12.8 */
 }
 .ak-post-head p {
   font-family: var(--serif);
   font-size: var(--fs-lede);
-  color: var(--text-3);
-  max-width: 700px;
+  font-weight: var(--w-light);
+  line-height: 1.61;
+  color: #222;
+  max-width: 82.906%; /* bootstrap .span10 */
   margin: 0 auto;
-  line-height: 1.6;
 }
-/* Sidebar (220px) beside the body while the body keeps at least 60% of
- * the row; on narrower screens the sidebar wraps above it at full width.
- * The body's grow factor is 999999, not the usual 999: in a row the
- * sidebar gets 1/(1 + grow) of the free space, which with 999 would make
- * it 0.9px wider than 220px on desktop. */
-.ak-post-body-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-5);
-  align-items: flex-start;
-}
-.ak-post-side {
-  flex: 1 1 220px;
-}
-.ak-post-side img {
-  width: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  background: #ddd;
-  margin-bottom: clamp(16px, calc(20px - 4 * var(--t)), 20px);
-}
-.ak-side-cat { margin-bottom: 12px; }
-.ak-side-cat .ak-arrow-link {
-  color: #000;
-  font-size: clamp(12px, calc(12px + 0.15 * var(--t)), 0.75rem);
-  margin-top: clamp(0px, calc(14 * var(--t)), 14px);
-}
-.ak-post-side .ak-side-date {
-  display: block;
+/* Quote posts: the quote is the headline, the author sits under it. */
+.ak-post-head.is-quote { margin-bottom: var(--post-quote-gap); }
+.ak-post-head.is-quote h1 { font-size: var(--fs-quote-h1); font-weight: var(--w-light); line-height: 1.255; }
+.ak-post-head.is-quote h1 em { font-style: normal; font-weight: var(--w-heading); }
+.ak-quote-attrib {
   font-family: var(--sans);
-  font-weight: bold;
-  font-size: clamp(11px, calc(11px + 0.1375 * var(--t)), 0.6875rem);
-  color: #000;
-  margin-bottom: clamp(18px, calc(18px + 2 * var(--t)), 20px);
+  font-size: var(--fs-attrib);
+  font-weight: 455;
+  line-height: 1.575;
+  color: #555;
 }
-.ak-post-side hr {
-  border: none;
+.ak-quote-attrib .ak-feather,
+.ak-side-author .ak-feather { display: inline; } /* the icon must not grow the line box */
+.ak-quote-attrib .ak-icon { height: 1.25em; vertical-align: -.215em; } /* 20 tall, 3.5 below the baseline */
+
+/* Sidebar and main column: bootstrap's >=1200 .span2 / .span8 grid
+ * (768-979 values in the tablet block below). */
+.ak-post-body-wrap {
+  display: grid;
+  grid-template-columns: 14.5299% 65.812%;
+  column-gap: 2.5641%;
+  align-items: start;
+}
+.ak-post-main { min-width: 0; }
+.ak-side-box {
+  margin-top: calc(.264 * var(--fs-body));
   border-top: 1px solid #aaa;
-  margin: 0;
+  border-bottom: 1px solid #aaa;
+  padding: calc(.879 * var(--fs-body)) calc(.44 * var(--fs-body));
+  text-align: center;
 }
+.ak-side-box img { width: 100%; height: auto; margin: 0 0 calc(.879 * var(--fs-body)); } /* natural aspect */
+.ak-side-meta {
+  padding: calc(.44 * var(--fs-body));
+  font-family: var(--sans);
+  font-size: var(--fs-side);
+  font-weight: 415;
+  color: #555;
+  line-height: clamp(20.3px, calc(20.3px + 4.48 * var(--t)), 23.8px); /* 22.3 / 23.8 = CSS 170% of .875rem */
+}
+.ak-side-meta a { text-decoration: none; }
+.ak-side-meta a:not(.ak-side-chip) { color: var(--accent); } /* keeps the shared chip black */
+.ak-side-date { display: block; font-weight: 610; color: #000; } /* size inherits .meta, as in the original */
+.ak-side-author .ak-icon { height: 1.2em; vertical-align: -.25em; } /* 18 tall, 3.75 below the baseline */
+.ak-side-loc .ak-icon { height: .93em; } /* map marker 9 x 14 */
+
+/* Body column */
 .ak-post-body {
-  flex: 999999 1 0;
   font-family: var(--serif);
   font-size: var(--fs-body);
+  font-weight: var(--w-regular);
+  line-height: clamp(24px, calc(24px + 10.46 * var(--t)), 30.6px); /* 28.69 / 30.6 = CSS 170% of 1.125rem */
   color: #555;
-  line-height: 1.7;
-  min-width: 60%;
 }
-/* Length, not a ratio, so it can interpolate (1.6 -> 1.7 x 16.2px); headings keep 1.7. */
-.ak-post-body p,
-.ak-post-body li { line-height: clamp(24px, calc(24px + 3.53 * var(--t)), 1.7rem); }
-/* First child: no top margin at 390, back to its own desktop margin at 1280
- * (1em for p/ul/ol, 40 h2, 32 h3, 20 blockquote, 24 img). */
-.ak-post-body > :first-child { margin-top: clamp(0px, calc(16.2 * var(--t)), 1em); }
-.ak-post-body > h2:first-child { margin-top: clamp(0px, calc(40 * var(--t)), 40px); }
-.ak-post-body > h3:first-child { margin-top: clamp(0px, calc(32 * var(--t)), 32px); }
-.ak-post-body > blockquote:first-child { margin-top: clamp(0px, calc(20 * var(--t)), 20px); }
-.ak-post-body > p:first-of-type::first-letter {
+.ak-post-body > :first-child { margin-top: 0; }
+.ak-post-body p { margin: 0 0 max(calc(15px - 6.692 * var(--t)), min(calc(11.52px + 1.067 * var(--t)), 12.8px)); } /* 15 / 12 / 12.8 */
+.ak-post-body strong,
+.ak-post-body b { font-weight: var(--w-bold); }
+/* Original: first child only, so not when a heading comes first. */
+.ak-post-body > p:first-child::first-letter {
   float: left;
-  font-size: 4em;
-  line-height: 0.9333;
-  font-weight: bold;
+  font-size: var(--fs-dropcap);
+  font-weight: var(--w-heading);
+  line-height: .75em;
   color: #000;
-  margin-right: 0.1em;
-  font-family: var(--serif);
+  margin: .192em 4px 0 -3px; /* CSS 6px 5px 0 -4px, tuned to the original cap position */
 }
-.ak-post-body > ol { padding-left: 0.94em; }
-.ak-post-body > ul,
-.ak-post-body blockquote > ol,
-.ak-post-body blockquote > ul { padding-left: 1.07em; }
 .ak-post-body blockquote {
-  border-left: 3px solid var(--accent);
-  margin: 20px 0;
-  padding-left: 16px;
-  font-weight: bold;
+  margin: var(--post-em);
+  padding: calc(.25 * var(--post-em)) 0 calc(.25 * var(--post-em)) var(--post-em);
+  border-left: 5px solid var(--accent);
   font-style: normal;
 }
+.ak-post-body blockquote p { font-size: var(--fs-bq); font-weight: 345; line-height: 1.57; color: #000; margin: 0 0 .703em; }
+.ak-post-body ol,
+.ak-post-body ul { margin: .703em 0 .703em 25px; padding: 0; }
+.ak-post-body ol { list-style: decimal; }
+.ak-post-body ul { list-style: circle; }
+.ak-post-body li { line-height: max(24px, 1.405em); } /* 24 / 24 / 25.6 (CSS li 1.6rem) */
 .ak-post-body em {
   color: var(--text-3);
 }
 .ak-post-body h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #222;
-  margin: 40px 0 16px;
+  font-size: var(--fs-post-h2);
+  font-weight: var(--w-heading);
+  line-height: 1.2424;
+  color: #000;
+  margin: calc(2.2222 * var(--post-em)) 0 calc(1.3333 * var(--post-em)); /* CSS 2.5rem 0 1.5rem */
 }
 .ak-post-body h3 {
-  font-size: 1.1875rem;
-  font-weight: bold;
+  font-size: var(--fs-post-h3);
+  font-weight: var(--w-heading);
+  line-height: 1.24;
+  color: #000;
+  margin: calc(2.2222 * var(--post-em)) 0 calc(1.3333 * var(--post-em));
+}
+.ak-post-body h4 {
+  font-size: var(--fs-post-h4);
+  font-weight: var(--w-heading);
+  line-height: 1.576;
   color: #222;
-  margin: 32px 0 12px;
+  margin: calc(1.7778 * var(--post-em)) 0 calc(.8889 * var(--post-em)); /* CSS 2rem 0 1rem */
 }
-.ak-post-body img {
-  margin: 24px 0;
+.ak-post-body h4 strong { font-weight: inherit; }
+.ak-post-body img { margin: var(--post-em) 0; } /* CSS 1em */
+/* ![alt](x.png "Caption"): the original's figure.thumbnail frame. */
+.ak-figure {
+  margin: var(--post-em) 0;
+  padding: var(--post-em) var(--post-em) 0;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .055);
+  text-align: center;
 }
+.ak-figure img { margin: 0 auto; }
+.ak-figure figcaption {
+  padding: 9px;
+  font-family: var(--sans);
+  font-size: var(--fs-caption);
+  font-weight: 455;
+  line-height: 1.59;
+  color: #555;
+}
+
+/* Categories under the body (all posts' categories, as in the original). */
+.ak-post-cats { margin-top: calc(2.6667 * var(--post-em)); } /* CSS section 3em */
+.ak-post-main > .ak-post-cats:first-child { margin-top: 0; } /* quote without body */
+.ak-post-cats-h {
+  font-family: var(--serif);
+  font-size: var(--fs-cats);
+  font-weight: var(--w-light);
+  line-height: 1.267;
+  color: #000;
+  text-align: left;
+  margin: 0 0 calc(.8222 * var(--post-em)); /* heading -> pills 14.8 / 13.9 */
+}
+.ak-post-cats .ak-pills { justify-content: flex-start; margin: 0; }
 /* Long words, wide code and wide tables must not widen the page. */
 .ak-post-body { overflow-wrap: anywhere; }
 .ak-post-body pre { overflow-x: auto; }
@@ -936,6 +1004,8 @@ a { color: inherit; }
 /* Original fluid-grid tablet range (768-979). Page plans put their tablet
  * grid percentages here; nothing else goes in this block. */
 @media (min-width: 761px) and (max-width: 979px) {
+  .ak-post-body-wrap { grid-template-columns: 14.3646% 65.7459%; column-gap: 2.7624%; }
+  .ak-post-head p { max-width: 82.8729%; }
 }
 
 /* Sizes and spacing scale through the fluid tokens on :root. This query
@@ -955,8 +1025,9 @@ a { color: inherit; }
   .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
 
-  .ak-post-side { text-align: center; }
-  .ak-post-side img { aspect-ratio: 4/3; }
+  .ak-post-body-wrap { grid-template-columns: 1fr; row-gap: var(--space-5); }
+  .ak-post-head p { max-width: none; }
+  .ak-side-box img { aspect-ratio: 4/3; object-fit: cover; }
 
   .ak-strive-list { flex-direction: column; }
   .ak-strive-item { flex-direction: row; gap: 16px; text-align: left; }
