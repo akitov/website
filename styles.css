@@ -71,7 +71,7 @@
   --space-1: 16px;                                            /* post nav gap */
   --space-2: clamp(18px, calc(18px + 6 * var(--t)), 24px);   /* post nav padding */
   --space-3: clamp(16px, calc(16px + 14 * var(--t)), 30px);
-  --space-4: clamp(20px, calc(20px + 51.8 * var(--t)), 47px);  /* post grid top (pills mb 30 + this = 72 / 77) */
+  --space-4: clamp(20px, calc(20px + 53.45 * var(--t)), 47.75px);  /* post grid top: pill bottom -> chip top 72.7 / 77.75 (pills mb 30 + this) */
   --space-5: clamp(24px, calc(24px + 16 * var(--t)), 40px);  /* content top, post nav bottom, post body gap */
   --space-6: clamp(30px, calc(30px + 10 * var(--t)), 40px);  /* work tile bottom, about top */
   --space-7: clamp(34px, calc(34px + 68.28 * var(--t)), 66px);  /* post card bottom: 63 / 66 below Read More */
