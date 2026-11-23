@@ -268,7 +268,8 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
       <nav class="ak-pills" aria-label="Categories">
         ${pills}
       </nav>
-      <div class="ak-post-grid" data-post-grid>${posts.map(postCard).join('')}
+      <div class="ak-post-grid" data-post-grid>
+        <div class="ak-post-grid-gutter" aria-hidden="true"></div>${posts.map(postCard).join('')}
       </div>
     </main>`;
   return page({

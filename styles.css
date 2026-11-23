@@ -61,14 +61,17 @@
   --gutter-page: min(9.5vw, max(clamp(14px, calc(14px + 24.4 * var(--tp)), 5vw), calc(14.823vw - 77.5px)));
   /* Space above the footer card (the original's .footer margin-top). */
   --footer-gap: 60px;
-  --gutter-content: clamp(14px, calc(14px + 157.2 * var(--t)), calc(11.5vw + 24px));
+  /* Listing content inset (home, category, 404): 14 at 390, 45 at 768, 150 at
+   * 1456 = the original's #wrap inset + the 1% .grid-element margin-left,
+   * which bounds it above 1456. */
+  --gutter-content: clamp(14px, calc(-12.7px + 135.83 * var(--t)), calc(0.98 * var(--gutter-page) + 1vw));
   --gutter-project: clamp(14px, calc(14px + 26 * var(--t)), 40px);
 
   /* Spacing, 390 -> 1280 */
   --space-1: 16px;                                            /* post nav gap */
   --space-2: clamp(18px, calc(18px + 6 * var(--t)), 24px);   /* post nav padding */
   --space-3: clamp(16px, calc(16px + 14 * var(--t)), 30px);
-  --space-4: clamp(20px, calc(20px + 10 * var(--t)), 30px);  /* post grid top */
+  --space-4: clamp(20px, calc(20px + 51.8 * var(--t)), 47px);  /* post grid top (pills mb 30 + this = 72 / 77) */
   --space-5: clamp(24px, calc(24px + 16 * var(--t)), 40px);  /* content top, post nav bottom, post body gap */
   --space-6: clamp(30px, calc(30px + 10 * var(--t)), 40px);  /* work tile bottom, about top */
   --space-7: clamp(34px, calc(34px + 10 * var(--t)), 44px);  /* post card bottom */
@@ -76,7 +79,7 @@
   --space-9: clamp(40px, calc(40px + 24 * var(--t)), 64px);  /* post page bottom */
 
   /* Font sizes, 390 -> 1280 */
-  --fs-page-h1: clamp(1.75rem, calc(24.5px + 16 * var(--t)), 2.5rem);
+  --fs-page-h1: clamp(1.75rem, calc(24.5px + 44.03 * var(--t)), 46px); /* h1.title: 43.2 / 46 */
   --fs-h1: clamp(1.625rem, calc(22.75px + 9.65 * var(--t)), 2rem);
   --fs-post-h1: clamp(24px, calc(24px + 8.4 * var(--t)), 2rem);
   --fs-project-h1: clamp(1.625rem, calc(22.75px + 13.7 * var(--t)), 2.25rem);
@@ -312,13 +315,18 @@ a { color: inherit; }
 
 /* ----------------------------- PAGE WRAPPER ----------------------------- */
 
-.ak-content { padding: var(--space-5) var(--gutter-content) 0; }
+/* Header bottom -> H1 baseline 100 / 107, H1 baseline -> pill top 36.9 / 38.9
+ * (original at 768 / 1456). */
+.ak-content {
+  padding: clamp(24px, calc(24px + 80.12 * var(--t)), 61.81px) var(--gutter-content) 0;
+}
 .ak-page-h1 {
   font-family: var(--serif);
   font-size: var(--fs-page-h1);
   color: #000;
-  margin: 0 0 22px;
-  font-weight: bold;
+  line-height: normal;
+  margin: 0 0 clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
+  font-weight: var(--w-heading);
   text-align: center;
 }
 
@@ -381,8 +389,11 @@ a { color: inherit; }
  * Masonry's positioning and force everything into row alignment). */
 .ak-post-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 40px;
+  /* The original .grid-element is 1% + 47% + 2% of #wrap. On this box (#wrap
+   * inset by its 1%) that is 47.96% + 3.06% + 47.96%, leaving ~1% empty on
+   * the right: the original's off-centre grid, kept on purpose. */
+  grid-template-columns: 47.96% 47.96%;
+  gap: 0 3.06%;
   align-items: flex-start;
   padding-top: var(--space-4);
 }
@@ -394,9 +405,12 @@ a { color: inherit; }
   display: block;
   clear: both;
 }
+/* Masonry reads its gutter from this sizer (js/home.js). */
+.ak-post-grid-gutter { position: absolute; width: 3.06%; height: 0; }
+.ak-post-grid:not(.is-masonry) .ak-post-grid-gutter { display: none; }
 .ak-post-grid-item { padding-bottom: var(--space-7); }
 .ak-post-grid.is-masonry .ak-post-grid-item {
-  width: calc(50% - 20px);
+  width: 47.96%;
   box-sizing: border-box;
 }
 
