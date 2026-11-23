@@ -542,23 +542,16 @@ a { color: inherit; }
   padding-left: 30px;
   border-left: 1px solid #969696;
 }
-/* Quote marks: Font Awesome quote-left/right (assets/icons, viewBox cropped
- * to the ink, so height = visible mark height), drawn as masks in #222. */
-.ak-quote-text::before,
-.ak-quote-text::after {
-  content: "";
-  display: inline-block;
-  height: .3625em;
-  width: calc(.3625em * 1.4);
-  background-color: #222;
-  -webkit-mask: var(--ak-mark) no-repeat 0 0 / 100% 100%;
-  mask: var(--ak-mark) no-repeat 0 0 / 100% 100%;
-}
 .ak-quote-text::before {
-  --ak-mark: url("/assets/icons/quote-left.svg");
+  content: "\201C";
   position: absolute;
   left: -10px;
-  top: .3em;
+  top: 0;
+  font-size: 1.35em;
+  color: #555; /* = the author feather */
+  font-family: var(--serif);
+  font-style: normal;
+  line-height: calc(1.4 / 1.35);
 }
 .ak-quote-text {
   position: relative;
@@ -570,9 +563,13 @@ a { color: inherit; }
   padding-left: 20px;
 }
 .ak-quote-text::after {
-  --ak-mark: url("/assets/icons/quote-right.svg");
-  margin-left: .14em;
-  vertical-align: .45em;
+  content: "\201D";
+  color: #555; /* = the author feather */
+  font-style: normal;
+  font-size: 1.35em;
+  line-height: 0;
+  font-family: var(--serif);
+  margin-left: 2px;
 }
 .ak-quote-author {
   margin-top: 18px;
@@ -604,15 +601,21 @@ a { color: inherit; }
   padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
 }
 /* The marks are icon glyphs in the original, heavier than the text. */
-/* Positions keep the old glyph marks' ink boxes (open top / close top at
- * 1456: 397 / 441; at 768: 380 / 461). */
+/* The marks are About Beige glyphs at 800, in the author feather's #555. */
 .ak-post-grid .ak-quote-text::before {
-  top: .07em;
+  font-size: 1.25em;
+  font-weight: 800;
+  color: #555;
+  line-height: 1;
+  top: -4px;
   left: max(calc(20px - 14.83 * var(--t)), min(15.1px, calc(12.93px + 1.811 * var(--t))));
 }
 .ak-post-grid .ak-quote-text::after {
-  margin-left: .23em;
-  vertical-align: calc(.45em + 2.7px + clamp(0px, calc(-0.3px + 2.587 * var(--t)), 2.8px));
+  font-size: 1.25em;
+  font-weight: 800;
+  color: #555;
+  margin-left: 0.14em;
+  vertical-align: clamp(0px, calc(-0.3px + 2.587 * var(--t)), 2.8px);
 }
 .ak-post-grid .ak-quote-author {
   font-size: clamp(0.875rem, calc(12.25px + 9.54 * var(--t)), 16.8px);
@@ -687,7 +690,8 @@ a { color: inherit; }
 /* Quote posts: the quote is the headline, the author sits under it. */
 .ak-post-head.is-quote { margin-bottom: var(--post-quote-gap); }
 .ak-post-head.is-quote h1 { font-size: var(--fs-quote-h1); font-weight: var(--w-light); line-height: 1.255; }
-.ak-post-head.is-quote h1 em { font-style: normal; font-weight: var(--w-heading); }
+.ak-post-head.is-quote h1 { font-style: italic; }
+.ak-post-head.is-quote h1 em { font-style: italic; font-weight: var(--w-heading); }
 .ak-quote-attrib {
   font-family: var(--sans);
   font-size: var(--fs-attrib);
@@ -1196,12 +1200,10 @@ a { color: inherit; }
 
 /* ------------------------- TYPE REFINEMENTS ------------------------- */
 
-/* All h1s: slightly tighter tracking than About Beige's default. */
-.ak-page-h1,
-.ak-post-head h1,
-.ak-work-h1,
-.ak-project-head h1,
-.ak-about h1 { letter-spacing: -0.025em; }
+/* Every headline (h1-h6 and the work captions) gets slightly tighter
+ * tracking; the home quote tiles are not headings and keep normal. */
+h1, h2, h3, h4, h5, h6,
+.ak-work-tile-title { letter-spacing: -0.025em; }
 
 /* 1x screens: small light text has sub-pixel stems and its diagonals and
  * curves (W, O, brackets) render grey and broken. Raise those weights so the
