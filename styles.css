@@ -464,11 +464,13 @@ a { color: inherit; }
 
 /* Original h2.entry-title: Source Sans Pro 300, 2.75rem / 1.2. */
 /* Tile titles scale with their column (container units, see
- * .ak-post-grid-item): two columns 27.4px at a 325px column (tablet) to
- * 41.6px at 554 (1456), capped; one column 30px at a 540px column. */
+ * .ak-post-grid-item). Two columns: 32px at a 325px column (768, = the quote
+ * tile text) -> 37.4px at 397 (980, = the widest single column) -> 41.6px at
+ * 554 (1456), capped; the 761-979 segment is in the tablet block. One
+ * column: 30px at a 540px column. */
 .ak-post-title {
   font-family: var(--serif);
-  font-size: min(41.6px, calc(7.25px + 6.2cqi));
+  font-size: min(41.6px, calc(26.78px + 2.675cqi));
   font-weight: var(--w-light);
   color: #000;
   margin: 0 0 min(17.6px, max(calc(12px - 8.594 * var(--t)), calc(3.268px + 11.966 * var(--t))));
@@ -1159,6 +1161,8 @@ a { color: inherit; }
   /* post: original 768-979 span2 / span8 percentages */
   .ak-post-body-wrap { grid-template-columns: 14.3646% 65.7459%; column-gap: 2.7624%; }
   .ak-post-head p { max-width: 82.8729%; }
+  /* home: tile title 32px at a 325px column -> 37.4px at 397 */
+  .ak-post-title { font-size: calc(7.625px + 7.5cqi); }
 }
 
 /* Sizes and spacing scale through the fluid tokens on :root. This query
