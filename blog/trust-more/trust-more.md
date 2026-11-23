@@ -4,6 +4,7 @@ updated: 23.02.2013
 category: People
 title: You lose less by trusting more
 subtitle: Managing a business is not about asserting control to minimize costs and risks, but about working collaboratively to achieve an agreed goal.
+author: Charalambos Vlachoutsicos
 ---
 
 Early in my career I thought of management as a defensive discipline: minimize cost, minimize risk, control variance. The harder I clamped down, the slower we moved and the less my team brought to the table.

@@ -4,7 +4,7 @@ updated: 03.02.2018
 category: Product
 quote: Be harsh, in the interest of being excellent.
 author: Stewart Butterfield, Slack
-source: https://slack.com
+source: https://medium.com/@stewart/we-dont-sell-saddles-here-4c59524d650d
 subtitle: A reminder from Slack's founder about the value of candid feedback.
 ---
 
