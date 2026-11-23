@@ -124,7 +124,9 @@ The pages are complete without JavaScript. Three small scripts add
 behaviour:
 
 - `js/main.js`: opens and closes the mobile menu (every page). See "Mobile menu" below
-- `js/home.js`: masonry layout of the post cards (home and category pages)
+- `js/home.js`: masonry layout of the post cards (home and category pages).
+  Column and gutter widths come from CSS: Masonry measures the first card
+  and the empty `.ak-post-grid-gutter` sizer that the build puts in the grid
 - `js/work.js`: the project pills on `/work/`, which filter without leaving
   the page
 
