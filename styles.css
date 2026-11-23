@@ -552,6 +552,50 @@ a { color: inherit; }
 .ak-quote-author .ak-feather { color: #555; font-size: 1rem; }
 .ak-quote-author a { color: var(--accent); text-decoration: none; }
 
+/* Quote card on home (the post page keeps the rules above). Original
+ * h3.quote-title: Source Sans Pro 300 italic, 2.25rem / 1.2, padding 0 1em,
+ * 1px #969696 rule; .author-meta Helvetica 300, 1rem. The 36 / 33.75px
+ * padding (1em) and the mark offsets stop growing at 1456 like the font. */
+.ak-post-grid .ak-quote {
+  padding-left: 0;
+  padding-bottom: clamp(0px, calc(5.886 * var(--t)), 3.11px);
+  margin-bottom: clamp(0px, calc(23.55 * var(--t)), 11px);
+}
+.ak-post-grid .ak-quote-text {
+  font-size: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px);
+  font-weight: var(--w-light);
+  color: #222;
+  line-height: clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px);
+  padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
+}
+/* The marks are icon glyphs in the original, heavier than the text. */
+.ak-post-grid .ak-quote-text::before {
+  font-size: 1.25em;
+  font-weight: 800;
+  color: #222;
+  line-height: 1;
+  top: -4px;
+  left: max(calc(20px - 14.83 * var(--t)), min(15.1px, calc(12.93px + 1.811 * var(--t))));
+}
+.ak-post-grid .ak-quote-text::after {
+  font-size: 1.25em;
+  font-weight: 800;
+  color: #222;
+  margin-left: 0.14em;
+  vertical-align: clamp(0px, calc(-0.3px + 2.587 * var(--t)), 2.8px);
+}
+.ak-post-grid .ak-quote-author {
+  font-size: clamp(0.875rem, calc(12.25px + 9.54 * var(--t)), 16.8px);
+  font-weight: 360;
+  font-style: italic;
+  line-height: normal;
+  margin-top: clamp(8.78px, calc(18px - 20.06 * var(--t)), 18px);
+  padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
+}
+.ak-post-grid .ak-quote-author .ak-feather .ak-icon {
+  height: clamp(17.5px, calc(17.5px + 2.237 * var(--t)), 19.5px);
+}
+
 /* Font Awesome icons (inlined by scripts/build.mjs, see {{icon:name}}) */
 .ak-icon { height: 1em; width: auto; vertical-align: -0.125em; }
 .ak-feather { display: inline-flex; align-items: center; }
