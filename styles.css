@@ -1222,12 +1222,11 @@ h1, h2, h3, h4, h5, h6 {
   padding-block: calc(var(--lh) * .075);
 }
 
-/* Quote post headline: About Beige's own marks like the home quote tiles
- * (800, upright, feather grey); a little air after the opening mark and a
- * tighter closing mark after the final period. */
-.ak-post-head.is-quote .ak-qm { font-style: normal; font-weight: 800; color: #555; }
-.ak-post-head.is-quote .ak-qm-open { margin-right: .12em; }
-.ak-post-head.is-quote .ak-qm-close { margin-left: -.06em; }
+/* Quote post headline: About Beige's own marks (800, upright) in the
+ * headline's black; the home quote tiles keep their #555 marks. */
+.ak-post-head.is-quote .ak-qm { font-style: normal; font-weight: 800; }
+.ak-post-head.is-quote .ak-qm-open { margin-right: 0em; }
+.ak-post-head.is-quote .ak-qm-close { margin-left: .05em; }
 
 /* 1x screens: small light text has sub-pixel stems and its diagonals and
  * curves (W, O, brackets) render grey and broken. Raise those weights so the
