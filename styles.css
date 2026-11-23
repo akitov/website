@@ -22,7 +22,6 @@
   --muted: #666;
   --border-2: #cfcfcf;
   --pill-bg: #f5f5f5;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   --serif: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --sans: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --title-font: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -68,7 +67,7 @@
   /* Spacing, 390 -> 1280 */
   --space-1: 16px;                                            /* post nav gap */
   --space-2: clamp(18px, calc(18px + 6 * var(--t)), 24px);   /* post nav padding */
-  --space-3: clamp(16px, calc(16px + 14 * var(--t)), 30px);  /* header top, footer bottom */
+  --space-3: clamp(16px, calc(16px + 14 * var(--t)), 30px);
   --space-4: clamp(20px, calc(20px + 10 * var(--t)), 30px);  /* post grid top */
   --space-5: clamp(24px, calc(24px + 16 * var(--t)), 40px);  /* content top, post nav bottom, post body gap */
   --space-6: clamp(30px, calc(30px + 10 * var(--t)), 40px);  /* work tile bottom, about top */
@@ -263,42 +262,53 @@ a { color: inherit; }
 
 /* ----------------------------- FOOTER ----------------------------- */
 
-.ak-footer { margin: 60px var(--gutter-frame) var(--space-3); }
+/* Original: .footer { margin: 60px auto 50px }, 5px red bottom border,
+ * 0 3px 8px shadow. Card 164 tall at 1456, 155 at 768. Line heights are
+ * normal; paddings and margins place the baselines of the original. */
+.ak-footer {
+  margin: var(--footer-gap) var(--gutter-frame) clamp(16px, calc(16px + 34 * var(--tp)), 50px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.125);
+}
 .ak-footer-inner {
-  padding: clamp(30px, calc(30px + 6 * var(--t)), 36px)
+  padding: calc(clamp(25.5px, calc(30px - 4.5 * var(--tp)), 30px) + clamp(0px, calc(1.2 * var(--t2)), 1.2px))
     clamp(16px, calc(16px + 8 * var(--t)), 24px)
-    clamp(20px, calc(20px + 4 * var(--t)), 24px);
+    calc(clamp(20px, calc(20px + 4.8 * var(--tp)), 24.8px) + clamp(0px, calc(.9 * var(--t2)), .9px));
   text-align: center;
   font-family: var(--serif);
   background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
 }
 .ak-footer-name {
-  font-size: clamp(1.125rem, calc(15.75px + 4.5 * var(--t)), 1.25rem);
+  font-size: calc(clamp(15.75px, calc(15.75px + 6.45 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
+  font-weight: var(--w-light);
   color: #222;
-  margin-bottom: 16px;
+  margin-bottom: calc(clamp(16px, calc(16px + 5.4 * var(--tp)), 21.4px) + clamp(0px, calc(2.8 * var(--t2)), 2.8px));
 }
 .ak-footer-links {
   display: flex;
   justify-content: center;
-  gap: clamp(14px, calc(14px + 11 * var(--t)), 25px);
+  gap: clamp(14px, calc(14px + 10 * var(--tp)), 24px);
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: calc(clamp(19.1px, calc(20px - .9 * var(--tp)), 20px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: calc(clamp(14px, calc(14px + .1 * var(--tp)), 14.1px) + clamp(0px, calc(.8 * var(--t2)), .8px));
 }
 .ak-footer-link {
   color: var(--accent);
+  font-weight: 350;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.35em;
+  gap: 0.25em;
 }
+.ak-footer-link:hover { color: #940000; }
+.ak-footer-link .ak-icon { height: 0.875em; }
 .ak-footer-copy {
-  font-size: 0.6875rem;
+  font-size: calc(clamp(9.625px, calc(9.625px + 3.175 * var(--tp)), 12.8px) + clamp(0px, calc(.7 * var(--t2)), .7px));
+  font-weight: 375;
   color: #808080;
   font-family: var(--sans);
 }
-.ak-footer .ak-stripe { height: 4px; }
+.ak-footer .ak-stripe { height: clamp(4px, calc(4px + 1 * var(--tp)), 5px); }
 
 /* ----------------------------- PAGE WRAPPER ----------------------------- */
 
