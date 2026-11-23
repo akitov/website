@@ -251,7 +251,7 @@ function postCard(p) {
         ${p.images[0] ? `<a href="${postUrl(p)}"><img class="ak-post-image" src="${esc(p.images[0])}" alt="${esc(title)}" /></a>` : ''}
         <h2 class="ak-post-title"><a href="${postUrl(p)}">${esc(title)}</a></h2>
         <p class="ak-post-excerpt">${esc(p.subtitle)}</p>
-        <a class="ak-arrow-link" href="${postUrl(p)}">Read More <span class="ak-arrow">›</span></a>
+        <a class="ak-arrow-link" href="${postUrl(p)}">Read More...</a>
       </article>`;
 }
 
@@ -268,7 +268,8 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
       <nav class="ak-pills" aria-label="Categories">
         ${pills}
       </nav>
-      <div class="ak-post-grid" data-post-grid>${posts.map(postCard).join('')}
+      <div class="ak-post-grid" data-post-grid>
+        <div class="ak-post-grid-gutter" aria-hidden="true"></div>${posts.map(postCard).join('')}
       </div>
     </main>`;
   return page({

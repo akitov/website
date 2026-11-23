@@ -13,7 +13,7 @@ if (grid && window.Masonry && !window.matchMedia(MOBILE_QUERY).matches) {
     itemSelector: '.ak-post-grid-item',
     columnWidth: '.ak-post-grid-item',
     percentPosition: true,
-    gutter: 40,
+    gutter: '.ak-post-grid-gutter', // 3.06% of the grid, from styles.css
     transitionDuration: 0,
   });
   if (window.imagesLoaded) window.imagesLoaded(grid, () => masonry.layout());
