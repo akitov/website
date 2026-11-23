@@ -175,13 +175,17 @@ a { color: inherit; }
 .ak-stripe { background: var(--accent); }
 .ak-header .ak-stripe { height: clamp(4px, calc(4px + 2 * var(--tp)), 6px); }
 
-/* 12.6 + 42 (avatar) + 12.6 = 67.2. Left: padding 20 + the links' .25em. */
+/* 12.6 + 42 (avatar) + 12.6 = 67.2. Left: padding 20 + the links' .25em.
+ * Half the stripe's height moves from the top padding to the bottom, so the
+ * row is optically centred on the whole card (stripe included); the card
+ * height doesn't change. */
 .ak-nav {
+  --half-stripe: clamp(2px, calc(2px + 1 * var(--tp)), 3px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--nav-pad-block) clamp(14px, calc(14px + 6 * var(--tp)), 20px)
-    var(--nav-pad-block) clamp(14px, calc(14px + 10.4 * var(--tp)), 24.4px);
+  padding: calc(var(--nav-pad-block) - var(--half-stripe)) clamp(14px, calc(14px + 6 * var(--tp)), 20px)
+    calc(var(--nav-pad-block) + var(--half-stripe)) clamp(14px, calc(14px + 10.4 * var(--tp)), 24.4px);
   background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
   position: relative;
 }

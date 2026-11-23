@@ -239,6 +239,8 @@ function page({ url, title, description, image, section, nav, main, scripts = ''
     current_home: nav === 'home' ? ' aria-current="page"' : '',
     current_work: nav === 'work' ? ' aria-current="page"' : '',
     current_about: nav === 'about' ? ' aria-current="page"' : '',
+    // Footer ©: the build year; js/main.js updates it in the browser.
+    year: String(new Date().getFullYear()),
   };
   return LAYOUT.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '');
 }

@@ -1,4 +1,8 @@
-/* main.js — every page. Opens and closes the mobile menu. */
+/* main.js — every page. Opens and closes the mobile menu, keeps the footer
+ * year current (the build writes its own year; this covers later years
+ * without a redeploy). */
+
+for (const el of document.querySelectorAll('[data-year]')) el.textContent = String(new Date().getFullYear());
 
 const menu = document.querySelector('[data-menu]');
 const toggle = document.querySelector('[data-menu-toggle]');
