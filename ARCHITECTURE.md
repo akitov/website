@@ -80,7 +80,7 @@ next to the page. `blog/slack-ux/argyle.png` becomes
 
 | File | What happens |
 |------|--------------|
-| Images | `images[0]` is the main image (home card, sidebar, link previews). Further entries form a gallery under the post. Inline `![](file.png)` can go anywhere in the text |
+| Images | `images[0]` is the main image (home card, sidebar, link previews). Further entries form a gallery under the post. Inline `![](file.png)` can go anywhere in the text; `![alt](file.png "Caption")` adds a captioned frame |
 | `style.css` | Loaded on that page only, after `styles.css`, so it can restyle the post without changing its HTML |
 | `*.html`, `*.js`, models… | Copied as they are. Embed with `<iframe src="scene.html" loading="lazy" …>`. Put `<meta name="robots" content="noindex, indexifembedded">` in the embedded file so Google doesn't list it on its own |
 | `index.html` | Not allowed. That's the generated page |
