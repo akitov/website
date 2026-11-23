@@ -26,15 +26,34 @@ updated: 21.03.2013            # DD.MM.YYYY; newest posts first
 type: lesson                   # lesson | event | quote
 category: UX                   # → listed on /blog/ux/
 images: [hero.jpg, extra.jpg]  # optional; first = main image, rest = gallery
-quote: "..."                   # quotes only
-author: Author name            # quotes only
-source: https://...            # quotes only, optional
+quote: "..."                   # quotes only; *stars* mark the bold part
+author: Author name            # optional; quotes: under the quote; lessons: sidebar
+source: https://...            # optional; "Read more here" in the sidebar
+location: https://maps...      # optional; events: "Location" map link in the sidebar
 ---
 
 Markdown text. Images in the folder are referenced by filename:
 
 ![Alt text](diagram.png)
+
+An image with a title in quotes gets a frame with that caption under it:
+
+![Alt text](diagram.png "Caption text")
 ```
+
+What each post type shows:
+
+- **lesson**: title and subtitle on top; the sidebar has the main image,
+  `author` (with a feather), `source` as "Read more here", the category and
+  the date.
+- **quote**: the `quote` is the headline (`*make it happen*` is shown bold)
+  with `author` under it. The sidebar has `source`, the category and the
+  date. The Markdown text is optional.
+- **event**: like a lesson, but the sidebar starts with the date and ends
+  with `source` and `location`.
+
+Every field is optional except where marked; a missing one is simply left
+out.
 
 ## Categories
 

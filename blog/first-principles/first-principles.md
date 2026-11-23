@@ -5,6 +5,8 @@ category: Life
 title: First principles reasoning
 subtitle: Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.
 images: [elon.jpg]
+author: Elon Musk - PayPal, Tesla Motors, SolarCity, SpaceX
+source: http://www.youtube.com/watch?v=IgKWPdJWuBQ
 ---
 
 Elon Musk attributes much of his ability to innovate to *first-principles thinking* — boiling problems down to fundamental truths and reasoning up from there, rather than reasoning by analogy.
