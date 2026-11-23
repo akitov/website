@@ -210,6 +210,38 @@ the value is in `rem`, keep `rem` for A and B but use `px` inside the `calc()`
 `--gutter-frame`, `--space-*` and so on) are tokens at the top of
 `styles.css`.
 
+Values matched to the original site's screenshots use two more helpers,
+anchored at the widths those were taken at (768 tablet, 1456 desktop):
+
+- `--tp: calc((100vw - 390px) / 378)`: 0 at 390px, 1px at 768px.
+- `--t2: calc((100vw - 768px) / 688)`: 0 at 768px, 1px at 1456px.
+
+A value that is T at 768 and D at 1456 is
+`clamp(T, calc(T + (D - T) * var(--t2)), D)`. One that is also P on phones
+(390) adds the two ranges:
+
+```css
+calc(clamp(P, calc(P + (T - P) * var(--tp)), T) + clamp(0px, calc((D - T) * var(--t2)), D - T))
+```
+
+When a value shrinks over a range, swap that clamp's bounds so the smaller
+one comes first (`clamp()` with min > max always returns min). Example: the
+pill height is `calc(clamp(18px, calc(18px + 12.4 * var(--tp)), 30.4px) +
+clamp(0px, calc(2 * var(--t2)), 2px))`, so 18 / 30.4 / 32.4px.
+
+Other shared tokens:
+
+- `--gutter-frame`: the header and footer card inset (14px on phones, 4vw at
+  768–789, 8vw from 1456 up).
+- `--gutter-page`: the page content inset (14px, 5vw, 9.5vw).
+- `--footer-gap`: the space above the footer card (60px).
+- `--w-heading: 650` for every bold heading, `--w-light: 270` for every
+  light text.
+
+Widths keep scaling above 1456px; font sizes and vertical spacing stop at
+their 1456px values. Tablet-only grid percentages go in the one
+`@media (min-width: 761px) and (max-width: 979px)` block.
+
 To change a size, change the token's 390px value (and its 1280px value if the
 desktop size changes too). Don't add breakpoints. The one `@media
 (max-width: 760px)` query is for things that switch (the menu, one-column
