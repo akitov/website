@@ -80,7 +80,6 @@
   --fs-page-h1: clamp(1.75rem, calc(24.5px + 44.03 * var(--t)), 46px); /* h1.title: 43.2 / 46 */
   --fs-h1: clamp(1.625rem, calc(22.75px + 9.65 * var(--t)), 2rem);
   --fs-project-h1: clamp(1.625rem, calc(22.75px + 13.7 * var(--t)), 2.25rem);
-  --fs-post-title: clamp(1.1875rem, calc(16.625px + 53.39 * var(--t)), 41.6px); /* 39.3 / 41.6 */
   --fs-quote: clamp(1.125rem, calc(15.75px + 8.55 * var(--t)), 1.5rem);
   --fs-h3: clamp(1.0625rem, calc(14.875px + 5.375 * var(--t)), 1.25rem);
   --fs-small: clamp(0.75rem, calc(10.5px + 2.6625 * var(--t)), 0.8125rem);
@@ -443,7 +442,7 @@ a { color: inherit; }
 /* Masonry reads its gutter from this sizer (js/home.js). */
 .ak-post-grid-gutter { position: absolute; width: 3.06%; height: 0; }
 .ak-post-grid:not(.is-masonry) .ak-post-grid-gutter { display: none; }
-.ak-post-grid-item { padding-bottom: var(--space-7); }
+.ak-post-grid-item { padding-bottom: var(--space-7); container-type: inline-size; }
 .ak-post-grid.is-masonry .ak-post-grid-item {
   width: 47.96%;
   box-sizing: border-box;
@@ -464,13 +463,16 @@ a { color: inherit; }
 .ak-post-meta .ak-type { color: #555; font-weight: 415; }
 
 /* Original h2.entry-title: Source Sans Pro 300, 2.75rem / 1.2. */
+/* Tile titles scale with their column (container units, see
+ * .ak-post-grid-item): two columns 27.4px at a 325px column (tablet) to
+ * 41.6px at 554 (1456), capped; one column 30px at a 540px column. */
 .ak-post-title {
   font-family: var(--serif);
-  font-size: var(--fs-post-title);
+  font-size: min(41.6px, calc(7.25px + 6.2cqi));
   font-weight: var(--w-light);
   color: #000;
   margin: 0 0 min(17.6px, max(calc(12px - 8.594 * var(--t)), calc(3.268px + 11.966 * var(--t))));
-  line-height: clamp(20.78px, calc(20.78px + 67.6 * var(--t)), 52.8px);
+  line-height: 1.27; /* 52.8 / 41.6 */
 }
 /* No image: chip bottom -> title baseline 48 / 58.1 (collapses with the meta's 14px). */
 .ak-post-meta + .ak-post-title {
@@ -745,7 +747,7 @@ a { color: inherit; }
   font-weight: var(--w-heading);
   line-height: .75em;
   color: #000;
-  margin: .192em 4px 0 -3px; /* fallback (no initial-letter support, e.g. Firefox) */
+  margin: .192em 7px 0 -3px; /* fallback (no initial-letter support, e.g. Firefox) */
 }
 /* Optical drop cap: the cap's top sits on line 1's cap height and its foot on
  * line 2's baseline, at any size. */
@@ -754,7 +756,7 @@ a { color: inherit; }
     float: none;
     font-size: inherit;
     line-height: inherit;
-    margin: 0 .14em 0 0;
+    margin: 0 .4em 0 0; /* ~7px at 1456 */
     -webkit-initial-letter: 2;
     initial-letter: 2;
   }
@@ -1175,6 +1177,7 @@ a { color: inherit; }
 
   .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
+  .ak-post-title { font-size: 5.556cqi; } /* 30px at a 540px column */
 
   .ak-work-grid { grid-template-columns: 1fr; --work-shift: 0%; }
 
