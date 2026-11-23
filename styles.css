@@ -74,7 +74,7 @@
   --space-4: clamp(20px, calc(20px + 51.8 * var(--t)), 47px);  /* post grid top (pills mb 30 + this = 72 / 77) */
   --space-5: clamp(24px, calc(24px + 16 * var(--t)), 40px);  /* content top, post nav bottom, post body gap */
   --space-6: clamp(30px, calc(30px + 10 * var(--t)), 40px);  /* work tile bottom, about top */
-  --space-7: clamp(34px, calc(34px + 10 * var(--t)), 44px);  /* post card bottom */
+  --space-7: clamp(34px, calc(34px + 68.28 * var(--t)), 66px);  /* post card bottom: 63 / 66 below Read More */
   --space-8: clamp(40px, calc(40px + 20 * var(--t)), 60px);  /* work title top, project bottom */
   --space-9: clamp(40px, calc(40px + 24 * var(--t)), 64px);  /* post page bottom */
 
@@ -396,6 +396,8 @@ a { color: inherit; }
   gap: 0 3.06%;
   align-items: flex-start;
   padding-top: var(--space-4);
+  /* Last ink -> footer card 120 / 124: tile padding 63 / 66 + this + --footer-gap. */
+  margin-bottom: max(calc(-7.06 * var(--t)), min(-2px, calc(-3.55px + 1.294 * var(--t))));
 }
 .ak-post-grid.is-masonry {
   display: block;
@@ -414,17 +416,19 @@ a { color: inherit; }
   box-sizing: border-box;
 }
 
+/* Original .meta: Helvetica .875rem, .meta .date bold black. Same values as
+ * the post sidebar's .ak-side-meta: 14 / 15px, 415, #555; date 610, #000. */
 .ak-post-meta {
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: clamp(0.75rem, calc(10.5px + 8.24 * var(--t)), 15px);
   margin-bottom: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   flex-wrap: wrap;
 }
-.ak-post-meta .ak-date { font-weight: bold; color: #000; }
-.ak-post-meta .ak-type { color: var(--text-3); font-weight: normal; }
+.ak-post-meta .ak-date { font-weight: 610; color: #000; }
+.ak-post-meta .ak-type { color: #555; font-weight: 415; }
 
 .ak-post-title {
   font-family: var(--serif);
