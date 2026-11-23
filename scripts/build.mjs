@@ -325,7 +325,7 @@ function postPage(p, prev, next, categories) {
   const title = postTitle(p);
   const head = isQuote
     ? `<div class="ak-post-head is-quote">
-        <h1>“${quoteHtml(p.fm.quote)}”</h1>${p.fm.author ? `
+        <h1><span class="ak-qm ak-qm-open">“</span>${quoteHtml(p.fm.quote)}<span class="ak-qm ak-qm-close">”</span></h1>${p.fm.author ? `
         <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather')}</span> ${esc(p.fm.author)}</div>` : ''}
       </div>`
     : `<div class="ak-post-head">
