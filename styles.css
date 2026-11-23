@@ -88,6 +88,11 @@
   --fs-h3: clamp(1.0625rem, calc(14.875px + 5.375 * var(--t)), 1.25rem);
   --fs-small: clamp(0.75rem, calc(10.5px + 2.6625 * var(--t)), 0.8125rem);
 
+  /* work: /work/ sizes, 43.2 / 32.56px at 770 and 46 / 34.25px at 1456
+   * (About Beige x-height = the original's; px ends hit the targets) */
+  --fs-work-h1: clamp(22.75px, calc(22.75px + 47.9 * var(--t)), 46px);
+  --fs-work-cap: clamp(15.75px, calc(15.75px + 39.37 * var(--t)), 34.25px);
+
   /* Sizes, 390 -> 1280 */
   --nav-pad-block: clamp(12px, calc(12px + .6 * var(--tp)), 12.6px);
   --radius: clamp(4px, calc(6px - 2 * var(--tp)), 6px); /* header and footer cards: 6 on phones, 4 from 768 */
@@ -664,33 +669,62 @@ a { color: inherit; }
 
 /* ----------------------------- WORK PAGE ----------------------------- */
 
-.ak-work-page { padding-inline: var(--gutter); }
+/* Targets are the original's /work/ at 770 and 1456 (bootstrap fluid
+ * grid inside #wrap). No max-width: widths keep scaling above 1456. */
+.ak-work-page { padding-inline: var(--gutter-page); }
+/* 46 / 43.2px, line-height 1.2; the max-width wraps it after "people"
+ * at 770 and keeps one line at 1456. Baseline = header + 106.2 / 99.6. */
 .ak-work-h1 {
   font-family: var(--serif);
-  font-weight: bold;
-  font-size: var(--fs-h1);
+  font-weight: var(--w-heading);
+  font-size: var(--fs-work-h1);
+  line-height: clamp(27.5px, calc(27.5px + 62.06 * var(--t)), 57.6px);
   color: #000;
   text-align: center;
-  margin: var(--space-8) 0 30px;
+  max-width: clamp(470px, calc(470px + 230 * var(--t)), 700px);
+  margin: clamp(40px, calc(40px + 38.36 * var(--t)), 60.12px) auto
+    clamp(25.45px, calc(25.45px + 2.309 * var(--t)), 28.22px);
 }
-/* Two columns while each can be at least 320px wide, else one. auto-fill
- * (not auto-fit) keeps the column width when work.js hides tiles. */
+/* Pill row: one row from 980 up; the tablet block narrows it so it wraps
+ * after the third pill at 770 like the original. 76 / 71px down to the
+ * grid. At 770 this and the h1 margin-bottom (26.44) are 0.5px under the
+ * original's gaps to offset the shared header (+0.2) and pill boxes
+ * (+0.4 each), so pills and images land on the original's pixel rows
+ * (294 / 328 / 429.5). */
+.ak-work-page .ak-pills {
+  max-width: 760px;
+  margin: 0 auto clamp(30px, calc(30px + 96.03 * var(--t)), 76px);
+}
+/* Two explicit columns (also while work.js hides tiles). The gap is a
+ * percentage of the grid like the original's span margin: 30.24px at
+ * 1456. --work-shift (gap / column) moves an odd last tile right by one
+ * gap, as the original's third .span6 kept its margin-left. */
 .ak-work-grid {
-  max-width: 1200px;
+  --work-gap: 2.5641%;
+  --work-shift: 5.2632%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(320px, 50%)), 1fr));
-  gap: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--work-gap);
+}
+.ak-work-grid:not(.is-filtered) > .ak-work-tile:last-child:nth-child(odd):not(:first-child) {
+  translate: var(--work-shift) 0;
 }
 .ak-work-tile { display: flex; flex-direction: column; }
 .ak-work-tile a { text-decoration: none; color: inherit; }
-.ak-work-tile img { width: 100%; height: auto; display: block; }
+/* 3:2 like the original thumbs; cover crops images of another shape. */
+.ak-work-tile img { width: 100%; aspect-ratio: 3 / 2; height: auto; object-fit: cover; display: block; }
+/* Baseline = image bottom + 46.7 / 44.1; next image = baseline + 41 / 38.2.
+ * Long captions wrap (at 770 "ZEIT MAGAZIN iPad App" takes two lines). */
 .ak-work-tile-title {
-  padding: clamp(10px, calc(10px + 2 * var(--t)), 12px) 0 var(--space-6);
+  padding: clamp(10px, calc(10px + 3.84 * var(--t)), 12.26px) 0
+    clamp(29.01px, calc(29.01px + 2.699 * var(--t)), 32.24px);
   text-align: center;
   font-family: var(--serif);
-  font-size: var(--fs-tile);
-  color: var(--text-2);
+  font-size: var(--fs-work-cap);
+  font-weight: var(--w-light);
+  line-height: clamp(19.06px, calc(19.06px + 50.25 * var(--t)), 43.2px);
+  color: #000;
 }
 
 /* ----------------------------- PROJECT PAGE ----------------------------- */
@@ -936,6 +970,9 @@ a { color: inherit; }
 /* Original fluid-grid tablet range (768-979). Page plans put their tablet
  * grid percentages here; nothing else goes in this block. */
 @media (min-width: 761px) and (max-width: 979px) {
+  /* work: 19.14px gap at 770 (original 768-979 span margin 2.7624%) */
+  .ak-work-grid { --work-gap: 2.7624%; --work-shift: 5.6818%; }
+  .ak-work-page .ak-pills { max-width: clamp(470px, calc(470px + 290 * var(--t2)), 760px); }
 }
 
 /* Sizes and spacing scale through the fluid tokens on :root. This query
@@ -954,6 +991,8 @@ a { color: inherit; }
 
   .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
+
+  .ak-work-grid { grid-template-columns: 1fr; --work-shift: 0%; }
 
   .ak-post-side { text-align: center; }
   .ak-post-side img { aspect-ratio: 4/3; }

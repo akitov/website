@@ -12,6 +12,8 @@ pills?.addEventListener('click', (e) => {
   pills.querySelectorAll('[data-slug-pill]').forEach((p) => {
     p.classList.toggle('is-active', p.dataset.slugPill === active);
   });
+  // A filtered grid drops the odd-last-tile shift (styles.css .is-filtered).
+  grid.classList.toggle('is-filtered', !!active);
   grid.querySelectorAll('[data-slug]').forEach((tile) => {
     tile.style.display = !active || tile.dataset.slug === active ? '' : 'none';
   });
