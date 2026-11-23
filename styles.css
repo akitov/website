@@ -259,14 +259,10 @@ a { color: inherit; }
   border-color: #c5c5c5;
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.13), inset 0 -1px 0 rgba(255, 255, 255, 0.3);
 }
-.ak-hamburger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #999;
-  border-radius: 1px;
-}
-.ak-hamburger[aria-expanded="true"] span { background: #7a7a7a; }
+/* Font Awesome bars: ink is 75% of the box, so 25px tall = 22px-wide bars. */
+.ak-hamburger { color: #999; }
+.ak-hamburger .ak-icon { height: 25px; vertical-align: 0; }
+.ak-hamburger[aria-expanded="true"] { color: #7a7a7a; }
 .ak-hamburger:focus-visible,
 .ak-menu-tile:focus-visible {
   outline: 2px solid var(--accent);
@@ -674,7 +670,9 @@ a { color: inherit; }
   color: var(--accent);
   text-decoration: none;
 }
-.ak-postnav-link .ak-icon { height: 1.77em; width: auto; vertical-align: top; } /* 28 / 26 px */
+/* angle-left/right ink is 75% of the icon box: 2.36em box = 1.77em (28 / 26 px)
+ * of ink, like the original; the negative margins keep the 1.77em line. */
+.ak-postnav-link .ak-icon { height: 2.36em; width: auto; margin-block: -.295em; }
 .ak-postnav-link.is-next { margin-left: auto; }
 
 .ak-post-head { text-align: center; margin-bottom: var(--post-head-gap); }

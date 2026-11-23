@@ -308,12 +308,8 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
   });
 }
 
-/* The original's outline chevron (15 x 28), drawn as a stroke; Font Awesome's
- * angle icons are filled and much heavier. */
-const chevron = (dir) =>
-  `<svg class="ak-icon ak-chevron" viewBox="0 0 15 28" aria-hidden="true" focusable="false"><path d="${
-    dir === 'prev' ? 'M13.5 1 1.6 14l11.9 13' : 'M1.5 1l11.9 13L1.5 27'
-  }" fill="none" stroke="currentColor" stroke-width="2.4" /></svg>`;
+/* Prev / next chevron: Font Awesome's angle (the original's was 15 x 28). */
+const chevron = (dir) => icon(dir === 'prev' ? 'angle-left' : 'angle-right');
 
 function postPage(p, prev, next, categories) {
   const navLink = (item, dir) => {
