@@ -306,7 +306,7 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
   });
 }
 
-/* Prev / next chevron: Font Awesome's angle (the original's was 15 x 28). */
+/* Prev / next caret: Phosphor Light (the original's chevron was 15 x 28). */
 const chevron = (dir) => icon(dir === 'prev' ? 'caret-left-light' : 'caret-right-light');
 
 function postPage(p, prev, next, categories) {
@@ -442,7 +442,7 @@ function workPage(projects) {
   });
 }
 
-function projectPage(p, next) {
+function projectPage(p, prev, next) {
   const fm = p.fm;
   const dl = [
     fm.client && `<dt>Client:</dt><dd>${esc(fm.client)}</dd>`,
@@ -451,10 +451,20 @@ function projectPage(p, next) {
     p.date && `<dt>Date:</dt><dd>${esc(p.date)}</dd>`,
   ].filter(Boolean).join('');
   const title = p.title || p.slug;
+  // Prev / next as on blog posts (.ak-postnav), with the project titles.
+  const navLink = (item, dir) => {
+    if (!item) return '<span></span>';
+    const label = esc(item.title || item.slug);
+    return dir === 'prev'
+      ? `<a class="ak-postnav-link" href="${projectUrl(item)}">${chevron('prev')}${label}</a>`
+      : `<a class="ak-postnav-link is-next" href="${projectUrl(item)}">${label}${chevron('next')}</a>`;
+  };
   const main = `    <main class="ak-project-page">
-      <nav class="ak-project-topnav">
-        ${next ? `<a class="ak-arrow-link" href="${projectUrl(next)}">${esc(next.title || next.slug)} <span class="ak-arrow">›</span></a>` : ''}
+      <nav class="ak-postnav">
+        ${navLink(prev, 'prev')}
+        ${navLink(next, 'next')}
       </nav>
+      <div class="ak-project-inner">
       <div class="ak-project-head">
         <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
       </div>
@@ -469,6 +479,7 @@ function projectPage(p, next) {
           <dl>${dl}</dl>
           ${fm.link ? `<a class="ak-project-link" href="${esc(fm.link)}" target="_blank" rel="noopener">View Project</a>` : ''}
         </aside>
+      </div>
       </div>
     </main>`;
   return page({
@@ -601,8 +612,11 @@ export async function build() {
 
   add('/work/', workPage(projects), 'the work page');
   projects.forEach((p, i) => {
-    const next = projects[i + 1] || (projects.length > 1 ? projects[0] : null);
-    add(projectUrl(p), projectPage(p, next), p.source);
+    // Prev / next wrap around.
+    const n = projects.length;
+    const prev = n > 1 ? projects[(i - 1 + n) % n] : null;
+    const next = n > 1 ? projects[(i + 1) % n] : null;
+    add(projectUrl(p), projectPage(p, prev, next), p.source);
   });
 
   add('/about/', page({

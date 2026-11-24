@@ -983,17 +983,18 @@ a { color: inherit; }
 
 /* ----------------------------- PROJECT PAGE ----------------------------- */
 
-.ak-project-page {
+/* Prev / next: the blog post's .ak-postnav, at the page gutters and the same
+ * height under the header; the gap below keeps the title where it was
+ * (header -> h1 top 85 / 87.7 / 91). */
+.ak-project-page > .ak-postnav {
+  padding-inline: var(--gutter-page);
+  margin-bottom: calc(clamp(26.9px, calc(49.3px - 22.4 * var(--tp)), 49.3px) - clamp(0px, calc(1.8 * var(--t2)), 1.8px));
+}
+.ak-project-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: clamp(16px, calc(16px + 4 * var(--t)), 20px) var(--gutter-project) var(--space-8);
+  padding: 0 var(--gutter-project) var(--space-8);
   font-family: var(--serif);
-}
-.ak-project-topnav {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 40px;
-  gap: 16px;
 }
 .ak-project-head {
   text-align: center;
