@@ -1218,7 +1218,7 @@ a { color: inherit; }
 /* Sizes and spacing scale through the fluid tokens on :root. This query
  * only flips what can't scale: inline nav vs hamburger, one post column
  * (also for Masonry), the side image shape and the strive list
- * orientation. js/home.js repeats the query in MOBILE_QUERY. */
+ * columns. js/home.js repeats the query in MOBILE_QUERY. */
 @media (max-width: 760px) {
   .ak-nav-links { display: none; }
   .ak-hamburger { display: inline-flex; }
@@ -1240,10 +1240,9 @@ a { color: inherit; }
   .ak-post-head p { max-width: none; }
   .ak-side-box img { aspect-ratio: 4/3; object-fit: cover; }
 
-  .ak-strive-list { flex-direction: column; gap: 18px; }
-  .ak-strive-item { flex-direction: row; gap: 16px; text-align: left; }
-  .ak-strive-item .ico { min-width: 40px; }
-  .ak-strive-item .lbl { margin-top: 0; }
+  /* Two columns, items as on tablet (icon over label); an odd last item
+   * sits in the left column like the work grid's. */
+  .ak-strive-list { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 16px; }
 }
 
 /* ------------------------- TYPE REFINEMENTS ------------------------- */
