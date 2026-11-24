@@ -233,6 +233,11 @@ function page({ url, title, description, image, nav, main, scripts = '', stylesh
     current_home: nav === 'home' ? ' aria-current="page"' : '',
     current_work: nav === 'work' ? ' aria-current="page"' : '',
     current_about: nav === 'about' ? ' aria-current="page"' : '',
+    // Header right: the profile photo linking to /about/; on /about/ (which
+    // already shows the photo) a tennis ball instead.
+    avatar: nav === 'about'
+      ? '<span class="ak-avatar ak-avatar-emoji" role="img" aria-label="Tennis ball">🎾</span>'
+      : '<a href="/about/" class="ak-avatar" aria-label="About"><img src="/assets/profile.jpg" width="378" height="378" alt="Alexander Kitov" /></a>',
     // Footer ©: the build year; js/main.js updates it in the browser.
     year: String(new Date().getFullYear()),
   };
