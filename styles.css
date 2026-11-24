@@ -241,15 +241,15 @@ a { color: inherit; }
   z-index: 1;
 }
 .ak-avatar img { width: 100%; height: 100%; object-fit: cover; }
-/* About page: a tennis ball the photo's size. The emoji's ink is .945em wide
- * and sits .032em above the middle of its box. */
+/* About page: a tennis ball 90% of the photo's size. The emoji's ink is
+ * .945em wide and sits .032em above the middle of its box. */
 .ak-avatar-emoji {
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
   border-radius: 0;
-  font-size: calc(clamp(42px, calc(44px - 2 * var(--tp)), 44px) / .945);
+  font-size: calc(clamp(42px, calc(44px - 2 * var(--tp)), 44px) * .9 / .945);
   line-height: 1;
   translate: 0 .032em; /* ink centred where the photo's centre is */
   user-select: none;
