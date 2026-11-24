@@ -13,6 +13,7 @@
 }
 /* Phosphor icon fonts, trimmed to the icons used (scripts/subset-icons.py).
  * block: never show the private-use codepoints as fallback boxes. */
+@font-face { font-family: "ph-bold"; src: url("/assets/fonts/phosphor-bold.woff2") format("woff2"); font-display: block; }
 @font-face { font-family: "ph-fill"; src: url("/assets/fonts/phosphor-fill.woff2") format("woff2"); font-display: block; }
 @font-face { font-family: "ph-regular"; src: url("/assets/fonts/phosphor-regular.woff2") format("woff2"); font-display: block; }
 @font-face { font-family: "ph-light"; src: url("/assets/fonts/phosphor-light.woff2") format("woff2"); font-display: block; }
@@ -671,12 +672,13 @@ a { color: inherit; }
   text-transform: none;
   vertical-align: calc(var(--yb) * -1em);
 }
+.ak-ph-bold { font-family: "ph-bold"; }
 .ak-ph-fill { font-family: "ph-fill"; }
 .ak-ph-regular { font-family: "ph-regular"; }
 .ak-ph-light { font-family: "ph-light"; }
-.ak-icon-envelope-simple-fill { --yb: .125; }
-.ak-icon-linkedin-logo-fill,
-.ak-icon-twitter-logo-fill,
+.ak-icon-at-bold,
+.ak-icon-linkedin-logo-bold { --yb: .015625; }
+.ak-icon-x-logo-bold { --yb: .046875; }
 .ak-icon-feather-fill { --yb: .03125; }
 /* map-pin-fill: 0 (the default) */
 .ak-feather { display: inline; }

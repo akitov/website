@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Trim Phosphor's official web fonts to the icons in scripts/vendor/phosphor/icons.json.
 
-Writes assets/fonts/phosphor-<style>.woff2 (fill, regular, light). The glyphs
+Writes assets/fonts/phosphor-<style>.woff2 (bold, fill, regular, light). The glyphs
 are Phosphor's, unchanged; only unused glyphs are dropped (the full fonts are
 130-155 KB each). Icons are font glyphs, not inline SVG, because Chrome on
 macOS draws SVG with 4x MSAA (stepped edges) while glyphs get the text's
@@ -19,7 +19,7 @@ import sys
 from fontTools import subset
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FONTS = {'fill': 'fill/Phosphor-Fill.woff2', 'regular': 'regular/Phosphor.woff2', 'light': 'light/Phosphor-Light.woff2'}
+FONTS = {'bold': 'bold/Phosphor-Bold.woff2', 'fill': 'fill/Phosphor-Fill.woff2', 'regular': 'regular/Phosphor.woff2', 'light': 'light/Phosphor-Light.woff2'}
 
 
 def main(src):
