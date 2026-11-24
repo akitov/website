@@ -1,0 +1,14 @@
+{
+  "_source": "@phosphor-icons/web 2.1.2 (MIT). Names follow Phosphor's classes: <name> is Regular, <name>-fill / <name>-light the other styles. Codepoints from the package's style.css; inkBottom is the glyph's lowest point in em above the baseline (from the font).",
+  "envelope-simple-fill": { "style": "fill", "codepoint": "e218", "inkBottom": 0.125 },
+  "linkedin-logo-fill": { "style": "fill", "codepoint": "e2ee", "inkBottom": 0.03125 },
+  "twitter-logo-fill": { "style": "fill", "codepoint": "e4ba", "inkBottom": 0.03125 },
+  "feather-fill": { "style": "fill", "codepoint": "e9c0", "inkBottom": 0.03125 },
+  "map-pin-fill": { "style": "fill", "codepoint": "e316", "inkBottom": 0 },
+  "list": { "style": "regular", "codepoint": "e2f0", "inkBottom": 0.15625 },
+  "users": { "style": "regular", "codepoint": "e4d6", "inkBottom": 0.125 },
+  "device-mobile": { "style": "regular", "codepoint": "e1e0", "inkBottom": 0 },
+  "check-square": { "style": "regular", "codepoint": "e186", "inkBottom": 0.0625 },
+  "caret-left-light": { "style": "light", "codepoint": "e138", "inkBottom": 0.1006 },
+  "caret-right-light": { "style": "light", "codepoint": "e13a", "inkBottom": 0.1025 }
+}

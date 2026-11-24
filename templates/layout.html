@@ -6,7 +6,9 @@
     <title>{{title}}</title>
 {{meta}}
     <link rel="preload" href="/assets/fonts/AboutBeige.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/assets/fonts/icons.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/phosphor-fill.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/phosphor-regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/phosphor-light.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css" />
 {{styles}}
     <link rel="icon" type="image/svg+xml" href="/assets/avatar.svg" />
@@ -17,7 +19,7 @@
       <div class="ak-stripe"></div>
       <nav class="ak-nav" aria-label="Main">
         <button type="button" class="ak-hamburger" aria-label="Menu" aria-expanded="false" aria-controls="ak-menu" data-menu-toggle>
-          {{icon:menu}}
+          {{icon:list}}
         </button>
         <div class="ak-nav-links">
           <a class="ak-nav-link{{active_home}}"{{current_home}} href="/" data-nav="home">HOME</a>
@@ -42,9 +44,9 @@
       <div class="ak-footer-inner">
         <div class="ak-footer-name">Alexander Kitov</div>
         <div class="ak-footer-links">
-          <a class="ak-footer-link" href="mailto:hello@example.com">{{icon:mail-filled}} Email</a>
-          <a class="ak-footer-link" href="#">{{icon:linkedin-filled}} LinkedIn</a>
-          <a class="ak-footer-link" href="#">{{icon:twitter-filled}} Twitter</a>
+          <a class="ak-footer-link" href="mailto:hello@example.com">{{icon:envelope-simple-fill}} Email</a>
+          <a class="ak-footer-link" href="#">{{icon:linkedin-logo-fill}} LinkedIn</a>
+          <a class="ak-footer-link" href="#">{{icon:twitter-logo-fill}} Twitter</a>
         </div>
         <div class="ak-footer-copy">© <span data-year>{{year}}</span></div>
       </div>

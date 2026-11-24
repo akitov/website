@@ -18,7 +18,7 @@ How it works: [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ## Look and feel
 
 - **Font:** all text is About Beige, a variable font in `assets/fonts/AboutBeige.woff2`. It is a commercial font by Krista Radoeva (abouttype.com), used under the site owner's license and not covered by the repo's other licenses.
-- **Icons:** Lucide SVGs in `scripts/vendor/lucide/`, turned into the icon font `assets/fonts/icons.woff2` by `scripts/icon-font.py`. Write `{{icon:name}}` in `templates/layout.html` or `pages/*.html`. To add one, copy its SVG into that folder and rebuild the font (steps in `ARCHITECTURE.md`).
+- **Icons:** Phosphor's web fonts, trimmed to the icons in `scripts/vendor/phosphor/icons.json` by `scripts/subset-icons.py`. Write `{{icon:name}}` in `templates/layout.html` or `pages/*.html`. Steps to add one are in `ARCHITECTURE.md`.
 - **Sizes:** they scale smoothly with the window using the `--t` token in `styles.css`. To change a size, change its 390px value. Don't add breakpoints.
 - **Mobile menu:** `js/main.js` opens and closes it below 761px.
 

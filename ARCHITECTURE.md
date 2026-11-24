@@ -179,43 +179,35 @@ by the repo's other licenses.
 
 ### Icons
 
-Icons are Lucide (ISC), kept as SVG files in `scripts/vendor/lucide/` with
-the license in `LICENSE`. Most come from `lucide-static` 1.70.0. LinkedIn and
-Twitter come from 0.577.0, the last release with brand icons.
+Icons are Phosphor (MIT, `@phosphor-icons/web` 2.1.2), the official web fonts
+in three styles: Fill, Regular and Light. `scripts/subset-icons.py` trims each
+font to the icons listed in `scripts/vendor/phosphor/icons.json` and writes
+`assets/fonts/phosphor-{fill,regular,light}.woff2`, about 3 KB in all; the
+full fonts are 130-155 KB each. The glyphs are Phosphor's, unchanged.
 
-The site doesn't use the SVGs directly. `scripts/icon-font.py` converts them
-into `assets/fonts/icons.woff2`, about 1.3 KB, and writes the name-to-codepoint
-map to `scripts/vendor/lucide/icons.json`. Chrome on macOS draws SVG shapes
-on the GPU with 4x multisampling, which leaves curved edges with 3 shades.
-Font glyphs get the same antialiasing as text: 70+ shades.
+The icons are font glyphs rather than inline SVG. Chrome on macOS draws SVG
+with 4x multisampling, which leaves stepped edges; glyphs get the text's
+antialiasing.
 
-The conversion is exact. It keeps fills, outlines strokes at their width,
-caps and joins, and subtracts `<mask>` black shapes. Each glyph is the icon's
-24-unit square on the baseline.
+Write `{{icon:<name>}}` in `templates/layout.html` or `pages/*.html`, or call
+`icon('<name>')` in `build.mjs`. Names follow Phosphor's classes: `users` is
+Regular, `feather-fill` and `caret-left-light` are the other styles. The build
+emits `<span class="ak-icon ak-icon-<name> ak-ph-<style>" aria-hidden="true">`.
 
-Write `{{icon:mail-filled}}` in `templates/layout.html` or `pages/*.html`, or
-call `icon('map-pin')` in `build.mjs`. The build emits
-`<span class="ak-icon ak-icon-<name>" aria-hidden="true">&#x…;</span>`.
+Next to text every icon is 16px. At that size Phosphor's grid lands on whole
+device pixels on 2x screens. `--yb` (`inkBottom` in `icons.json`) lowers each
+glyph so its ink sits on the text's baseline.
 
-`*-filled.svg` files are filled variants made from Lucide's own paths. Where
-a fill would hide an inner line (the mail flap, the feather's shaft and barb),
-a mask cuts that line out. No new geometry is drawn.
+To add an icon:
 
-Next to text, an icon's font-size is 1.1em, and its ink bottom sits on the
-text's baseline. `--ib` in `styles.css` is the space under the ink in the
-icon's 24-unit grid, stroke included.
-
-To add or change an icon:
-
-1. Download the package: `npm pack lucide-static@1.70.0`, then unpack it.
-2. Copy `package/icons/<name>.svg` into `scripts/vendor/lucide/`.
-3. Rebuild the font. It needs fonttools, skia-pathops and brotli:
-   `python3 -m venv /tmp/iv && /tmp/iv/bin/pip install fonttools skia-pathops brotli && /tmp/iv/bin/python scripts/icon-font.py`.
-   Commit the new `icons.woff2` and `icons.json`.
-4. Measure the icon's ink bottom in the 24-unit grid. If it isn't y 22, set
-   `.ak-icon-<name> { --ib: <24 - y> }`.
-5. Use `{{icon:<name>}}`. A name missing from `icons.json` stops the build
-   with `Unknown icon`.
+1. Find it on phosphoricons.com. Its codepoint is in the package's
+   `src/<style>/style.css`, and its ink bottom is the glyph's yMin / 1024.
+2. Add it to `icons.json`.
+3. Trim the fonts again. This needs fonttools and brotli:
+   `npm pack @phosphor-icons/web@2.1.2 && tar xzf phosphor-icons-web-2.1.2.tgz`, then
+   `python3 -m venv /tmp/iv && /tmp/iv/bin/pip install fonttools brotli && /tmp/iv/bin/python scripts/subset-icons.py package/src`.
+   Commit the new `.woff2` files.
+4. If its `inkBottom` isn't 0, set `.ak-icon-<name> { --yb: <inkBottom> }`.
 
 ### Fluid sizes
 
@@ -295,12 +287,12 @@ projects/<slug>/               one folder per project
 redirects.txt                  old URL → new URL
 styles.css                     all styles
 js/main.js home.js work.js     small browser scripts
-assets/                        avatar / favicon / fonts/AboutBeige.woff2, fonts/icons.woff2
+assets/                        avatar / favicon / fonts/AboutBeige.woff2, fonts/phosphor-*.woff2
 scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
-scripts/icon-font.py           builds assets/fonts/icons.woff2 from the icon SVGs
-scripts/vendor/lucide/         icon SVGs + icons.json + LICENSE (Lucide, ISC)
+scripts/subset-icons.py        trims the Phosphor fonts to the icons used
+scripts/vendor/phosphor/       icons.json (name, style, codepoint) + LICENSE (MIT)
 .github/workflows/deploy.yml   build + deploy on push
 _materials/                    design references (gitignored, local only)
 _site/                         build output (not committed)

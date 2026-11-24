@@ -189,17 +189,18 @@ const markdown = (src) => marked.parse(src).replace(/<p>\s*(<figure class="ak-fi
 
 let LAYOUT = '';
 
-// Lucide icons (ISC), as glyphs of assets/fonts/icons.woff2: {{icon:name}}
-// becomes <span class="ak-icon ak-icon-<name>">&#x…;</span>. The font is
-// built from scripts/vendor/lucide/<name>.svg by scripts/icon-font.py, which
-// also writes the name -> codepoint map read here. Glyphs, not inline SVG:
-// Chrome on macOS draws SVG with 4x MSAA (stepped edges); glyphs get the
-// text's antialiasing.
-const ICON_MAP = JSON.parse(readFileSync(path.join(ROOT, 'scripts', 'vendor', 'lucide', 'icons.json'), 'utf8'));
+// Phosphor icons (MIT), as glyphs of Phosphor's own web fonts, trimmed to the
+// icons used (assets/fonts/phosphor-<style>.woff2, see scripts/subset-icons.py).
+// {{icon:name}} uses Phosphor's class names: "users" is Regular,
+// "feather-fill" / "caret-left-light" the Fill / Light styles. The build
+// emits <span class="ak-icon ak-icon-<name> ak-ph-<style>">&#x…;</span>.
+// Glyphs, not inline SVG: Chrome on macOS draws SVG with 4x MSAA (stepped
+// edges); glyphs get the text's antialiasing.
+const ICONS = JSON.parse(readFileSync(path.join(ROOT, 'scripts', 'vendor', 'phosphor', 'icons.json'), 'utf8'));
 function icon(name) {
-  const cp = ICON_MAP[name];
-  if (!cp) throw new Error(`Unknown icon: ${name} (add scripts/vendor/lucide/${name}.svg and run scripts/icon-font.py)`);
-  return `<span class="ak-icon ak-icon-${name}" aria-hidden="true">&#x${cp};</span>`;
+  const ic = ICONS[name];
+  if (!ic || name.startsWith('_')) throw new Error(`Unknown icon: ${name} (add it to scripts/vendor/phosphor/icons.json and run scripts/subset-icons.py)`);
+  return `<span class="ak-icon ak-icon-${name} ak-ph-${ic.style}" aria-hidden="true">&#x${ic.codepoint};</span>`;
 }
 const withIcons = (html) => html.replace(/\{\{icon:([\w-]+)\}\}/g, (_, name) => icon(name));
 
@@ -253,7 +254,7 @@ function postCard(p) {
         <div class="ak-quote">
           <div class="ak-quote-text"><a href="${postUrl(p)}" style="color:inherit;text-decoration:none">${quoteHtml(p.fm.quote)}</a></div>
           <div class="ak-quote-author">
-            <span class="ak-feather">${icon('feather-filled')}</span>
+            <span class="ak-feather">${icon('feather-fill')}</span>
             <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
           </div>
         </div>
@@ -301,7 +302,7 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
 }
 
 /* Prev / next chevron: Font Awesome's angle (the original's was 15 x 28). */
-const chevron = (dir) => icon(dir === 'prev' ? 'chevron-left' : 'chevron-right');
+const chevron = (dir) => icon(dir === 'prev' ? 'caret-left-light' : 'caret-right-light');
 
 function postPage(p, prev, next, categories) {
   const navLink = (item, dir) => {
@@ -316,7 +317,7 @@ function postPage(p, prev, next, categories) {
   const head = isQuote
     ? `<div class="ak-post-head is-quote">
         <h1><span class="ak-qm ak-qm-open">“</span>${quoteHtml(p.fm.quote)}<span class="ak-qm ak-qm-close">”</span></h1>${p.fm.author ? `
-        <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather-filled')}</span> ${esc(p.fm.author)}</div>` : ''}
+        <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather-fill')}</span> ${esc(p.fm.author)}</div>` : ''}
       </div>`
     : `<div class="ak-post-head">
         <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
@@ -330,13 +331,13 @@ function postPage(p, prev, next, categories) {
   const typeWord = (TYPE_LABELS[type] || 'A Note').replace(/^An?/, (m) => m.toLowerCase());
   const side = {
     author: !isQuote && p.fm.author
-      ? `<div class="ak-side-author"><span class="ak-feather">${icon('feather-filled')}</span> ${esc(p.fm.author)}</div>` : '',
+      ? `<div class="ak-side-author"><span class="ak-feather">${icon('feather-fill')}</span> ${esc(p.fm.author)}</div>` : '',
     link: p.fm.source
       ? `<div class="ak-side-link"><a href="${esc(p.fm.source)}" target="_blank" rel="noopener">Read more here</a></div>` : '',
     type: `<div class="ak-side-type">${esc(typeWord)} in <a class="ak-side-chip" href="${categoryUrl(p.category)}">${esc(p.category)}</a></div>`,
     date: p.date ? `<time class="ak-side-date" datetime="${isoDate(p.date)}">${esc(p.date)}</time>` : '',
     loc: p.fm.location
-      ? `<div class="ak-side-loc"><a href="${esc(p.fm.location)}" target="_blank" rel="noopener">${icon('map-pin')} Location</a></div>` : '',
+      ? `<div class="ak-side-loc"><a href="${esc(p.fm.location)}" target="_blank" rel="noopener">${icon('map-pin-fill')} Location</a></div>` : '',
   };
   const order = { quote: ['link', 'type', 'date'], event: ['date', 'type', 'link', 'loc'] }[type] || ['author', 'link', 'type', 'date', 'loc'];
   const sideMeta = order.map((k) => side[k]).filter(Boolean).join('\n              ');

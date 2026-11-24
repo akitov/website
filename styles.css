@@ -11,13 +11,11 @@
   font-style: normal;
   font-display: swap;
 }
-/* Lucide icons as glyphs (scripts/icon-font.py). block: never show the
- * private-use codepoints as fallback boxes. */
-@font-face {
-  font-family: "ak-icons";
-  src: url("/assets/fonts/icons.woff2") format("woff2");
-  font-display: block;
-}
+/* Phosphor icon fonts, trimmed to the icons used (scripts/subset-icons.py).
+ * block: never show the private-use codepoints as fallback boxes. */
+@font-face { font-family: "ph-fill"; src: url("/assets/fonts/phosphor-fill.woff2") format("woff2"); font-display: block; }
+@font-face { font-family: "ph-regular"; src: url("/assets/fonts/phosphor-regular.woff2") format("woff2"); font-display: block; }
+@font-face { font-family: "ph-light"; src: url("/assets/fonts/phosphor-light.woff2") format("woff2"); font-display: block; }
 
 :root {
   --bg: #ededed;
@@ -269,7 +267,7 @@ a { color: inherit; }
 }
 /* Font Awesome bars: ink is 75% of the box, so 25px tall = 22px-wide bars. */
 .ak-hamburger { color: #999; }
-.ak-hamburger .ak-icon { --icon-h: 28px; vertical-align: 0; } /* menu ink 16 of 24: 18.7px tall, 21 wide */
+.ak-hamburger .ak-icon { --icon-h: 32px; vertical-align: 0; } /* list ink .5625 x .75em: 18px tall, 24 wide, on whole pixels */
 .ak-hamburger[aria-expanded="true"] { color: #7a7a7a; }
 .ak-hamburger:focus-visible,
 .ak-menu-tile:focus-visible {
@@ -341,7 +339,7 @@ a { color: inherit; }
   text-decoration: none;
   white-space: nowrap;
 }
-.ak-footer-link .ak-icon { margin-right: .05em; } /* + the space: .3em, as on the about page */
+.ak-footer-link .ak-icon { margin-right: .05em; } /* + the space, as on the about page */
 .ak-footer-link:hover { color: #940000; }
 .ak-footer-copy {
   font-size: calc(clamp(9.625px, calc(9.625px + 3.175 * var(--tp)), 12.8px) + clamp(0px, calc(.7 * var(--t2)), .7px));
@@ -651,26 +649,36 @@ a { color: inherit; }
   padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
 }
 
-/* Lucide icons (glyphs of the ak-icons font, see scripts/icon-font.py).
- * Each glyph is the icon's 24-unit square sitting on the baseline, so
- * font-size = the icon's box (--icon-h). Next to text the box is 1.1em, so
- * the ink is .82em (mail) to 1em (feather) tall, and the ink's bottom sits on
- * the text's baseline. --ib is the space under the ink in the 24-unit grid
- * (incl. the stroke). The gap to the text is the space in the markup +
- * .05em = .3em. */
+/* Phosphor icons (glyphs, see scripts/build.mjs icon()). A glyph's box is
+ * 1em tall, from .0625em below the baseline to .9375em above it. Next to text
+ * every icon is 16px (--icon-h): Phosphor's grid lands on whole device pixels
+ * at 16px on 2x screens, so edges are sharp (at 1.2em, ~18px, they blurred).
+ * --yb, the ink's lowest point in em above the glyph's baseline
+ * (scripts/vendor/phosphor/icons.json), lowers the glyph so its ink sits on
+ * the text's baseline (2px / .5px at 16px). No font smoothing: on 1x screens
+ * macOS smoothing thickens glyphs and closes the cut-outs (the "in", the
+ * envelope's flap). The gap to the text is the space in the markup + .05em. */
 .ak-icon {
-  --icon-h: 1.1em;
-  --ib: 2;
+  --icon-h: 16px;
+  -webkit-font-smoothing: antialiased;
+  --yb: 0;
   display: inline-block;
-  font: normal 400 var(--icon-h) / 1 "ak-icons";
+  font-size: var(--icon-h);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
   letter-spacing: 0;
   text-transform: none;
-  vertical-align: calc(var(--ib) * -1em / 24);
+  vertical-align: calc(var(--yb) * -1em);
 }
-.ak-icon-mail-filled { --ib: 3; }
-.ak-icon-feather-filled,
-.ak-icon-map-pin { --ib: 1; }
-/* linkedin-filled, twitter-filled: 2 (the default) */
+.ak-ph-fill { font-family: "ph-fill"; }
+.ak-ph-regular { font-family: "ph-regular"; }
+.ak-ph-light { font-family: "ph-light"; }
+.ak-icon-envelope-simple-fill { --yb: .125; }
+.ak-icon-linkedin-logo-fill,
+.ak-icon-twitter-logo-fill,
+.ak-icon-feather-fill { --yb: .03125; }
+/* map-pin-fill: 0 (the default) */
 .ak-feather { display: inline; }
 .ak-feather .ak-icon { margin-right: .05em; }
 
@@ -703,21 +711,20 @@ a { color: inherit; }
   color: var(--accent);
   text-decoration: none;
 }
-/* chevron-left/right (stroke 1.25, see scripts/icon-font.py): ink 13.25 x
- * 9.25 of 24, so a 3.22em glyph gives the original's 28 x 15 px chevron.
- * Inside the glyph em is 3.22x the link's. Text side: the glyph's 7.375-unit
- * side bearing is pulled in so the chevron-text gap is .34em of the text
- * (a quarter of the old .38em gap + bearing). Vertically: flex centres it on
- * the line; the shift puts its middle on the text's x-height middle, then 1px
- * higher. The block margins keep the 1.77em line. */
+/* caret-left/right (Light): ink .672 x .36em, so a 2.65em glyph gives the
+ * original's 28 x 15 px chevron. Inside the glyph em is 2.65x the link's.
+ * Text side: the glyph's side bearing (.35em) is pulled in so the caret-text
+ * gap is .34em of the text. Vertically: flex centres it on the line; the
+ * shift puts its middle on the text's x-height middle, then 1px higher. The
+ * block margins keep the 1.77em line. */
 .ak-postnav-link .ak-icon {
-  --icon-h: 3.22em;
+  --icon-h: 2.65em;
   vertical-align: 0;
-  margin-block: -.2252em;
-  translate: 0 calc(.0202em - 1px);
+  margin-block: -.166em;
+  translate: 0 calc(.0245em - 1px);
 }
-.ak-postnav-link .ak-icon-chevron-left { margin-right: -.319em; }
-.ak-postnav-link .ak-icon-chevron-right { margin-left: -.319em; }
+.ak-postnav-link .ak-icon-caret-left-light { margin-right: -.365em; }
+.ak-postnav-link .ak-icon-caret-right-light { margin-left: -.367em; }
 .ak-postnav-link.is-next { margin-left: auto; }
 
 .ak-post-head { text-align: center; margin-bottom: var(--post-head-gap); }
@@ -1127,7 +1134,7 @@ a { color: inherit; }
   text-decoration: none;
   white-space: nowrap;
 }
-.ak-about-social .ak-icon { margin-right: .05em; } /* + the space: .3em */
+.ak-about-social .ak-icon { margin-right: .05em; } /* + the space */
 
 /* Body copy: Helvetica 1rem / 1.6rem #555 in the original; paragraphs were
  * <br><br>, so one blank line between them. */
@@ -1214,10 +1221,11 @@ a { color: inherit; }
   justify-content: center;
   color: #000;
 }
-/* Ink 34px tall like the original: users and square-check fill 20 of 24
- * units, smartphone 22. */
-.ak-strive-item .ico .ak-icon { --icon-h: 40.8px; }
-.ak-strive-item .ico .ak-icon-smartphone { --icon-h: 37.09px; }
+/* Ink 34px tall like the original (glyph sizes from the ink heights). */
+.ak-strive-item .ico .ak-icon { vertical-align: 0; }
+.ak-strive-item .ico .ak-icon-users { --icon-h: 54.4px; }          /* ink .625em */
+.ak-strive-item .ico .ak-icon-device-mobile { --icon-h: 38.86px; } /* ink .875em */
+.ak-strive-item .ico .ak-icon-check-square { --icon-h: 45.33px; }  /* ink .75em */
 .ak-strive-item .lbl {
   font-family: var(--sans);
   font-size: var(--ab-lbl);
