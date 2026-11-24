@@ -1049,6 +1049,7 @@ a { color: inherit; }
 
   margin: 0 auto;
   padding: var(--ab-top) var(--gutter-page) var(--ab-bottom);
+  container-type: inline-size; /* the photo is sized in cqi, see below */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1059,11 +1060,13 @@ a { color: inherit; }
 .ak-about-section { width: min(100%, max(65.812%, 690.3px)); margin: 0; }
 
 /* Photo: .span2 (14.5299% of #wrap) on desktop, 150px max at 767 (120 on
- * phones), plus the original's 1px grey ring and 0 2px 2px shadow. */
+ * phones), plus the original's 1px grey ring and 0 2px 2px shadow.
+ * cqi, not %, and an explicit height: with a % width WebKit (Safari) sized
+ * the height wrong once the % won, giving a 173 x 277 oval at 1456. */
 .ak-about-photo {
-  width: max(calc(clamp(120px, calc(120px + 30 * var(--tp)), 150px) + 2px), calc(14.5299% + 2px));
-  aspect-ratio: 1;
-  height: auto;
+  --ab-photo: max(calc(clamp(120px, calc(120px + 30 * var(--tp)), 150px) + 2px), calc(14.5299cqi + 2px));
+  width: var(--ab-photo);
+  height: var(--ab-photo);
   border: 1px solid grey;
   border-radius: 50%;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
