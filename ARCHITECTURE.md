@@ -179,18 +179,31 @@ by the repo's other licenses.
 
 ### Icons
 
-Icons are Font Awesome Free 7.3.1 (CC BY 4.0), kept as SVG files in
-`scripts/vendor/fontawesome/` with the license in `LICENSE.txt`. They are not
-in `assets/`, so they are never published as files. Write `{{icon:envelope}}`
-in `templates/layout.html` or `pages/*.html`; the build replaces it with that
-SVG inline (`<svg class="ak-icon" aria-hidden="true">`), sized and colored by
-CSS. To add an icon:
+Icons are Lucide (ISC), kept as SVG files in `scripts/vendor/lucide/` with
+the license in `LICENSE`. Most come from `lucide-static` 1.70.0. LinkedIn and
+Twitter come from 0.577.0, the last release with brand icons. They are not in
+`assets/`, so they are never published as files. Write `{{icon:mail-filled}}`
+in `templates/layout.html` or `pages/*.html`, or call `icon('map-pin')` in
+`build.mjs`. The build inlines the SVG as
+`<svg class="ak-icon ak-icon-<name>" aria-hidden="true">`. It moves the
+license comment inside and drops the file's `class`, `width` and `height`;
+CSS sizes and colours the icon.
 
-1. Download the package: `npm pack @fortawesome/fontawesome-free@7.3.1`, then
-   unpack it.
-2. Copy `package/svgs/<style>/<name>.svg` into `scripts/vendor/fontawesome/`.
-   Keep the license comment inside the SVG.
-3. Use `{{icon:<name>}}`. An unknown name stops the build with `Unknown icon`.
+`*-filled.svg` files are filled variants made from Lucide's own paths. Where
+a fill would hide an inner line (the mail flap, the feather's shaft and barb),
+a mask cuts that line out. No new geometry is drawn.
+
+Next to text, an icon's box is 1.1em, and its ink bottom sits on the text's
+baseline. `--ib` in `styles.css` is the space under the ink in the icon's
+24-unit grid, stroke included.
+
+To add an icon:
+
+1. Download the package: `npm pack lucide-static@1.70.0`, then unpack it.
+2. Copy `package/icons/<name>.svg` into `scripts/vendor/lucide/`.
+3. Measure its ink bottom in the 24-unit grid. If that isn't y 22, set
+   `.ak-icon-<name> { --ib: <24 - y> }`.
+4. Use `{{icon:<name>}}`. An unknown name stops the build with `Unknown icon`.
 
 ### Fluid sizes
 
@@ -274,7 +287,7 @@ assets/                        avatar / favicon / fonts/AboutBeige.woff2
 scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
-scripts/vendor/fontawesome/    icon SVGs + LICENSE.txt (Font Awesome Free 7.3.1)
+scripts/vendor/lucide/         icon SVGs + LICENSE (Lucide, ISC)
 .github/workflows/deploy.yml   build + deploy on push
 _materials/                    design references (gitignored, local only)
 _site/                         build output (not committed)

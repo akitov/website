@@ -16,14 +16,14 @@
       <div class="ak-stripe"></div>
       <nav class="ak-nav" aria-label="Main">
         <button type="button" class="ak-hamburger" aria-label="Menu" aria-expanded="false" aria-controls="ak-menu" data-menu-toggle>
-          {{icon:bars}}
+          {{icon:menu}}
         </button>
         <div class="ak-nav-links">
           <a class="ak-nav-link{{active_home}}"{{current_home}} href="/" data-nav="home">HOME</a>
           <a class="ak-nav-link{{active_work}}"{{current_work}} href="/work/" data-nav="work">WORK</a>
           <a class="ak-nav-link{{active_about}}"{{current_about}} href="/about/" data-nav="about">RESUMÉ</a>
         </div>
-        <div class="ak-page-title" data-page-title-slot>{{section}}</div>
+        <a class="ak-page-title" href="/">Alexander Kitov</a>
         <a href="/about/" class="ak-avatar" aria-label="About">
           <img src="/assets/avatar.svg" alt="Alexander Kitov" />
         </a>
@@ -41,9 +41,9 @@
       <div class="ak-footer-inner">
         <div class="ak-footer-name">Alexander Kitov</div>
         <div class="ak-footer-links">
-          <a class="ak-footer-link" href="mailto:hello@example.com">{{icon:envelope}} Email</a>
-          <a class="ak-footer-link" href="#">{{icon:linkedin-in}} LinkedIn</a>
-          <a class="ak-footer-link" href="#">{{icon:twitter}} Twitter</a>
+          <a class="ak-footer-link" href="mailto:hello@example.com">{{icon:mail-filled}} Email</a>
+          <a class="ak-footer-link" href="#">{{icon:linkedin-filled}} LinkedIn</a>
+          <a class="ak-footer-link" href="#">{{icon:twitter-filled}} Twitter</a>
         </div>
         <div class="ak-footer-copy">© <span data-year>{{year}}</span></div>
       </div>

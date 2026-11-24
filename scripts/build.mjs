@@ -189,28 +189,34 @@ const markdown = (src) => marked.parse(src).replace(/<p>\s*(<figure class="ak-fi
 
 let LAYOUT = '';
 
-// Font Awesome Free icons: {{icon:name}} becomes the inline SVG from
-// scripts/vendor/fontawesome/<name>.svg (the license comment inside stays).
-const ICON_DIR = path.join(ROOT, 'scripts', 'vendor', 'fontawesome');
+// Lucide icons (ISC): {{icon:name}} becomes the inline SVG from
+// scripts/vendor/lucide/<name>.svg. The file's license comment moves inside
+// the <svg>; its class, width and height go (CSS sizes it by height, the
+// width follows the 24 x 24 viewBox). Each icon also gets ak-icon-<name>.
+const ICON_DIR = path.join(ROOT, 'scripts', 'vendor', 'lucide');
 const iconCache = new Map();
 function icon(name) {
   if (!iconCache.has(name)) {
-    let svg;
+    let src;
     try {
-      svg = readFileSync(path.join(ICON_DIR, `${name}.svg`), 'utf8').trim();
+      src = readFileSync(path.join(ICON_DIR, `${name}.svg`), 'utf8');
     } catch (err) {
       if (err.code === 'ENOENT') throw new Error(`Unknown icon: ${name}`);
       throw err;
     }
-    if (!svg.startsWith('<svg ')) throw new Error(`Icon ${name}.svg does not start with "<svg "`);
-    iconCache.set(name, svg.replace('<svg ', '<svg class="ak-icon" aria-hidden="true" focusable="false" '));
+    const license = (src.match(/<!--[\s\S]*?-->/) || [''])[0];
+    const m = src.match(/<svg\b([^>]*)>([\s\S]*?)<\/svg>/);
+    if (!m) throw new Error(`Icon ${name}.svg has no <svg> element`);
+    const attrs = m[1].replace(/\s(class|width|height)="[^"]*"/g, '').replace(/\s+/g, ' ').trim();
+    const body = m[2].replace(/\s*\n\s*/g, '');
+    iconCache.set(name, `<svg class="ak-icon ak-icon-${name}" aria-hidden="true" focusable="false" ${attrs}>${license}${body}</svg>`);
   }
   return iconCache.get(name);
 }
 const withIcons = (html) => html.replace(/\{\{icon:([\w-]+)\}\}/g, (_, name) => icon(name));
 
 /* Wrap a page's <main> in templates/layout.html. */
-function page({ url, title, description, image, section, nav, main, scripts = '', stylesheet = '', extraMeta = [], noindex = false }) {
+function page({ url, title, description, image, nav, main, scripts = '', stylesheet = '', extraMeta = [], noindex = false }) {
   const meta = [
     description && `<meta name="description" content="${esc(description)}" />`,
     noindex ? `<meta name="robots" content="noindex" />` : `<link rel="canonical" href="${esc(absUrl(url))}" />`,
@@ -230,7 +236,6 @@ function page({ url, title, description, image, section, nav, main, scripts = ''
     meta,
     // A post's own style.css loads after styles.css, so it can override anything.
     styles: stylesheet ? `    <link rel="stylesheet" href="${esc(stylesheet)}" />` : '',
-    section: esc(section),
     main,
     scripts,
     active_home: nav === 'home' ? ' is-active' : '',
@@ -260,7 +265,7 @@ function postCard(p) {
         <div class="ak-quote">
           <div class="ak-quote-text"><a href="${postUrl(p)}" style="color:inherit;text-decoration:none">${quoteHtml(p.fm.quote)}</a></div>
           <div class="ak-quote-author">
-            <span class="ak-feather">${icon('feather')}</span>
+            <span class="ak-feather">${icon('feather-filled')}</span>
             <span>${esc(p.fm.author)}${p.fm.source ? `, <a href="${esc(p.fm.source)}">Source</a>` : ''}</span>
           </div>
         </div>
@@ -285,7 +290,7 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
     ...categories.map((c) => pill(categoryUrl(c.name), `${c.name} (${c.posts.length})`, c.name === activeCategory)),
   ].join('\n        ');
   const main = `    <main class="ak-content">
-      <h1 class="ak-page-h1">${esc(activeCategory || SITE_NAME)}</h1>
+      <h1 class="ak-page-h1">${activeCategory ? esc(activeCategory) : 'Welcome 👋'}</h1>
       <nav class="ak-pills" aria-label="Categories">
         ${pills}
       </nav>
@@ -297,7 +302,6 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
     url: activeCategory ? categoryUrl(activeCategory) : '/',
     title: activeCategory || SITE_NAME,
     description: activeCategory ? `Posts about ${activeCategory} by ${SITE_NAME}.` : SITE_DESCRIPTION,
-    section: activeCategory ? 'BLOG' : 'HOME',
     nav: 'home',
     main,
     scripts: [
@@ -309,7 +313,7 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
 }
 
 /* Prev / next chevron: Font Awesome's angle (the original's was 15 x 28). */
-const chevron = (dir) => icon(dir === 'prev' ? 'angle-left' : 'angle-right');
+const chevron = (dir) => icon(dir === 'prev' ? 'chevron-left' : 'chevron-right');
 
 function postPage(p, prev, next, categories) {
   const navLink = (item, dir) => {
@@ -324,7 +328,7 @@ function postPage(p, prev, next, categories) {
   const head = isQuote
     ? `<div class="ak-post-head is-quote">
         <h1><span class="ak-qm ak-qm-open">“</span>${quoteHtml(p.fm.quote)}<span class="ak-qm ak-qm-close">”</span></h1>${p.fm.author ? `
-        <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather')}</span> ${esc(p.fm.author)}</div>` : ''}
+        <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather-filled')}</span> ${esc(p.fm.author)}</div>` : ''}
       </div>`
     : `<div class="ak-post-head">
         <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
@@ -338,13 +342,13 @@ function postPage(p, prev, next, categories) {
   const typeWord = (TYPE_LABELS[type] || 'A Note').replace(/^An?/, (m) => m.toLowerCase());
   const side = {
     author: !isQuote && p.fm.author
-      ? `<div class="ak-side-author"><span class="ak-feather">${icon('feather')}</span> ${esc(p.fm.author)}</div>` : '',
+      ? `<div class="ak-side-author"><span class="ak-feather">${icon('feather-filled')}</span> ${esc(p.fm.author)}</div>` : '',
     link: p.fm.source
       ? `<div class="ak-side-link"><a href="${esc(p.fm.source)}" target="_blank" rel="noopener">Read more here</a></div>` : '',
     type: `<div class="ak-side-type">${esc(typeWord)} in <a class="ak-side-chip" href="${categoryUrl(p.category)}">${esc(p.category)}</a></div>`,
     date: p.date ? `<time class="ak-side-date" datetime="${isoDate(p.date)}">${esc(p.date)}</time>` : '',
     loc: p.fm.location
-      ? `<div class="ak-side-loc"><a href="${esc(p.fm.location)}" target="_blank" rel="noopener">${icon('location-dot')} Location</a></div>` : '',
+      ? `<div class="ak-side-loc"><a href="${esc(p.fm.location)}" target="_blank" rel="noopener">${icon('map-pin')} Location</a></div>` : '',
   };
   const order = { quote: ['link', 'type', 'date'], event: ['date', 'type', 'link', 'loc'] }[type] || ['author', 'link', 'type', 'date', 'loc'];
   const sideMeta = order.map((k) => side[k]).filter(Boolean).join('\n              ');
@@ -397,7 +401,6 @@ function postPage(p, prev, next, categories) {
     title,
     description: postDescription(p),
     image: p.images[0],
-    section: 'BLOG',
     nav: '', // the original marks no nav link on a post
     main,
     stylesheet: p.stylesheet,
@@ -439,7 +442,6 @@ function workPage(projects) {
     url: '/work/',
     title: 'Work',
     description: `Selected work by ${SITE_NAME}.`,
-    section: 'WORK',
     nav: 'work',
     main,
     scripts: '    <script type="module" src="/js/work.js"></script>',
@@ -480,7 +482,6 @@ function projectPage(p, next) {
     title,
     description: p.subtitle,
     image: p.images[0],
-    section: 'WORK',
     nav: 'work',
     main,
     stylesheet: p.stylesheet,
@@ -615,7 +616,6 @@ export async function build() {
     title: 'Resumé',
     description: 'Alexander Kitov — Product Manager and Entrepreneur.',
     image: '/assets/avatar.svg',
-    section: 'RESUMÉ',
     nav: 'about',
     main: await readFragment('about.html'),
   }), 'pages/about.html');
@@ -648,7 +648,6 @@ export async function build() {
   await fs.writeFile(path.join(OUT, '404.html'), page({
     url: '/404.html',
     title: 'Page not found',
-    section: '404',
     main: await readFragment('404.html'),
     noindex: true,
   }));

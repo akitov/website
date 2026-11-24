@@ -208,15 +208,18 @@ a { color: inherit; }
   color: var(--accent);
 }
 
+/* The site name, in the footer name's size, weight and colour. */
 .ak-page-title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-family: var(--title-font);
-  font-size: clamp(18.375px, calc(18.375px + 8.025 * var(--tp)), 26.4px);
-  font-weight: var(--w-heading);
+  font-family: var(--serif);
+  font-size: calc(clamp(15.75px, calc(15.75px + 6.45 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
+  font-weight: var(--w-light);
   letter-spacing: normal;
-  color: #000;
+  white-space: nowrap;
+  color: #222;
+  text-decoration: none;
 }
 
 .ak-avatar {
@@ -259,7 +262,7 @@ a { color: inherit; }
 }
 /* Font Awesome bars: ink is 75% of the box, so 25px tall = 22px-wide bars. */
 .ak-hamburger { color: #999; }
-.ak-hamburger .ak-icon { height: 25px; vertical-align: 0; }
+.ak-hamburger .ak-icon { --icon-h: 28px; } /* menu ink 16 of 24: 18.7px tall, 21 wide */
 .ak-hamburger[aria-expanded="true"] { color: #7a7a7a; }
 .ak-hamburger:focus-visible,
 .ak-menu-tile:focus-visible {
@@ -329,12 +332,10 @@ a { color: inherit; }
   color: var(--accent);
   font-weight: 350;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25em;
+  white-space: nowrap;
 }
+.ak-footer-link .ak-icon { margin-right: .05em; } /* + the space: .3em, as on the about page */
 .ak-footer-link:hover { color: #940000; }
-.ak-footer-link .ak-icon { height: 0.875em; }
 .ak-footer-copy {
   font-size: calc(clamp(9.625px, calc(9.625px + 3.175 * var(--tp)), 12.8px) + clamp(0px, calc(.7 * var(--t2)), .7px));
   font-weight: 375;
@@ -358,6 +359,19 @@ a { color: inherit; }
   margin: 0 0 clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
   font-weight: 500; /* = the post title */
   text-align: center;
+}
+
+/* Read by screen readers, not shown. */
+.ak-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ----------------------------- PILLS ----------------------------- */
@@ -573,12 +587,9 @@ a { color: inherit; }
   font-size: 0.875rem;
   font-family: var(--sans);
   color: #555;
-  display: flex;
-  align-items: center;
-  gap: 5px;
   padding-left: 20px;
 }
-.ak-quote-author .ak-feather { color: #555; font-size: 1rem; }
+.ak-quote-author .ak-feather { color: #555; }
 .ak-quote-author a { color: var(--accent); text-decoration: none; }
 
 /* Quote card on home (the post page keeps the rules above). Original
@@ -632,14 +643,25 @@ a { color: inherit; }
   margin-top: clamp(8.78px, calc(18px - 20.06 * var(--t)), 18px);
   padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
 }
-.ak-post-grid .ak-quote-author .ak-feather .ak-icon {
-  height: clamp(17.5px, calc(17.5px + 2.237 * var(--t)), 19.5px);
-}
 
-/* Font Awesome icons (inlined by scripts/build.mjs, see {{icon:name}}) */
-.ak-icon { height: 1em; width: auto; vertical-align: -0.125em; }
-.ak-feather { display: inline-flex; align-items: center; }
-.ak-feather .ak-icon { height: 1.25em; }
+/* Lucide icons (inlined by scripts/build.mjs, see {{icon:name}}).
+ * Next to text: a 1.1em box (--icon-h), so the ink is .82em (mail) to 1em
+ * (feather) tall, and the ink's bottom sits on the text's baseline. The
+ * gap to the text is the space in the markup + .05em = .3em. --ib is
+ * the space under the ink in the icon's 24-unit grid (incl. the stroke). */
+.ak-icon {
+  --icon-h: 1.1em;
+  --ib: 2;
+  height: var(--icon-h);
+  width: auto;
+  vertical-align: calc(var(--ib) / -24 * var(--icon-h));
+}
+.ak-icon-mail-filled { --ib: 3; }
+.ak-icon-feather-filled,
+.ak-icon-map-pin { --ib: 1; }
+/* linkedin-filled, twitter-filled: 2 (the default) */
+.ak-feather { display: inline; }
+.ak-feather .ak-icon { margin-right: .05em; }
 
 /* ----------------------------- BLOG POST PAGE ----------------------------- */
 
@@ -670,9 +692,15 @@ a { color: inherit; }
   color: var(--accent);
   text-decoration: none;
 }
-/* angle-left/right ink is 75% of the icon box: 2.36em box = 1.77em (28 / 26 px)
- * of ink, like the original; the negative margins keep the 1.77em line. */
-.ak-postnav-link .ak-icon { height: 2.36em; width: auto; margin-block: -.295em; }
+/* chevron-left/right at stroke 1.25: ink 13.25 x 7.25 of 24, so a 3.22em box
+ * gives the original's 28 x 15 px chevron. Flex centres it on the line;
+ * the shift puts its middle on the text's x-height middle (.255em). The negative margins keep the 1.77em line. */
+.ak-postnav-link .ak-icon {
+  --icon-h: 3.22em;
+  stroke-width: 1.25;
+  margin-block: -.725em;
+  translate: 0 .065em;
+}
 .ak-postnav-link.is-next { margin-left: auto; }
 
 .ak-post-head { text-align: center; margin-bottom: var(--post-head-gap); }
@@ -706,9 +734,6 @@ a { color: inherit; }
   line-height: 1.575;
   color: #555;
 }
-.ak-quote-attrib .ak-feather,
-.ak-side-author .ak-feather { display: inline; } /* the icon must not grow the line box */
-.ak-quote-attrib .ak-icon { height: 1.25em; vertical-align: -.215em; } /* 20 tall, 3.5 below the baseline */
 
 /* Sidebar and main column: bootstrap's >=1200 .span2 / .span8 grid
  * (768-979 values in the tablet block below). */
@@ -738,8 +763,6 @@ a { color: inherit; }
 .ak-side-meta a { text-decoration: none; }
 .ak-side-meta a:not(.ak-side-chip) { color: var(--accent); } /* keeps the shared chip black */
 .ak-side-date { display: block; font-weight: 610; color: #000; } /* size inherits .meta, as in the original */
-.ak-side-author .ak-icon { height: 1.2em; vertical-align: -.25em; } /* 18 tall, 3.75 below the baseline */
-.ak-side-loc .ak-icon { height: .93em; } /* map marker 9 x 14 */
 
 /* Body column */
 .ak-post-body {
@@ -1024,7 +1047,6 @@ a { color: inherit; }
  * Sizes: About Beige x-height = the original's. Vertical gaps put each
  * baseline where the original's is (baseline = box top + L/2 + .375em). */
 .ak-about {
-  --ab-h1:   calc(clamp(24.5px, calc(24.5px + 15.13 * var(--tp)), 39.63px) + clamp(0px, calc(6.37 * var(--t2)), 6.37px));  /* 39.6 / 46 */
   --ab-body: calc(clamp(12.92px, calc(12.92px + .99 * var(--tp)), 13.91px) + clamp(0px, calc(2.02 * var(--t2)), 2.02px)); /* 13.9 / 15.9 */
   --ab-lh:   calc(clamp(20.75px, calc(20.75px + 1.58 * var(--tp)), 22.33px) + clamp(0px, calc(3.17 * var(--t2)), 3.17px)); /* 22.3 / 25.5 */
   --ab-h6:   calc(clamp(12.07px, calc(12.07px + .93 * var(--tp)), 13px) + clamp(0px, calc(1.34 * var(--t2)), 1.34px));       /* 13 / 14.3 */
@@ -1033,8 +1055,7 @@ a { color: inherit; }
   --ab-lbl-lh: calc(clamp(25.35px, calc(25.35px + 1.95 * var(--tp)), 27.3px) + clamp(0px, calc(3.75 * var(--t2)), 3.75px)); /* 27.3 / 31.05 */
 
   --ab-top:       calc(clamp(30px, calc(30px + 22.5 * var(--tp)), 52.5px) + clamp(0px, calc(7.4 * var(--t2)), 7.4px));     /* header -> photo 52.5 / 59.9 */
-  --ab-h1-mt:     calc(clamp(12px, calc(12px + 3.08 * var(--tp)), 15.08px) + clamp(0px, calc(1.54 * var(--t2)), 1.54px));  /* photo -> h1 baseline 53.8 / 61.6 */
-  --ab-h1-mb:     calc(clamp(12px, calc(12px + 3.58 * var(--tp)), 15.58px) + clamp(0px, calc(1.85 * var(--t2)), 1.85px));  /* h1 -> links baseline 40.8 / 46.4 */
+  --ab-social-mt: calc(clamp(20px, calc(20px + 4.4 * var(--tp)), 24.4px) + clamp(0px, calc(3.3 * var(--t2)), 3.3px));     /* photo -> links baseline 40.8 / 46.4 (no visible h1) */
   --ab-social-mb: calc(clamp(40px, calc(40px + 12.76 * var(--tp)), 52.76px) + clamp(0px, calc(8.04 * var(--t2)), 8.04px)); /* links -> bio baseline 75.1 / 86.3 */
   --ab-sec1-mt:   calc(clamp(50px, calc(50px + 15.82 * var(--tp)), 65.82px) + clamp(0px, calc(9.37 * var(--t2)), 9.37px)); /* Alex -> "Most endorsed" 86.4 / 98.1 */
   --ab-h6-mb:     calc(clamp(8px, calc(8px + .37 * var(--tp)), 8.37px) + clamp(0px, calc(1.25 * var(--t2)), 1.25px));      /* baseline -> row top 13.25 / 15 */
@@ -1073,15 +1094,6 @@ a { color: inherit; }
   object-fit: cover;
   background: #ddd;
 }
-.ak-about h1 {
-  font-family: var(--serif);
-  font-size: var(--ab-h1);
-  --lh: 1.1957em;
-  font-weight: 500; /* = the post, home and work titles */
-  color: #000;
-  text-align: center;
-  margin: var(--ab-h1-mt) 0 var(--ab-h1-mb);
-}
 .ak-about-social {
   display: flex;
   flex-wrap: wrap;
@@ -1089,7 +1101,7 @@ a { color: inherit; }
   column-gap: 24px; /* li padding-right 20px + the inline-block space */
   font-size: var(--ab-body);
   line-height: var(--ab-lh);
-  margin-bottom: var(--ab-social-mb);
+  margin: var(--ab-social-mt) 0 var(--ab-social-mb);
 }
 .ak-about-social a {
   color: var(--accent);
@@ -1098,7 +1110,7 @@ a { color: inherit; }
   text-decoration: none;
   white-space: nowrap;
 }
-.ak-about-social .ak-icon { height: 1.1em; vertical-align: -.2em; margin-right: .3em; }
+.ak-about-social .ak-icon { margin-right: .05em; } /* + the space: .3em */
 
 /* Body copy: Helvetica 1rem / 1.6rem #555 in the original; paragraphs were
  * <br><br>, so one blank line between them. */
@@ -1126,7 +1138,6 @@ a { color: inherit; }
   margin: var(--ab-sec1-mt) 0 var(--ab-h6-mb);
 }
 .ak-about-section + .ak-about-section .ak-about-section-h { margin: var(--ab-sec2-mt) 0 0; }
-.ak-about-section-h .ak-icon { height: 1.115em; vertical-align: -.07em; } /* LinkedIn "in", ink 14 / 13 tall */
 
 /* Endorsements: circle column .span3 (23.0769% desktop, 32.43% at 767),
  * gap 2.6%, text column ends 2.11% short at 767 (.span9 62.86%). Each row is
@@ -1186,10 +1197,10 @@ a { color: inherit; }
   justify-content: center;
   color: #000;
 }
-/* Ink 34px tall: user-group fills 97% of its box, square-check 87.5%. */
-.ak-strive-item .ico .ak-icon { height: 35px; vertical-align: 0; }
-.ak-strive-item:nth-child(2) .ico .ak-icon { height: 34px; }
-.ak-strive-item:nth-child(3) .ico .ak-icon { height: 38.9px; }
+/* Ink 34px tall like the original: users and square-check fill 20 of 24
+ * units, smartphone 22. */
+.ak-strive-item .ico .ak-icon { --icon-h: 40.8px; }
+.ak-strive-item .ico .ak-icon-smartphone { --icon-h: 37.09px; }
 .ak-strive-item .lbl {
   font-family: var(--sans);
   font-size: var(--ab-lbl);
@@ -1279,6 +1290,7 @@ h1, h2, h3, h4, h5, h6 {
   .ak-footer-link,
   .ak-post-body blockquote p { font-weight: 380; }
   .ak-footer-name,
+  .ak-page-title,
   .ak-post-head:not(.is-quote) p,
   .ak-endorse-item h3,
   .ak-endorse-circle .num,
