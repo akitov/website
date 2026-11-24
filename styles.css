@@ -356,7 +356,7 @@ a { color: inherit; }
   color: #000;
   --lh: 1.1957em; /* About Beige's normal: 55px at 46px */
   margin: 0 0 clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
-  font-weight: var(--w-heading);
+  font-weight: 500; /* = the post title */
   text-align: center;
 }
 
@@ -590,8 +590,12 @@ a { color: inherit; }
   padding-bottom: clamp(0px, calc(5.886 * var(--t)), 3.11px);
   margin-bottom: clamp(0px, calc(23.55 * var(--t)), 11px);
 }
+/* Two columns: 20.92px + 30% of the tile title size (.ak-post-title) at
+ * the same column, so 33.4px at 1456 (the original's) and 0.3px smaller
+ * for every 1px the titles lose; the 761-979 segment is in the tablet
+ * block. One column (phone block): scales with the viewport as before. */
 .ak-post-grid .ak-quote-text {
-  font-size: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px);
+  font-size: min(33.4px, calc(28.954px + .8025cqi));
   font-weight: var(--w-light);
   color: #222;
   /* Headline leading at 85% like the headings; the padding keeps the first
@@ -867,7 +871,7 @@ a { color: inherit; }
  * at 770 and keeps one line at 1456. Baseline = header + 106.2 / 99.6. */
 .ak-work-h1 {
   font-family: var(--serif);
-  font-weight: var(--w-heading);
+  font-weight: 500; /* = the post title */
   font-size: var(--fs-work-h1);
   --lh: clamp(27.5px, calc(27.5px + 62.06 * var(--t)), 57.6px);
   color: #000;
@@ -888,18 +892,14 @@ a { color: inherit; }
 }
 /* Two explicit columns (also while work.js hides tiles). The gap is a
  * percentage of the grid like the original's span margin: 30.24px at
- * 1456. --work-shift (gap / column) moves an odd last tile right by one
- * gap, as the original's third .span6 kept its margin-left. */
+ * 1456. An odd last tile sits in the left column (the original shifted it
+ * right by one gap). */
 .ak-work-grid {
   --work-gap: 2.5641%;
-  --work-shift: 5.2632%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0 var(--work-gap);
-}
-.ak-work-grid:not(.is-filtered) > .ak-work-tile:last-child:nth-child(odd):not(:first-child) {
-  translate: var(--work-shift) 0;
 }
 .ak-work-tile { display: flex; flex-direction: column; }
 .ak-work-tile a { text-decoration: none; color: inherit; }
@@ -1205,13 +1205,14 @@ a { color: inherit; }
  * grid percentages here; nothing else goes in this block. */
 @media (min-width: 761px) and (max-width: 979px) {
   /* work: 19.14px gap at 770 (original 768-979 span margin 2.7624%) */
-  .ak-work-grid { --work-gap: 2.7624%; --work-shift: 5.6818%; }
+  .ak-work-grid { --work-gap: 2.7624%; }
   .ak-work-page .ak-pills { max-width: clamp(470px, calc(470px + 290 * var(--t2)), 760px); }
   /* post: original 768-979 span2 / span8 percentages */
   .ak-post-body-wrap { grid-template-columns: 14.3646% 65.7459%; column-gap: 2.7624%; }
   .ak-post-head p { max-width: 82.8729%; }
   /* home: tile title 32px at a 325px column -> 37.4px at 397 */
   .ak-post-title { font-size: calc(7.625px + 7.5cqi); }
+  .ak-post-grid .ak-quote-text { font-size: min(33.4px, calc(23.208px + 2.25cqi)); } /* 20.92 + 30% of the title */
 }
 
 /* Sizes and spacing scale through the fluid tokens on :root. This query
@@ -1231,8 +1232,9 @@ a { color: inherit; }
   .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
   .ak-post-title { font-size: 5.556cqi; } /* 30px at a 540px column */
+  .ak-post-grid .ak-quote-text { font-size: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px); }
 
-  .ak-work-grid { grid-template-columns: 1fr; --work-shift: 0%; }
+  .ak-work-grid { grid-template-columns: 1fr; }
 
   .ak-post-body-wrap { grid-template-columns: 1fr; row-gap: var(--space-5); }
   .ak-post-head p { max-width: none; }
