@@ -1077,7 +1077,7 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--ab-h1);
   --lh: 1.1957em;
-  font-weight: var(--w-heading);
+  font-weight: 500; /* = the post, home and work titles */
   color: #000;
   text-align: center;
   margin: var(--ab-h1-mt) 0 var(--ab-h1-mb);
