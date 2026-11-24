@@ -1302,8 +1302,10 @@ h1, h2, h3, h4, h5, h6 {
  * strokes are solid. Light text (--w-light 350) is already heavy enough.
  * Retina is unchanged. */
 @media (max-resolution: 1.49dppx) {
-  .ak-nav-link:not(.is-active),
   .ak-pill,
   .ak-footer-link,
   .ak-post-body blockquote p { font-weight: 380; }
+  /* The nav's capitals: at 380 the W's diagonals are 1px with gaps; 450
+   * makes them a solid 2px. */
+  .ak-nav-link:not(.is-active) { font-weight: 450; }
 }
