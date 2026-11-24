@@ -604,7 +604,7 @@ export async function build() {
     url: '/about/',
     title: 'Resumé',
     description: 'Alexander Kitov — Product Manager and Entrepreneur.',
-    image: '/assets/avatar.svg',
+    image: '/assets/profile.jpg',
     nav: 'about',
     main: await readFragment('about.html'),
   }), 'pages/about.html');

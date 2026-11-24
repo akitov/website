@@ -287,7 +287,7 @@ projects/<slug>/               one folder per project
 redirects.txt                  old URL → new URL
 styles.css                     all styles
 js/main.js home.js work.js     small browser scripts
-assets/                        avatar / favicon / fonts/AboutBeige.woff2, fonts/phosphor-*.woff2
+assets/                        profile.jpg (header + about photo) / avatar.svg (favicon) / fonts/
 scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
