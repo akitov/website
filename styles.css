@@ -11,6 +11,13 @@
   font-style: normal;
   font-display: swap;
 }
+/* Lucide icons as glyphs (scripts/icon-font.py). block: never show the
+ * private-use codepoints as fallback boxes. */
+@font-face {
+  font-family: "ak-icons";
+  src: url("/assets/fonts/icons.woff2") format("woff2");
+  font-display: block;
+}
 
 :root {
   --bg: #ededed;
@@ -49,7 +56,7 @@
 
   /* Weights: every bold/semibold heading, and every light text. */
   --w-heading: 650;
-  --w-light: 270;
+  --w-light: 350;
   --w-subhead: 500; /* section headings (h2-h4); page h1s stay --w-heading */
 
   /* Side gutters: 14px on phones. */
@@ -262,7 +269,7 @@ a { color: inherit; }
 }
 /* Font Awesome bars: ink is 75% of the box, so 25px tall = 22px-wide bars. */
 .ak-hamburger { color: #999; }
-.ak-hamburger .ak-icon { --icon-h: 28px; } /* menu ink 16 of 24: 18.7px tall, 21 wide */
+.ak-hamburger .ak-icon { --icon-h: 28px; vertical-align: 0; } /* menu ink 16 of 24: 18.7px tall, 21 wide */
 .ak-hamburger[aria-expanded="true"] { color: #7a7a7a; }
 .ak-hamburger:focus-visible,
 .ak-menu-tile:focus-visible {
@@ -644,17 +651,21 @@ a { color: inherit; }
   padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
 }
 
-/* Lucide icons (inlined by scripts/build.mjs, see {{icon:name}}).
- * Next to text: a 1.1em box (--icon-h), so the ink is .82em (mail) to 1em
- * (feather) tall, and the ink's bottom sits on the text's baseline. The
- * gap to the text is the space in the markup + .05em = .3em. --ib is
- * the space under the ink in the icon's 24-unit grid (incl. the stroke). */
+/* Lucide icons (glyphs of the ak-icons font, see scripts/icon-font.py).
+ * Each glyph is the icon's 24-unit square sitting on the baseline, so
+ * font-size = the icon's box (--icon-h). Next to text the box is 1.1em, so
+ * the ink is .82em (mail) to 1em (feather) tall, and the ink's bottom sits on
+ * the text's baseline. --ib is the space under the ink in the 24-unit grid
+ * (incl. the stroke). The gap to the text is the space in the markup +
+ * .05em = .3em. */
 .ak-icon {
   --icon-h: 1.1em;
   --ib: 2;
-  height: var(--icon-h);
-  width: auto;
-  vertical-align: calc(var(--ib) / -24 * var(--icon-h));
+  display: inline-block;
+  font: normal 400 var(--icon-h) / 1 "ak-icons";
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: calc(var(--ib) * -1em / 24);
 }
 .ak-icon-mail-filled { --ib: 3; }
 .ak-icon-feather-filled,
@@ -692,15 +703,21 @@ a { color: inherit; }
   color: var(--accent);
   text-decoration: none;
 }
-/* chevron-left/right at stroke 1.25: ink 13.25 x 7.25 of 24, so a 3.22em box
- * gives the original's 28 x 15 px chevron. Flex centres it on the line;
- * the shift puts its middle on the text's x-height middle (.255em). The negative margins keep the 1.77em line. */
+/* chevron-left/right (stroke 1.25, see scripts/icon-font.py): ink 13.25 x
+ * 9.25 of 24, so a 3.22em glyph gives the original's 28 x 15 px chevron.
+ * Inside the glyph em is 3.22x the link's. Text side: the glyph's 7.375-unit
+ * side bearing is pulled in so the chevron-text gap is .34em of the text
+ * (a quarter of the old .38em gap + bearing). Vertically: flex centres it on
+ * the line; the shift puts its middle on the text's x-height middle, then 1px
+ * higher. The block margins keep the 1.77em line. */
 .ak-postnav-link .ak-icon {
   --icon-h: 3.22em;
-  stroke-width: 1.25;
-  margin-block: -.725em;
-  translate: 0 .065em;
+  vertical-align: 0;
+  margin-block: -.2252em;
+  translate: 0 calc(.0202em - 1px);
 }
+.ak-postnav-link .ak-icon-chevron-left { margin-right: -.319em; }
+.ak-postnav-link .ak-icon-chevron-right { margin-left: -.319em; }
 .ak-postnav-link.is-next { margin-left: auto; }
 
 .ak-post-head { text-align: center; margin-bottom: var(--post-head-gap); }
@@ -1280,19 +1297,13 @@ h1, h2, h3, h4, h5, h6 {
 .ak-post-head.is-quote .ak-qm-open { margin-right: 0em; }
 .ak-post-head.is-quote .ak-qm-close { margin-left: .05em; }
 
-/* 1x screens: small light text has sub-pixel stems and its diagonals and
+/* 1x screens: small thin text has sub-pixel stems and its diagonals and
  * curves (W, O, brackets) render grey and broken. Raise those weights so the
- * strokes are solid. Large light text (>= 30px) already has 2px+ stems and
- * keeps 270. Retina is unchanged. */
+ * strokes are solid. Light text (--w-light 350) is already heavy enough.
+ * Retina is unchanged. */
 @media (max-resolution: 1.49dppx) {
   .ak-nav-link:not(.is-active),
   .ak-pill,
   .ak-footer-link,
   .ak-post-body blockquote p { font-weight: 380; }
-  .ak-footer-name,
-  .ak-page-title,
-  .ak-post-head:not(.is-quote) p,
-  .ak-endorse-item h3,
-  .ak-endorse-circle .num,
-  .ak-strive-item .lbl { font-weight: 330; }
 }

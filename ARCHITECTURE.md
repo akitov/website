@@ -181,29 +181,41 @@ by the repo's other licenses.
 
 Icons are Lucide (ISC), kept as SVG files in `scripts/vendor/lucide/` with
 the license in `LICENSE`. Most come from `lucide-static` 1.70.0. LinkedIn and
-Twitter come from 0.577.0, the last release with brand icons. They are not in
-`assets/`, so they are never published as files. Write `{{icon:mail-filled}}`
-in `templates/layout.html` or `pages/*.html`, or call `icon('map-pin')` in
-`build.mjs`. The build inlines the SVG as
-`<svg class="ak-icon ak-icon-<name>" aria-hidden="true">`. It moves the
-license comment inside and drops the file's `class`, `width` and `height`;
-CSS sizes and colours the icon.
+Twitter come from 0.577.0, the last release with brand icons.
+
+The site doesn't use the SVGs directly. `scripts/icon-font.py` converts them
+into `assets/fonts/icons.woff2`, about 1.3 KB, and writes the name-to-codepoint
+map to `scripts/vendor/lucide/icons.json`. Chrome on macOS draws SVG shapes
+on the GPU with 4x multisampling, which leaves curved edges with 3 shades.
+Font glyphs get the same antialiasing as text: 70+ shades.
+
+The conversion is exact. It keeps fills, outlines strokes at their width,
+caps and joins, and subtracts `<mask>` black shapes. Each glyph is the icon's
+24-unit square on the baseline.
+
+Write `{{icon:mail-filled}}` in `templates/layout.html` or `pages/*.html`, or
+call `icon('map-pin')` in `build.mjs`. The build emits
+`<span class="ak-icon ak-icon-<name>" aria-hidden="true">&#x…;</span>`.
 
 `*-filled.svg` files are filled variants made from Lucide's own paths. Where
 a fill would hide an inner line (the mail flap, the feather's shaft and barb),
 a mask cuts that line out. No new geometry is drawn.
 
-Next to text, an icon's box is 1.1em, and its ink bottom sits on the text's
-baseline. `--ib` in `styles.css` is the space under the ink in the icon's
-24-unit grid, stroke included.
+Next to text, an icon's font-size is 1.1em, and its ink bottom sits on the
+text's baseline. `--ib` in `styles.css` is the space under the ink in the
+icon's 24-unit grid, stroke included.
 
-To add an icon:
+To add or change an icon:
 
 1. Download the package: `npm pack lucide-static@1.70.0`, then unpack it.
 2. Copy `package/icons/<name>.svg` into `scripts/vendor/lucide/`.
-3. Measure its ink bottom in the 24-unit grid. If that isn't y 22, set
+3. Rebuild the font. It needs fonttools, skia-pathops and brotli:
+   `python3 -m venv /tmp/iv && /tmp/iv/bin/pip install fonttools skia-pathops brotli && /tmp/iv/bin/python scripts/icon-font.py`.
+   Commit the new `icons.woff2` and `icons.json`.
+4. Measure the icon's ink bottom in the 24-unit grid. If it isn't y 22, set
    `.ak-icon-<name> { --ib: <24 - y> }`.
-4. Use `{{icon:<name>}}`. An unknown name stops the build with `Unknown icon`.
+5. Use `{{icon:<name>}}`. A name missing from `icons.json` stops the build
+   with `Unknown icon`.
 
 ### Fluid sizes
 
@@ -251,7 +263,7 @@ Other shared tokens:
   768–789, 8vw from 1456 up).
 - `--gutter-page`: the page content inset (14px, 5vw, 9.5vw).
 - `--footer-gap`: the space above the footer card (60px).
-- `--w-heading: 650` for every bold heading, `--w-light: 270` for every
+- `--w-heading: 650` for every bold heading, `--w-light: 350` for every
   light text.
 
 Widths keep scaling above 1456px; font sizes and vertical spacing stop at
@@ -283,11 +295,12 @@ projects/<slug>/               one folder per project
 redirects.txt                  old URL → new URL
 styles.css                     all styles
 js/main.js home.js work.js     small browser scripts
-assets/                        avatar / favicon / fonts/AboutBeige.woff2
+assets/                        avatar / favicon / fonts/AboutBeige.woff2, fonts/icons.woff2
 scripts/build.mjs              builds _site/
 scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
-scripts/vendor/lucide/         icon SVGs + LICENSE (Lucide, ISC)
+scripts/icon-font.py           builds assets/fonts/icons.woff2 from the icon SVGs
+scripts/vendor/lucide/         icon SVGs + icons.json + LICENSE (Lucide, ISC)
 .github/workflows/deploy.yml   build + deploy on push
 _materials/                    design references (gitignored, local only)
 _site/                         build output (not committed)

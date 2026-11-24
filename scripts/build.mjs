@@ -189,29 +189,17 @@ const markdown = (src) => marked.parse(src).replace(/<p>\s*(<figure class="ak-fi
 
 let LAYOUT = '';
 
-// Lucide icons (ISC): {{icon:name}} becomes the inline SVG from
-// scripts/vendor/lucide/<name>.svg. The file's license comment moves inside
-// the <svg>; its class, width and height go (CSS sizes it by height, the
-// width follows the 24 x 24 viewBox). Each icon also gets ak-icon-<name>.
-const ICON_DIR = path.join(ROOT, 'scripts', 'vendor', 'lucide');
-const iconCache = new Map();
+// Lucide icons (ISC), as glyphs of assets/fonts/icons.woff2: {{icon:name}}
+// becomes <span class="ak-icon ak-icon-<name>">&#x…;</span>. The font is
+// built from scripts/vendor/lucide/<name>.svg by scripts/icon-font.py, which
+// also writes the name -> codepoint map read here. Glyphs, not inline SVG:
+// Chrome on macOS draws SVG with 4x MSAA (stepped edges); glyphs get the
+// text's antialiasing.
+const ICON_MAP = JSON.parse(readFileSync(path.join(ROOT, 'scripts', 'vendor', 'lucide', 'icons.json'), 'utf8'));
 function icon(name) {
-  if (!iconCache.has(name)) {
-    let src;
-    try {
-      src = readFileSync(path.join(ICON_DIR, `${name}.svg`), 'utf8');
-    } catch (err) {
-      if (err.code === 'ENOENT') throw new Error(`Unknown icon: ${name}`);
-      throw err;
-    }
-    const license = (src.match(/<!--[\s\S]*?-->/) || [''])[0];
-    const m = src.match(/<svg\b([^>]*)>([\s\S]*?)<\/svg>/);
-    if (!m) throw new Error(`Icon ${name}.svg has no <svg> element`);
-    const attrs = m[1].replace(/\s(class|width|height)="[^"]*"/g, '').replace(/\s+/g, ' ').trim();
-    const body = m[2].replace(/\s*\n\s*/g, '');
-    iconCache.set(name, `<svg class="ak-icon ak-icon-${name}" aria-hidden="true" focusable="false" ${attrs}>${license}${body}</svg>`);
-  }
-  return iconCache.get(name);
+  const cp = ICON_MAP[name];
+  if (!cp) throw new Error(`Unknown icon: ${name} (add scripts/vendor/lucide/${name}.svg and run scripts/icon-font.py)`);
+  return `<span class="ak-icon ak-icon-${name}" aria-hidden="true">&#x${cp};</span>`;
 }
 const withIcons = (html) => html.replace(/\{\{icon:([\w-]+)\}\}/g, (_, name) => icon(name));
 
