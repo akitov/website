@@ -185,6 +185,81 @@ marked.use({
 // marked wraps a lone image in <p>; a <figure> can't sit inside a <p>.
 const markdown = (src) => marked.parse(src).replace(/<p>\s*(<figure class="ak-figure">[\s\S]*?<\/figure>)\s*<\/p>/g, '$1');
 
+/* Optical left edge (styles.css, TYPE REFINEMENTS): a heading's and a drop
+ * cap's first glyph is pulled left by its own left side bearing, so its ink
+ * starts on the text column's edge. The build sets the bearing inline (--lsb
+ * on headings, --dc-lsb on the drop cap's paragraph) from About Beige's
+ * bearings at the weight the element is set in, read from the weight tokens
+ * in styles.css. scripts/font-metrics.py writes the table. */
+const SIDE_BEARINGS = JSON.parse(readFileSync(path.join(ROOT, 'scripts', 'vendor', 'about-beige', 'side-bearings.json'), 'utf8'));
+const STYLES = readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
+function bearingsAt(token) {
+  const m = STYLES.match(new RegExp(`--w-${token}:\\s*([^;]+);`));
+  if (!m) throw new Error(`styles.css has no --w-${token}`);
+  const ref = m[1].trim().match(/^var\(--w-([\w-]+)\)$/);
+  if (ref) return bearingsAt(ref[1]);
+  const table = SIDE_BEARINGS[m[1].trim()];
+  if (!table) throw new Error(`No side bearings at weight ${m[1].trim()} (--w-${token}); run scripts/font-metrics.py`);
+  return table;
+}
+const BEARINGS = { subhead: bearingsAt('subhead'), heavy: bearingsAt('heavy'), normal: bearingsAt('normal'), regular: bearingsAt('regular') };
+// Text paragraphs are pulled by the capitals' stem bearing (--lsb-text in
+// styles.css), which has to match the font at --w-regular.
+{
+  const css = Number((STYLES.match(/--lsb-text:\s*([\d.]+)/) || [])[1]);
+  const font = bearingsAt('regular').H / 1000;
+  if (css !== font) throw new Error(`styles.css --lsb-text is ${css}; About Beige's H at --w-regular is ${font}. Update --lsb-text.`);
+}
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+const decode = (s) => s.replace(/&(#x[\da-f]+|#\d+|\w+);/gi, (m, e) =>
+  e[0] === '#' ? String.fromCodePoint(e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : Number(e.slice(1))) : ENTITIES[e.toLowerCase()] ?? m);
+// The first visible character of an HTML fragment, and whether it is bold.
+function firstGlyph(html) {
+  let bold = 0;
+  for (const m of html.matchAll(/<(\/?)([a-z][a-z0-9]*)\b[^>]*>|([^<]+)/gi)) {
+    if (m[3] !== undefined) {
+      const ch = [...decode(m[3]).trimStart()][0];
+      if (ch) return { ch, bold: bold > 0 };
+    } else if (/^(strong|b)$/i.test(m[2])) bold += m[1] ? -1 : 1;
+  }
+  return {};
+}
+// A character's bearing in em (0 if the font has no glyph for it).
+const bearing = (table, ch) => (ch && table[ch] != null ? table[ch] / 1000 : 0);
+const VOID = new Set(['img', 'br', 'hr', 'input', 'source', 'wbr']);
+// Offsets of the <p>s that are direct children of the fragment.
+function topLevelPs(html) {
+  const at = [];
+  let depth = 0;
+  for (const m of html.matchAll(/<(\/?)([a-z][a-z0-9]*)\b[^>]*>/gi)) {
+    const tag = m[2].toLowerCase();
+    if (VOID.has(tag) || m[0].endsWith('/>')) continue;
+    if (m[1]) depth--;
+    else if (depth++ === 0 && tag === 'p') at.push(m.index);
+  }
+  return at;
+}
+/* Headings get --lsb at the subhead weight. The drop cap's paragraph (a
+ * post's first child, a project's first <p>, as the CSS selects them) gets
+ * --dc-lsb at the drop cap weight; every other paragraph gets --lsb for its
+ * first glyph (bold if it opens in <strong>), which corrects its first line. */
+function opticalEdges(html, dropcap) {
+  html = html.replace(/<(h[2-6])((?:\s[^>]*)?)>([\s\S]*?)<\/\1>/g, (_, tag, attrs, inner) =>
+    `<${tag}${attrs} style="--lsb:${bearing(BEARINGS.subhead, firstGlyph(inner).ch)}">${inner}</${tag}>`);
+  const ps = topLevelPs(html);
+  const capAt = ps.length && !(dropcap === 'first-child' && html.slice(0, ps[0]).trim()) ? ps[0] : -1;
+  for (const at of ps.reverse()) {
+    const gt = html.indexOf('>', at);
+    const { ch, bold } = firstGlyph(html.slice(gt + 1, html.indexOf('</p>', gt)));
+    if (!ch) continue;
+    const style = at === capAt
+      ? `--dc-lsb:${bearing(BEARINGS.heavy, ch)}`
+      : `--lsb:${bearing(bold ? BEARINGS.heavy : BEARINGS.regular, ch)}`;
+    html = `${html.slice(0, gt)} style="${style}"${html.slice(gt)}`;
+  }
+  return html;
+}
+
 // ================================================================ layout
 
 let LAYOUT = '';
@@ -328,8 +403,8 @@ function postPage(p, prev, next, categories) {
         <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
       </div>`;
   const body = isQuote
-    ? (p.body.trim() ? markdown(p.body) : '')
-    : markdown(p.body) +
+    ? (p.body.trim() ? opticalEdges(markdown(p.body), 'first-child') : '')
+    : opticalEdges(markdown(p.body), 'first-child') +
       (p.images.length > 1 ? `<div class="ak-post-gallery">${p.images.slice(1).map((s) => img(s, title)).join('')}</div>` : '');
 
   // Sidebar: the items each post type shows, in the original's order.
@@ -371,7 +446,7 @@ function postPage(p, prev, next, categories) {
             ${body}
           </article>` : ''}
           <section class="ak-post-cats">
-            <h2 class="ak-post-cats-h">Categories</h2>
+            <h2 class="ak-post-cats-h" style="--lsb:${bearing(BEARINGS.normal, 'C')}">Categories</h2>
             <nav class="ak-pills" aria-label="Categories">
               ${cats}
             </nav>
@@ -471,7 +546,7 @@ function projectPage(p, prev, next) {
       <div class="ak-project-body-wrap">
         <div class="ak-project-main">
           ${p.images[0] ? img(p.images[0], title) : ''}
-          <div class="ak-project-body">${marked.parse(p.body)}</div>
+          <div class="ak-project-body">${opticalEdges(marked.parse(p.body), 'first-of-type')}</div>
           ${p.images.length > 1 ? `<div class="ak-project-gallery">${p.images.slice(1).map((s) => img(s, title)).join('')}</div>` : ''}
         </div>
         <aside class="ak-project-side">

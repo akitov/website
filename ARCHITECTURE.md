@@ -177,6 +177,24 @@ changing those three variables.
 (abouttype.com). It is used under the site owner's license and is not covered
 by the repo's other licenses.
 
+**Optical left edge.** In a post or project text column, the blockquote bar,
+images, drop cap, headings and text all start on one line, measured on the
+ink rather than the glyph boxes. A glyph's ink starts its left side bearing
+to the right of its box, so:
+- Text paragraphs are pulled left by the capitals' stem bearing
+  (`--lsb-text`). Straight stems sit on the edge, and round or diagonal
+  letters reach just past it.
+- A paragraph's first line, each heading and the drop cap are pulled by their
+  own first glyph's bearing, so their ink starts exactly on the edge.
+
+`scripts/build.mjs` writes each element's bearing inline (`--lsb`,
+`--dc-lsb`), from `scripts/vendor/about-beige/side-bearings.json` at the
+element's weight. `scripts/font-metrics.py` generates that file from the font
+at every `--w-*` weight in `styles.css`. Re-run it after changing a weight
+token or the font; the build stops with a message if a weight is missing or
+`--lsb-text` no longer matches. It needs the same fonttools virtualenv as the
+icon script below.
+
 ### Icons
 
 Icons are Phosphor (MIT, `@phosphor-icons/web` 2.1.2), the official web fonts
@@ -255,8 +273,12 @@ Other shared tokens:
   768–789, 8vw from 1456 up).
 - `--gutter-page`: the page content inset (14px, 5vw, 9.5vw).
 - `--footer-gap`: the space above the footer card (60px).
-- `--w-heading: 650` for every bold heading, `--w-light: 350` for every
-  light text.
+- Weights: the scale is `--w-light: 250`, `--w-normal: 350`, `--w-bold: 450`,
+  `--w-heavy: 550` and `--w-black: 650`, the heaviest weight on the site.
+  Headlines (h1s), drop caps, `<strong>` and the about section headings use
+  `--w-heavy`; section headings use `--w-subhead` (= `--w-bold`); light text
+  (nav, titles, lede, quotes, pills) uses `--w-normal`; only the active nav
+  link and the quote marks use `--w-black`. Body text is `--w-regular: 385`.
 
 Widths keep scaling above 1456px; font sizes and vertical spacing stop at
 their 1456px values. Tablet-only grid percentages go in the one
@@ -293,6 +315,8 @@ scripts/serve.mjs              local preview
 scripts/vendor/marked.js       Markdown converter (saved copy, MIT)
 scripts/subset-icons.py        trims the Phosphor fonts to the icons used
 scripts/vendor/phosphor/       icons.json (name, style, codepoint) + LICENSE (MIT)
+scripts/font-metrics.py        About Beige's side bearings at the site's weights
+scripts/vendor/about-beige/    side-bearings.json (generated; read by the build)
 .github/workflows/deploy.yml   build + deploy on push
 _materials/                    design references (gitignored, local only)
 _site/                         build output (not committed)

@@ -53,10 +53,17 @@
   --tp: calc((100vw - 390px) / 378);
   --t2: calc((100vw - 768px) / 688);
 
-  /* Weights: every bold/semibold heading, and every light text. */
-  --w-heading: 650;
-  --w-light: 350;
-  --w-subhead: 500; /* section headings (h2-h4); page h1s stay --w-heading */
+  /* Weights: the scale, then the roles that use it. --w-black is the
+   * heaviest weight on the site; nothing goes above it. */
+  --w-light: 250;
+  --w-normal: 350;  /* light text: nav, titles, lede, quotes, pills */
+  --w-bold: 450;
+  --w-heavy: 550;   /* headlines (h1s), drop caps, <strong>, about section headings */
+  --w-black: 650;   /* the active nav link and the quote marks */
+  --w-subhead: var(--w-bold); /* section headings (post h2-h4, project h2) */
+  /* About Beige's capital-stem left side bearing (H, I, B, E...) at
+   * --w-regular, in em: 91 / 1000. The build checks it against the font. */
+  --lsb-text: .091;
 
   /* Side gutters: 14px on phones. */
   --gutter: clamp(14px, calc(14px + 10 * var(--t)), 24px);
@@ -105,10 +112,12 @@
   --fs-post-nav:  clamp(10px,   calc(10px   + 10.62  * var(--t)), 15.75px); /* 10 / 14.76 / 15.75 */
   --fs-post-h1:   clamp(24px,   calc(24px   + 42.83  * var(--t)), 46px);    /* 24 / 43.2 / 46 */
   --fs-quote-h1:  clamp(24px,   calc(24px   + 42.38  * var(--t)), 45.9px);  /* 24 / 43 / 45.9 */
-  --fs-lede:      clamp(14px,   calc(14px   + 17.09  * var(--t)), 23.1px);  /* 14 / 21.66 / 23.1 */
+  --fs-lede:      clamp(18px,   calc(18px   +  4.461 * var(--t)), 22px);    /* 18 / 20 / 22 */
   --fs-attrib:    clamp(14px,   calc(14px   +  2.788 * var(--t)), 16.25px); /* 14 / 15.25 / 16.25 */
   --fs-side:      clamp(12px,   calc(12px   +  4.461 * var(--t)), 15px);    /* 12 / 14 / 15 (= home meta) */
-  --fs-dropcap:   max(calc(60px - 16.51 * var(--t)), min(calc(51.22px + 3.069 * var(--t)), 54.9px)); /* 60 / 52.6 / 54.9 */
+  --lh-body:      clamp(21.6px, calc(21.6px + 9.414 * var(--t)), 27.54px); /* 21.6 / 25.82 / 27.54: 90% of the original's 24 / 28.69 / 30.6 */
+  /* Three-line drop cap: its cap height (.72em) = two lines + one body cap height. */
+  --fs-dropcap:   calc(var(--fs-body) + 2 * var(--lh-body) / .72);            /* 75 / 88.8 / 94.7 */
   /* h2 = 0.80 x the post h1, h3 = 0.66 x (phones keep 21 / 16.6) */
   --fs-post-h2:   clamp(21px,   calc(19.2px  + 34.26 * var(--t)), 36.8px);  /* 21 / 34.56 / 36.8 */
   --fs-post-h3:   clamp(16.6px, calc(15.84px + 28.27 * var(--t)), 30.36px); /* 16.6 / 28.51 / 30.36 */
@@ -122,7 +131,6 @@
   --post-quote-gap: clamp(30px, calc(30px + 117.1 * var(--t)), 88px);    /* attribution -> row: 30 / 82.5 / 88 (CSS 5.5em) */
   --post-em:        clamp(15px, calc(15px + 4.183 * var(--t)), 18px);    /* the original's 1em (1.125rem): 15 / 16.875 / 18 */
   --w-regular: 385;  /* post body text */
-  --w-bold: 755;     /* post <strong>, body and blockquote */
 }
 
 * { box-sizing: border-box; }
@@ -202,7 +210,7 @@ a { color: inherit; }
 .ak-nav-link {
   font-family: var(--sans);
   font-size: clamp(15.3px, calc(15.3px + 1.6 * var(--t2)), 16.9px);
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   letter-spacing: normal;
   color: #000;
   text-decoration: none;
@@ -210,7 +218,7 @@ a { color: inherit; }
 }
 .ak-nav-link:hover { color: var(--accent); }
 .ak-nav-link.is-active {
-  font-weight: var(--w-heading);
+  font-weight: var(--w-black);
   color: var(--accent);
 }
 
@@ -221,7 +229,7 @@ a { color: inherit; }
   transform: translateX(-50%);
   font-family: var(--serif);
   font-size: calc(clamp(15.75px, calc(15.75px + 6.45 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   letter-spacing: normal;
   white-space: nowrap;
   color: #222;
@@ -334,7 +342,7 @@ a { color: inherit; }
 }
 .ak-footer-name {
   font-size: calc(clamp(15.75px, calc(15.75px + 6.45 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   color: #222;
   margin-bottom: calc(clamp(16px, calc(16px + 5.4 * var(--tp)), 21.4px) + clamp(0px, calc(2.8 * var(--t2)), 2.8px));
 }
@@ -349,7 +357,7 @@ a { color: inherit; }
 }
 .ak-footer-link {
   color: var(--accent);
-  font-weight: 350;
+  font-weight: var(--w-normal);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -376,7 +384,7 @@ a { color: inherit; }
   color: #000;
   --lh: 1.1957em; /* About Beige's normal: 55px at 46px */
   margin: 0 0 clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
-  font-weight: 500; /* = the post title */
+  font-weight: var(--w-heavy); /* = the post title */
   text-align: center;
 }
 
@@ -415,7 +423,7 @@ a { color: inherit; }
   line-height: calc(clamp(18px, calc(18px + 12.4 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
   font-family: var(--sans);
   font-size: calc(clamp(10.5px, calc(10.5px + 6.85 * var(--tp)), 17.35px) + clamp(0px, calc(.85 * var(--t2)), .85px));
-  font-weight: 350;
+  font-weight: var(--w-normal);
   color: #000;
   text-decoration: none;
   cursor: pointer;
@@ -501,7 +509,7 @@ a { color: inherit; }
 .ak-post-title {
   font-family: var(--serif);
   font-size: min(41.6px, calc(26.78px + 2.675cqi));
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   color: #000;
   margin: 0 0 min(17.6px, max(calc(12px - 8.594 * var(--t)), calc(3.268px + 11.966 * var(--t))));
   --lh: 1.27em; /* 52.8 / 41.6 */
@@ -535,7 +543,7 @@ a { color: inherit; }
   color: #333;
   text-decoration: none;
   font-family: var(--sans);
-  font-weight: bold;
+  font-weight: var(--w-heavy);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -626,7 +634,7 @@ a { color: inherit; }
  * block. One column (phone block): scales with the viewport as before. */
 .ak-post-grid .ak-quote-text {
   font-size: min(33.4px, calc(28.954px + .8025cqi));
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   color: #222;
   /* Headline leading at 85% like the headings; the padding keeps the first
    * line (and the absolute opening mark) where it was. */
@@ -636,10 +644,10 @@ a { color: inherit; }
   padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
 }
 /* The marks are icon glyphs in the original, heavier than the text. */
-/* The marks are About Beige glyphs at 800, in the author feather's #555. */
+/* The marks are About Beige glyphs at --w-black, in the author feather's #555. */
 .ak-post-grid .ak-quote-text::before {
   font-size: 1.25em;
-  font-weight: 800;
+  font-weight: var(--w-black);
   color: #555;
   line-height: 1;
   top: -4px;
@@ -647,7 +655,7 @@ a { color: inherit; }
 }
 .ak-post-grid .ak-quote-text::after {
   font-size: 1.25em;
-  font-weight: 800;
+  font-weight: var(--w-black);
   color: #555;
   margin-left: 0.14em;
   /* .1em lower than the original's raise: with 85% leading the raised mark
@@ -746,7 +754,7 @@ a { color: inherit; }
 .ak-post-head h1 {
   font-family: var(--serif);
   font-size: var(--fs-post-h1);
-  font-weight: 500;
+  font-weight: var(--w-heavy);
   /* 1.2 on phones (as before), 1.25 from 789 (CSS 1.2 x 3rem = 57.6 / 54) */
   --lh: calc(1.2em + clamp(0px, calc(2.16 * var(--tp)), 2.16px) + clamp(0px, calc(.14 * var(--t2)), .14px));
   color: #000;
@@ -755,7 +763,7 @@ a { color: inherit; }
 .ak-post-head p {
   font-family: var(--serif);
   font-size: var(--fs-lede);
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   line-height: 1.41;
   color: #222;
   max-width: 82.906%; /* bootstrap .span10 */
@@ -763,9 +771,9 @@ a { color: inherit; }
 }
 /* Quote posts: the quote is the headline, the author sits under it. */
 .ak-post-head.is-quote { margin-bottom: var(--post-quote-gap); }
-.ak-post-head.is-quote h1 { font-size: var(--fs-quote-h1); font-weight: var(--w-light); --lh: 1.255em; }
+.ak-post-head.is-quote h1 { font-size: var(--fs-quote-h1); font-weight: var(--w-normal); --lh: 1.255em; }
 .ak-post-head.is-quote h1 { font-style: italic; }
-.ak-post-head.is-quote h1 em { font-style: italic; font-weight: var(--w-heading); }
+.ak-post-head.is-quote h1 em { font-style: italic; font-weight: var(--w-heavy); }
 .ak-quote-attrib {
   font-family: var(--sans);
   font-size: var(--fs-attrib);
@@ -808,33 +816,36 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--fs-body);
   font-weight: var(--w-regular);
-  line-height: clamp(21.6px, calc(21.6px + 9.414 * var(--t)), 27.54px); /* 90% of the original's 24 / 28.69 / 30.6 */
+  line-height: var(--lh-body);
   color: #555;
 }
 .ak-post-body > :first-child { margin-top: 0; }
 .ak-post-body p { margin: 0 0 max(calc(15px - 6.692 * var(--t)), min(calc(11.52px + 1.067 * var(--t)), 12.8px)); } /* 15 / 12 / 12.8 */
 .ak-post-body strong,
-.ak-post-body b { font-weight: var(--w-bold); }
-/* Original: first child only, so not when a heading comes first. */
-.ak-post-body > p:first-child::first-letter {
+.ak-post-body b { font-weight: var(--w-heavy); }
+/* Drop cap, posts and projects (same copy settings): three lines tall at any
+ * width. Its cap height (.72em; About Beige's ascender is the same, so a
+ * lowercase letter fits too) runs from line 1's cap top to line 3's baseline
+ * (--fs-dropcap). The float's line height X puts its baseline on line 3's:
+ * a line's baseline is X/2 + (ascent - descent)/2 x its size, with About
+ * Beige's ascent .975 and descent .225, so X = 5L - 2L (.975 - .225) / .72
+ * (L = --lh-body). The float ends above line 4; flow-root keeps it inside a
+ * first paragraph shorter than three lines (it would run into a blockquote).
+ * Posts: first child only, so not when a heading comes first. */
+.ak-post-body > p:first-child,
+.ak-project-body > p:first-of-type { display: flow-root; }
+.ak-post-body > p:first-child::first-letter,
+.ak-project-body > p:first-of-type::first-letter {
   float: left;
+  font-family: var(--serif);
   font-size: var(--fs-dropcap);
-  font-weight: var(--w-heading);
-  line-height: .75em;
+  font-weight: var(--w-heavy);
+  line-height: calc(var(--lh-body) * (5 - 1.5 / .72));
   color: #000;
-  margin: .192em 7px 0 -3px; /* fallback (no initial-letter support, e.g. Firefox) */
-}
-/* Optical drop cap: the cap's top sits on line 1's cap height and its foot on
- * line 2's baseline, at any size. */
-@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
-  .ak-post-body > p:first-child::first-letter {
-    float: none;
-    font-size: inherit;
-    line-height: inherit;
-    margin: 0 .4em 0 0; /* ~7px at 1456 */
-    -webkit-initial-letter: 2;
-    initial-letter: 2;
-  }
+  margin-right: .085em; /* 8px at 1456 */
+  /* Ink on the column edge: undo the paragraph's pull (--lsb-text at the body
+   * size), then pull by the letter's own bearing (see Optical left edge). */
+  margin-left: calc(var(--lsb-text) * var(--fs-body) - var(--dc-lsb, 0) * 1em);
 }
 /* Bar flush with the text column; the last child's margin is dropped so the
  * space inside the bar is the same above and below. */
@@ -846,7 +857,7 @@ a { color: inherit; }
 }
 .ak-post-body blockquote > :first-child { margin-top: 0; }
 .ak-post-body blockquote > :last-child { margin-bottom: 0; }
-.ak-post-body blockquote p { font-size: var(--fs-bq); font-weight: 345; line-height: 1.57; color: #000; margin: 0 0 .703em; }
+.ak-post-body blockquote p { font-size: var(--fs-bq); font-weight: var(--w-normal); line-height: 1.57; color: #000; margin: 0 0 .703em; }
 .ak-post-body ol,
 .ak-post-body ul { margin: .703em 0 .703em 25px; padding: 0; }
 .ak-post-body ol { list-style: decimal; }
@@ -904,7 +915,7 @@ a { color: inherit; }
 .ak-post-cats-h {
   font-family: var(--serif);
   font-size: var(--fs-cats);
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   --lh: 1.267em;
   color: #000;
   text-align: left;
@@ -933,7 +944,7 @@ a { color: inherit; }
  * at 770 and keeps one line at 1456. Baseline = header + 106.2 / 99.6. */
 .ak-work-h1 {
   font-family: var(--serif);
-  font-weight: 500; /* = the post title */
+  font-weight: var(--w-heavy); /* = the post title */
   font-size: var(--fs-work-h1);
   --lh: clamp(27.5px, calc(27.5px + 62.06 * var(--t)), 57.6px);
   color: #000;
@@ -975,7 +986,7 @@ a { color: inherit; }
   text-align: center;
   font-family: var(--serif);
   font-size: var(--fs-work-cap);
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   --lh: clamp(19.06px, calc(19.06px + 50.25 * var(--t)), 43.2px);
   line-height: calc(var(--lh) * .85);
   color: #000;
@@ -1002,7 +1013,7 @@ a { color: inherit; }
 }
 .ak-project-head h1 {
   font-size: var(--fs-project-h1);
-  font-weight: bold;
+  font-weight: var(--w-heavy);
   margin: 0 0 10px;
   color: #000;
 }
@@ -1021,21 +1032,13 @@ a { color: inherit; }
 }
 .ak-project-main { flex: 65 1 455px; min-width: 0; }
 .ak-project-main img { width: 100%; height: auto; margin-bottom: 30px; }
+/* Copy: the blog post body's settings (the drop cap is shared, see the post). */
 .ak-project-body {
-  line-height: 1.8;
-  color: var(--text-2);
-  font-size: 0.9375rem;
+  font-size: var(--fs-body);
+  font-weight: var(--w-regular);
+  line-height: var(--lh-body);
+  color: #555;
   margin-bottom: 40px;
-}
-.ak-project-body > p:first-of-type::first-letter {
-  float: left;
-  font-size: 5.625rem;
-  font-weight: bold;
-  color: #000;
-  line-height: 60px;
-  padding-top: 10px;
-  margin-right: 8px;
-  font-family: var(--serif);
 }
 .ak-project-body p { margin: 0 0 16px; }
 .ak-project-body h2 {
@@ -1064,7 +1067,7 @@ a { color: inherit; }
   color: #444;
   margin: 0;
 }
-.ak-project-side dt { font-weight: bold; }
+.ak-project-side dt { font-weight: var(--w-heavy); }
 .ak-project-side dd { margin: 0 0 15px; }
 .ak-project-link {
   display: inline-block;
@@ -1074,7 +1077,7 @@ a { color: inherit; }
   font-size: 1rem;
   padding-bottom: 4px;
   border-bottom: 2px solid var(--accent);
-  font-weight: bold;
+  font-weight: var(--w-heavy);
   margin-top: 6px;
 }
 
@@ -1166,13 +1169,13 @@ a { color: inherit; }
 .ak-about-bio p:last-child,
 .ak-endorse-item p { margin-bottom: 0; }
 .ak-about-bio strong,
-.ak-endorse-item p strong { font-weight: var(--w-bold); color: #555; }
+.ak-endorse-item p strong { font-weight: var(--w-heavy); color: #555; }
 
 /* "Most endorsed in:" / "I strive to:" (original h6: SSP 600, #222, 150%). */
 .ak-about-section-h {
   font-family: var(--sans);
   font-size: var(--ab-h6);
-  font-weight: var(--w-heading);
+  font-weight: var(--w-heavy);
   --lh: 1.5em;
   color: #222;
   margin: var(--ab-sec1-mt) 0 var(--ab-h6-mb);
@@ -1206,12 +1209,12 @@ a { color: inherit; }
   color: #000;
   font-family: var(--sans);
 }
-.ak-endorse-circle .num { font-size: var(--ab-name); font-weight: var(--w-light); line-height: 1; }
+.ak-endorse-circle .num { font-size: var(--ab-name); font-weight: var(--w-normal); line-height: 1; }
 .ak-endorse-circle .lbl { font-size: 12.17px; font-weight: var(--w-regular); line-height: 1; margin-top: var(--ab-endr-gap); }
 .ak-endorse-item h3 {
   font-family: var(--serif);
   font-size: var(--ab-name);
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   --lh: 1.5em;
   color: #222;
   margin: var(--ab-name-mt) 0 var(--ab-name-mb);
@@ -1245,7 +1248,7 @@ a { color: inherit; }
 .ak-strive-item .lbl {
   font-family: var(--sans);
   font-size: var(--ab-lbl);
-  font-weight: var(--w-light);
+  font-weight: var(--w-normal);
   line-height: var(--ab-lbl-lh);
   color: #222;
   margin-top: var(--ab-lbl-mt);
@@ -1315,15 +1318,38 @@ h1, h2, h3, h4, h5, h6 {
   padding-block: calc(var(--lh) * .075);
 }
 
-/* Quote post headline: About Beige's own marks (800, upright) in the
+/* Optical left edge (post and project text column). The column's edge is
+ * where the blockquote bar, images and figure frames start; text ink starts
+ * there too. A glyph's ink begins its left side bearing to the right of its
+ * box, so:
+ * - Text paragraphs are pulled left by the capitals' stem bearing
+ *   (--lsb-text): straight stems sit on the edge and round or diagonal
+ *   letters (o, A, t, w) reach just past it, as in optical margin alignment.
+ *   The first line's glyph is known, so text-indent corrects that line by
+ *   its own bearing (--lsb) and it starts exactly on the edge. Paragraphs
+ *   that hold an image stay put, so the image keeps the edge.
+ * - A heading and a drop cap are pulled by their own first glyph's bearing
+ *   (--lsb, --dc-lsb), so their ink starts exactly on the edge.
+ * scripts/build.mjs sets --lsb / --dc-lsb inline from the font at the
+ * element's weight. */
+.ak-post-body > p:not(:has(> img)),
+.ak-project-body > p:not(:has(> img)) {
+  margin-left: calc(-1em * var(--lsb-text));
+  text-indent: calc(1em * (var(--lsb-text) - var(--lsb, var(--lsb-text))));
+}
+.ak-post-body > :is(h2, h3, h4, h5, h6),
+.ak-project-body > :is(h2, h3, h4, h5, h6),
+.ak-post-cats-h { margin-left: calc(-1em * var(--lsb, 0)); }
+
+/* Quote post headline: About Beige's own marks (--w-black, upright) in the
  * headline's black; the home quote tiles keep their #555 marks. */
-.ak-post-head.is-quote .ak-qm { font-style: normal; font-weight: 800; }
+.ak-post-head.is-quote .ak-qm { font-style: normal; font-weight: var(--w-black); }
 .ak-post-head.is-quote .ak-qm-open { margin-right: 0em; }
 .ak-post-head.is-quote .ak-qm-close { margin-left: .05em; }
 
 /* 1x screens: small thin text has sub-pixel stems and its diagonals and
  * curves (W, O, brackets) render grey and broken. Raise those weights so the
- * strokes are solid. Light text (--w-light 350) is already heavy enough.
+ * strokes are solid. Larger --w-normal (350) text is already heavy enough.
  * Retina is unchanged. */
 @media (max-resolution: 1.49dppx) {
   .ak-pill,
