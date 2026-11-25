@@ -2,11 +2,11 @@
 """About Beige's left side bearings at the weights the site sets.
 
 Writes scripts/vendor/about-beige/side-bearings.json: for every weight token in
-styles.css (--w-light, --w-normal, ... --w-regular), each character's left side
+styles.css (--w-light, --w-normal, ... --w-black), each character's left side
 bearing (the glyph's xMin, in font units; 1000 units = 1em) in the variable
 font instanced at that weight. scripts/build.mjs uses it to pull drop caps and
-headings left by their first glyph's side bearing, so their ink starts on the
-text column's edge (see "Optical left edge" in styles.css).
+headings left by their first glyph's side bearing (see "Left edge" in
+styles.css).
 
 Run after changing a weight token or the font (needs fonttools and brotli):
     python3 -m venv /tmp/fv && /tmp/fv/bin/pip install fonttools brotli

@@ -20,10 +20,11 @@ folder. What you see locally is what goes live.
 
 | URL                      | Comes from                              |
 |--------------------------|-----------------------------------------|
-| `/`                      | all posts, newest first                 |
+| `/`                      | the home page: all projects (work)      |
+| `/blog/`                 | notes: all posts, newest first          |
 | `/blog/<category>/`      | the posts with that `category:`         |
 | `/blog/<slug>/`          | the folder `blog/<slug>/`               |
-| `/work/`                 | all projects, by `order:`               |
+| `/work/`                 | redirects to `/`                        |
 | `/work/<slug>/`          | the folder `projects/<slug>/`           |
 | `/about/`                | `pages/about.html`                      |
 | `/feed.xml`, `/sitemap.xml` | generated                            |
@@ -124,10 +125,10 @@ The pages are complete without JavaScript. Three small scripts add
 behaviour:
 
 - `js/main.js`: opens and closes the mobile menu (every page). See "Mobile menu" below
-- `js/home.js`: masonry layout of the post cards (home and category pages).
+- `js/home.js`: masonry layout of the post cards (notes and category pages).
   Column and gutter widths come from CSS: Masonry measures the first card
   and the empty `.ak-post-grid-gutter` sizer that the build puts in the grid
-- `js/work.js`: the project pills on `/work/`, which filter without leaving
+- `js/work.js`: the project pills on the home page, which filter without leaving
   the page (a filtered grid gets `is-filtered`, which drops the odd last
   tile's offset)
 
@@ -177,15 +178,13 @@ changing those three variables.
 (abouttype.com). It is used under the site owner's license and is not covered
 by the repo's other licenses.
 
-**Optical left edge.** In a post or project text column, the blockquote bar,
-images, drop cap, headings and text all start on one line, measured on the
-ink rather than the glyph boxes. A glyph's ink starts its left side bearing
-to the right of its box, so:
-- Text paragraphs are pulled left by the capitals' stem bearing
-  (`--lsb-text`). Straight stems sit on the edge, and round or diagonal
-  letters reach just past it.
-- A paragraph's first line, each heading and the drop cap are pulled by their
-  own first glyph's bearing, so their ink starts exactly on the edge.
+**Left edge.** In a post or project text column, images start on the
+column's edge. A glyph's ink starts its left side bearing to the right of
+its box, so paragraph text, set as is, starts a little in: capital stems
+`--lsb-text` (.095em, 1.4–1.7px). The blockquote bar sits 1px in to meet it,
+and the drop cap is pulled by its own glyph's bearing so its ink starts where
+the capital stems do. Headings are pulled by their first glyph's bearing, so
+their ink starts on the edge.
 
 `scripts/build.mjs` writes each element's bearing inline (`--lsb`,
 `--dc-lsb`), from `scripts/vendor/about-beige/side-bearings.json` at the
@@ -272,17 +271,39 @@ Other shared tokens:
 - `--gutter-frame`: the header and footer card inset (14px on phones, 4vw at
   768–789, 8vw from 1456 up).
 - `--gutter-page`: the page content inset (14px, 5vw, 9.5vw).
-- `--footer-gap`: the space above the footer card (60px).
+- `--footer-gap`: the space above the footer card (45px, the original's 60
+  less 25%).
+- `--fs-listing-h1`, `--listing-title-cap`: the listing pages' title (the
+  home page (work), notes, categories and 404 share `.ak-listing-h1`: 24px on
+  phones, 46 on desktop) and header → title capitals (45.9px on phones, 73
+  on desktop). Below the pills both have the notes page's gap (30px +
+  `--space-4`).
+- `--fs-site-name`: "Alexander Kitov" in the header and the footer (17px on
+  phones, 23.5 on desktop).
+- `--fs-tile-meta`, `--fs-tile-copy`, `--lh-tile-copy`: the notes tiles'
+  details line, and the excerpt and its Read More (12 and 14px on phones).
+- `--avatar`: the header photo (44px on phones, 42px from 768). The phone
+  hamburger button takes its height, so the two always line up.
+- `--fs-prevnext`, `--prevnext-chevron`, `--prevnext-top`: the prev / next
+  links' label size (never below 12px), chevron size and distance below the
+  header. See "Prev / next" below.
+- `--fs-hero-title`, `--fs-hero-sub`, `--hero-top`, `--hero-bottom`: the
+  hero's title and subtitle sizes (24 / 43.2 / 46 and 18 / 20 / 22) and the
+  space above it (from prev / next) and below it. See "Hero" below.
 - Weights: the scale is `--w-light: 250`, `--w-normal: 350`, `--w-bold: 450`,
   `--w-heavy: 550` and `--w-black: 650`, the heaviest weight on the site.
   Headlines (h1s), drop caps, `<strong>` and the about section headings use
-  `--w-heavy`; section headings use `--w-subhead` (= `--w-bold`); light text
-  (nav, titles, lede, quotes, pills) uses `--w-normal`; only the active nav
-  link and the quote marks use `--w-black`. Body text is `--w-regular: 385`.
+  `--w-heavy`; section headings use `--w-bold`; body text and light text
+  (nav, titles, lede, quotes, pills) use `--w-normal`; only the active nav
+  link and the quote marks use `--w-black`. These five are the only weight
+  tokens: no aliases or in-between weights.
 
 Widths keep scaling above 1456px; font sizes and vertical spacing stop at
 their 1456px values. Tablet-only grid percentages go in the one
-`@media (min-width: 761px) and (max-width: 979px)` block.
+`@media (min-width: 761px) and (max-width: 979px)` block. One exception: on
+post pages the sidebar and text column share out half the empty right-hand
+space up to 1023px (a quarter from 1024), so a `(min-width: 980px) and (max-width: 1023px)` block
+carries that on past 979.
 
 To change a size, change the token's 390px value (and its 1280px value if the
 desktop size changes too). Don't add breakpoints. The one `@media
@@ -293,11 +314,44 @@ grids); `MOBILE_QUERY` in `js/home.js` repeats it and must stay the same.
 
 At 760px and below the inline nav is replaced by a hamburger button.
 `templates/layout.html` holds both the button (`data-menu-toggle`) and a
-`<nav data-menu hidden>` with HOME, WORK and RESUMÉ tiles inside the header
+`<nav data-menu hidden>` with WORK, NOTES and ABOUT tiles inside the header
 card, so opening it grows the card and pushes the page down. `js/main.js`
 toggles the nav's `hidden` attribute and `aria-expanded` on the button. It
 closes on a tap on a menu link, on Escape (focus returns to the button) and
 when the viewport grows past 760px. Without JavaScript the menu stays closed.
+The tiles are always 170:100, and their labels scale with them (the menu is a
+size container; 18px on the 160px tile at 393px wide). The hamburger's left
+edge sits on the tiles' left edge (`--menu-pad`) at every width.
+
+### Header title
+
+The middle of the header shows "Alexander Kitov", except on the home page
+(`/`) when it's the first page of the visit: then it says "Welcome 👋". An
+inline script in `templates/layout.html`'s `<head>` keeps a flag in
+`sessionStorage` (one per browser tab) and sets `.ak-greeted` on `<html>`
+before the page draws, so every later page, a reload and Back show the name.
+`page()` in `scripts/build.mjs` writes both texts on `/`; `styles.css` shows
+one. Without JavaScript `/` always says "Welcome 👋".
+
+### Prev / next
+
+Blog posts and project pages share one prev / next component: `prevNext()`
+in `scripts/build.mjs` writes it between the header and `<main>`, and the
+`.ak-prevnext` rules in `styles.css` style it. Neither page has rules of its
+own for it. The space between it and the page title belongs to the hero
+(below). Titles stay on one line; on the narrowest phones a long pair just
+comes close (7px apart at 320px on betahaus | Sofia).
+
+### Hero
+
+The title and the line under it are one component too: `hero()` in
+`scripts/build.mjs` writes it at the top of `<main>` on blog posts and
+project pages, and `.ak-hero` in `styles.css` styles it. Both pages get the
+same title and subtitle sizes and the same space above (from prev / next)
+and between. Below it (to the content) project pages get 5px more: their
+short heroes made the same gap look tighter. On quote posts the quote is the title
+(italic, with About Beige's quote marks) and the author, after a feather, is
+the subtitle.
 
 ## File map
 

@@ -12,6 +12,21 @@
     <link rel="preload" href="/assets/fonts/phosphor-light.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css" />
 {{styles}}
+    <script>
+      /* Header title on the home page: "Welcome 👋" when it's the first page
+       * of the visit (this tab), "Alexander Kitov" on every page after,
+       * including a reload or Back to it (.ak-greeted, see styles.css). */
+      (function () {
+        var html = document.documentElement;
+        try {
+          if (sessionStorage.getItem('ak-greeted')) html.classList.add('ak-greeted');
+          sessionStorage.setItem('ak-greeted', '1');
+        } catch (e) {
+          html.classList.add('ak-greeted');
+        }
+        addEventListener('pageshow', function (e) { if (e.persisted) html.classList.add('ak-greeted'); });
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/assets/avatar.svg" />
     <link rel="alternate" type="application/rss+xml" title="Alexander Kitov" href="/feed.xml" />
   </head>
@@ -23,17 +38,17 @@
           {{icon:list}}
         </button>
         <div class="ak-nav-links">
-          <a class="ak-nav-link{{active_home}}"{{current_home}} href="/" data-nav="home">HOME</a>
-          <a class="ak-nav-link{{active_work}}"{{current_work}} href="/work/" data-nav="work">WORK</a>
-          <a class="ak-nav-link{{active_about}}"{{current_about}} href="/about/" data-nav="about">RESUMÉ</a>
+          <a class="ak-nav-link{{active_work}}"{{current_work}} href="/" data-nav="work">WORK</a>
+          <a class="ak-nav-link{{active_notes}}"{{current_notes}} href="/blog/" data-nav="notes">NOTES</a>
+          <a class="ak-nav-link{{active_about}}"{{current_about}} href="/about/" data-nav="about">ABOUT</a>
         </div>
-        <a class="ak-page-title" href="/">Alexander Kitov</a>
+        <a class="ak-page-title" href="/">{{page_title}}</a>
         {{avatar}}
       </nav>
       <nav class="ak-menu" id="ak-menu" aria-label="Main menu" data-menu hidden>
-        <a class="ak-menu-tile{{active_home}}"{{current_home}} href="/">HOME</a>
-        <a class="ak-menu-tile{{active_work}}"{{current_work}} href="/work/">WORK</a>
-        <a class="ak-menu-tile{{active_about}}"{{current_about}} href="/about/">RESUMÉ</a>
+        <a class="ak-menu-tile{{active_work}}"{{current_work}} href="/">WORK</a>
+        <a class="ak-menu-tile{{active_notes}}"{{current_notes}} href="/blog/">NOTES</a>
+        <a class="ak-menu-tile{{active_about}}"{{current_about}} href="/about/">ABOUT</a>
       </nav>
     </header>
 
@@ -43,9 +58,9 @@
       <div class="ak-footer-inner">
         <div class="ak-footer-name">Alexander Kitov</div>
         <div class="ak-footer-links">
-          <a class="ak-footer-link" href="mailto:hello@example.com">{{icon:at-bold}} Email</a>
-          <a class="ak-footer-link" href="#">{{icon:linkedin-logo-bold}} LinkedIn</a>
-          <a class="ak-footer-link" href="#">{{icon:x-logo-bold}} X.com</a>
+          <a class="ak-footer-link" href="#" data-mail-user="kitov.gm" data-mail-domain="gmail.com">{{icon:at-bold}} Email</a>
+          <a class="ak-footer-link" href="https://www.linkedin.com/in/alexanderkitov/" target="_blank" rel="me noopener">{{icon:linkedin-logo-bold}} LinkedIn</a>
+          <a class="ak-footer-link" href="https://x.com/_akitov" target="_blank" rel="me noopener">{{icon:x-logo-bold}} X.com</a>
         </div>
         <div class="ak-footer-copy">© <span data-year>{{year}}</span></div>
       </div>

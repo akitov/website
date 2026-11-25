@@ -1,4 +1,4 @@
-/* home.js — home and category pages. Lays out the post cards as a masonry
+/* home.js — the notes page (/blog/) and category pages. Lays out the post cards as a masonry
  * grid on wide screens. Without it (or if the CDN script fails) the CSS
  * two-column grid is used, so the page always works.
  */

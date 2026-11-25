@@ -1,8 +1,16 @@
 /* main.js — every page. Opens and closes the mobile menu, keeps the footer
  * year current (the build writes its own year; this covers later years
- * without a redeploy). */
+ * without a redeploy) and puts the email links together. */
 
 for (const el of document.querySelectorAll('[data-year]')) el.textContent = String(new Date().getFullYear());
+
+// Email links: the address is never whole in the HTML (spam bots read the
+// HTML without running scripts). The link carries its two halves and gets
+// its mailto: when someone points at, focuses, right-clicks or clicks it.
+for (const a of document.querySelectorAll('[data-mail-user]')) {
+  const set = () => { a.href = `mailto:${a.dataset.mailUser}@${a.dataset.mailDomain}`; };
+  for (const type of ['pointerenter', 'focus', 'contextmenu', 'click']) a.addEventListener(type, set);
+}
 
 const menu = document.querySelector('[data-menu]');
 const toggle = document.querySelector('[data-menu-toggle]');

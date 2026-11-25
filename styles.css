@@ -56,14 +56,14 @@
   /* Weights: the scale, then the roles that use it. --w-black is the
    * heaviest weight on the site; nothing goes above it. */
   --w-light: 250;
-  --w-normal: 350;  /* light text: nav, titles, lede, quotes, pills */
-  --w-bold: 450;
+  --w-normal: 350;  /* body text, and light text: nav, titles, lede, quotes, pills */
+  --w-bold: 450;    /* section headings (post h2-h4, project h2) */
   --w-heavy: 550;   /* headlines (h1s), drop caps, <strong>, about section headings */
   --w-black: 650;   /* the active nav link and the quote marks */
-  --w-subhead: var(--w-bold); /* section headings (post h2-h4, project h2) */
   /* About Beige's capital-stem left side bearing (H, I, B, E...) at
-   * --w-regular, in em: 91 / 1000. The build checks it against the font. */
-  --lsb-text: .091;
+   * --w-normal (body text), in em: 95 / 1000. The build checks it against
+   * the font. */
+  --lsb-text: .095;
 
   /* Side gutters: 14px on phones. */
   --gutter: clamp(14px, calc(14px + 10 * var(--t)), 24px);
@@ -73,8 +73,9 @@
   /* Page content inset: 14 at 390, 5vw at 768-789, 9.5vw at >=1456
    * (the original's #wrap widths 90% and 81%). */
   --gutter-page: min(9.5vw, max(clamp(14px, calc(14px + 24.4 * var(--tp)), 5vw), calc(14.823vw - 77.5px)));
-  /* Space above the footer card (the original's .footer margin-top). */
-  --footer-gap: 60px;
+  /* Space above the footer card: the original's .footer margin-top (60px)
+   * less 25%. */
+  --footer-gap: 45px;
   /* Listing content inset (home, category, 404): 14 at 390, 45 at 768, 150 at
    * 1456 = the original's #wrap inset + the 1% .grid-element margin-left,
    * which bounds it above 1456. */
@@ -90,47 +91,62 @@
   --space-8: clamp(40px, calc(40px + 20 * var(--t)), 60px);  /* work title top, project bottom */
 
   /* Font sizes, 390 -> 1280 */
-  --fs-page-h1: clamp(1.75rem, calc(24.5px + 44.03 * var(--t)), 46px); /* h1.title: 43.2 / 46 */
+  /* Listing page titles (home "Welcome", categories, 404, /work/): 24 / 44.2 / 46 */
+  --fs-listing-h1: clamp(24px, calc(24px + 45.13 * var(--t)), 46px);
   --fs-h1: clamp(1.625rem, calc(22.75px + 9.65 * var(--t)), 2rem);
-  --fs-project-h1: clamp(1.625rem, calc(22.75px + 13.7 * var(--t)), 2.25rem);
   --fs-quote: clamp(1.125rem, calc(15.75px + 8.55 * var(--t)), 1.5rem);
   --fs-h3: clamp(1.0625rem, calc(14.875px + 5.375 * var(--t)), 1.25rem);
   --fs-small: clamp(0.75rem, calc(10.5px + 2.6625 * var(--t)), 0.8125rem);
+  /* Home tiles: details (date, type, category), the excerpt and its Read More.
+   * Phones 12 / 14px; the tablet and desktop sizes as before (15 from 876,
+   * 16.2 from 812). The excerpt keeps the original's 1.6 leading on phones. */
+  --fs-tile-meta: clamp(12px, calc(12px + 5.493 * var(--t)), 15px);     /* 12 / 14.46 / 15 */
+  --fs-tile-copy: clamp(14px, calc(14px + 4.641 * var(--t)), 16.2px);   /* 14 / 16.08 / 16.2 */
+  --lh-tile-copy: clamp(22.4px, calc(22.4px + 5.907 * var(--t)), 25.6px); /* 22.4 / 25.05 / 25.6 */
 
   /* work: /work/ sizes, 43.2 / 32.56px at 770 and 46 / 34.25px at 1456
    * (About Beige x-height = the original's; px ends hit the targets) */
-  --fs-work-h1: clamp(22.75px, calc(22.75px + 47.9 * var(--t)), 46px);
+  /* Listing pages: header -> title capitals, 45.9 on phones, 69.6 at 789,
+   * 73 from 847 (the /work/ title's before the two were made one). */
+  --listing-title-cap: clamp(45.9px, calc(45.9px + 52.87 * var(--t)), 73.05px);
   --fs-work-cap: clamp(15.75px, calc(15.75px + 39.37 * var(--t)), 34.25px);
 
   /* Sizes, 390 -> 1280 */
   --nav-pad-block: clamp(12px, calc(12px + .6 * var(--tp)), 12.6px);
   --radius: clamp(4px, calc(6px - 2 * var(--tp)), 6px); /* header and footer cards: 6 on phones, 4 from 768 */
+  /* Header photo, and the phone hamburger at its height: 44 on phones, 42 from 768 (original .brand) */
+  --avatar: clamp(42px, calc(44px - 2 * var(--tp)), 44px);
+  /* "Alexander Kitov" in the header and the footer: 17 on phones, 22.2 at 768, 23.5 from 1456 */
+  --fs-site-name: calc(clamp(17px, calc(17px + 5.2 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
+
+  /* Prev / next (.ak-prevnext, the same on blog posts and project pages).
+   * The label never goes below 12px. The chevron is Phosphor's caret glyph
+   * at this size; its ink is .672 of it tall: 18.7 / 27.6 / 29.4. */
+  --fs-prevnext:      clamp(12px, calc(10px + 10.62 * var(--t)), 15.75px);       /* 12 (up to 557) / 14.76 / 15.75 */
+  --prevnext-chevron: clamp(27.83px, calc(27.83px + 29.55 * var(--t)), 43.82px); /* 27.83 / 41.08 / 43.82 */
+  --prevnext-top:     clamp(18px, calc(18px + 40.15 * var(--t)), 38px);          /* header -> prev/next: 18 / 36 / 38 */
+
+  /* Hero (.ak-hero, the same on blog posts and project pages): the title, the
+   * line under it, and the space above it (from prev / next) and below it. */
+  --fs-hero-title: clamp(24px, calc(24px + 42.83 * var(--t)), 46px);      /* 24 / 43.2 / 46 */
+  --fs-hero-sub:   clamp(18px, calc(18px + 4.461 * var(--t)), 22px);      /* 18 / 20 / 22 */
+  --hero-top:      clamp(40.3px, calc(40.3px + 68.03 * var(--t)), 75.9px); /* prev/next -> title box: 40.3 / 70.8 / 75.9 */
+  --hero-bottom:   clamp(30px, calc(30px + 134.95 * var(--t)), 96.5px);   /* line -> content: 30 / 90.5 / 96.5 (CSS 5.5em + .5333rem) */
 
   /* post: blog post page, 390 -> 789 -> >=1280 (phone / tablet / desktop
    * in the comments). k = (tablet - phone) / 0.448315, the value of --t at 789. */
   --fs-body:      clamp(15px,   calc(15px   +  4.684 * var(--t)), 18.2px);  /* 15 / 17.1 / 18.2 */
-  --fs-post-nav:  clamp(10px,   calc(10px   + 10.62  * var(--t)), 15.75px); /* 10 / 14.76 / 15.75 */
-  --fs-post-h1:   clamp(24px,   calc(24px   + 42.83  * var(--t)), 46px);    /* 24 / 43.2 / 46 */
-  --fs-quote-h1:  clamp(24px,   calc(24px   + 42.38  * var(--t)), 45.9px);  /* 24 / 43 / 45.9 */
-  --fs-lede:      clamp(18px,   calc(18px   +  4.461 * var(--t)), 22px);    /* 18 / 20 / 22 */
-  --fs-attrib:    clamp(14px,   calc(14px   +  2.788 * var(--t)), 16.25px); /* 14 / 15.25 / 16.25 */
   --fs-side:      clamp(12px,   calc(12px   +  4.461 * var(--t)), 15px);    /* 12 / 14 / 15 (= home meta) */
   --lh-body:      clamp(21.6px, calc(21.6px + 9.414 * var(--t)), 27.54px); /* 21.6 / 25.82 / 27.54: 90% of the original's 24 / 28.69 / 30.6 */
   /* Three-line drop cap: its cap height (.72em) = two lines + one body cap height. */
   --fs-dropcap:   calc(var(--fs-body) + 2 * var(--lh-body) / .72);            /* 75 / 88.8 / 94.7 */
-  /* h2 = 0.80 x the post h1, h3 = 0.66 x (phones keep 21 / 16.6) */
+  /* h2 = 0.80 x the hero title, h3 = 0.66 x (phones keep 21 / 16.6) */
   --fs-post-h2:   clamp(21px,   calc(19.2px  + 34.26 * var(--t)), 36.8px);  /* 21 / 34.56 / 36.8 */
   --fs-post-h3:   clamp(16.6px, calc(15.84px + 28.27 * var(--t)), 30.36px); /* 16.6 / 28.51 / 30.36 */
   --fs-post-h4:   clamp(15px,   calc(15px   + 15.84  * var(--t)), 23.6px);  /* 15 / 22.1 / 23.6 */
   --fs-bq:        clamp(15px,   calc(15px   +  9.145 * var(--t)), 20.4px);  /* 15 / 19.1 / 20.4 */
   --fs-caption:   clamp(13px,   calc(13px   +  4.684 * var(--t)), 16.1px);  /* 13 / 15.1 / 16.1 */
-  --fs-cats:      clamp(21px,   calc(21px   + 24.54  * var(--t)), 34.1px);  /* 21 / 32 / 34.1 */
-  --post-nav-top:   clamp(18px, calc(18px +  40.15 * var(--t)), 38px);   /* header -> prev/next: 18 / 36 / 38 */
-  --post-nav-gap:   clamp(40.3px, calc(40.3px + 68.03 * var(--t)), 75.9px); /* prev/next -> title: 40.3 / 70.8 / 75.9 */
-  --post-head-gap:  clamp(30px, calc(30px + 134.95 * var(--t)), 96.5px); /* lede -> row: 30 / 90.5 / 96.5 (CSS 5.5em + .5333rem) */
-  --post-quote-gap: clamp(30px, calc(30px + 117.1 * var(--t)), 88px);    /* attribution -> row: 30 / 82.5 / 88 (CSS 5.5em) */
   --post-em:        clamp(15px, calc(15px + 4.183 * var(--t)), 18px);    /* the original's 1em (1.125rem): 15 / 16.875 / 18 */
-  --w-regular: 385;  /* post body text */
 }
 
 * { box-sizing: border-box; }
@@ -180,6 +196,7 @@ a { color: inherit; }
 /* Original: .navbar { margin: 30px auto 0 }, 6px red top border, 4px radius,
  * 0 2px 6px shadow. Card 6 + 67.2 = 73.2 tall from 768 up. */
 .ak-header {
+  --menu-pad: 14px; /* the mobile menu's side padding; the hamburger lines up with it */
   margin: clamp(16px, calc(16px + 14 * var(--tp)), 30px) var(--gutter-frame) 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.125);
 }
@@ -192,11 +209,12 @@ a { color: inherit; }
  * optically (card 70.2 from 768 up, 70 on phones). */
 .ak-nav {
   --half-stripe: clamp(2px, calc(2px + 1 * var(--tp)), 3px);
+  --nav-pad-left: clamp(14px, calc(14px + 10.4 * var(--tp)), 24.4px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: calc(var(--nav-pad-block) - var(--half-stripe)) clamp(14px, calc(14px + 6 * var(--tp)), 20px)
-    var(--nav-pad-block) clamp(14px, calc(14px + 10.4 * var(--tp)), 24.4px);
+    var(--nav-pad-block) var(--nav-pad-left);
   background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
   position: relative;
 }
@@ -222,13 +240,18 @@ a { color: inherit; }
   color: var(--accent);
 }
 
-/* The site name, in the footer name's size, weight and colour. */
+/* The site name, in the footer name's size, weight and colour. On the home
+ * page "Welcome 👋" instead on the visit's first page; after that
+ * (.ak-greeted, set by the inline script in layout.html) the name again. */
+.ak-title-name { display: none; }
+.ak-greeted .ak-title-greet { display: none; }
+.ak-greeted .ak-title-name { display: inline; }
 .ak-page-title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--serif);
-  font-size: calc(clamp(15.75px, calc(15.75px + 6.45 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
+  font-size: var(--fs-site-name);
   font-weight: var(--w-normal);
   letter-spacing: normal;
   white-space: nowrap;
@@ -237,10 +260,10 @@ a { color: inherit; }
 }
 
 .ak-avatar {
-  /* 42 from 768 (original .brand); phones keep 44 to match the hamburger row.
-   * The 1.5px shift puts the centre at y 71.1 like the original. */
-  width: clamp(42px, calc(44px - 2 * var(--tp)), 44px);
-  height: clamp(42px, calc(44px - 2 * var(--tp)), 44px);
+  /* --avatar: 42 from 768 (original .brand), 44 on phones. The 1.5px shift
+   * puts the centre at y 71.1 like the original. */
+  width: var(--avatar);
+  height: var(--avatar);
   margin-top: clamp(0px, calc(1.5 * var(--tp)), 1.5px);
   margin-bottom: clamp(-1.5px, calc(-1.5 * var(--tp)), 0px);
   border-radius: 50%;
@@ -249,29 +272,24 @@ a { color: inherit; }
   z-index: 1;
 }
 .ak-avatar img { width: 100%; height: 100%; object-fit: cover; }
-/* About page: a tennis ball 90% of the photo's size. The emoji's ink is
- * .945em wide and sits .032em above the middle of its box. */
-.ak-avatar-emoji {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-  border-radius: 0;
-  font-size: calc(clamp(42px, calc(44px - 2 * var(--tp)), 44px) * .9 / .945);
-  line-height: 1;
-  translate: 0 .032em; /* ink centred where the photo's centre is */
-  user-select: none;
-}
 
-/* Hamburger — mobile only */
+/* Hamburger, mobile only: just the three lines; the button only shows when
+ * pressed or while the menu is open. Its box is as tall as the photo on the
+ * right, with its shift, so their tops and bottoms line up at every width;
+ * 50 x 44 on phones. The border is there but transparent, so pressing it
+ * doesn't move the lines. The left margin puts the box's left edge on the
+ * menu tiles' left edge (--menu-pad in from the card) at every width, so the
+ * pressed button lines up with HOME and RESUMÉ below it. */
 .ak-hamburger {
   display: none;
-  width: 50px;
-  height: 44px;
+  width: calc(var(--avatar) * 50 / 44);
+  height: var(--avatar);
+  margin-left: calc(var(--menu-pad) - var(--nav-pad-left));
+  margin-top: clamp(0px, calc(1.5 * var(--tp)), 1.5px);
+  margin-bottom: clamp(-1.5px, calc(-1.5 * var(--tp)), 0px);
   border-radius: 8px;
-  border: 1px solid var(--border-2);
-  background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid transparent;
+  background: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -300,18 +318,21 @@ a { color: inherit; }
 /* ----------------------------- MOBILE MENU ----------------------------- */
 /* Inside the header card, so opening it grows the card and pushes the page down. */
 
-.ak-menu { display: none; }
+/* The menu is a size container so the tile labels can scale with the tiles:
+ * a tile is (100cqi - the 16px gap) / 2 wide, and its label is 18px on a
+ * 160.37px tile (iPhone 16, 393 wide), the same proportion at every width. */
+.ak-menu { display: none; container-type: inline-size; --menu-gap: 16px; }
 .ak-menu-tile {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 0;
-  height: 120px;
+  aspect-ratio: 170 / 100; /* width : height, so the height follows the screen width */
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  font: 300 clamp(24px, calc(8.571vw - 3.43px), 30px) / 1 var(--title-font);
+  font: 300 calc((100cqi - var(--menu-gap)) / 2 * 18 / 160.37) / 1 var(--title-font); /* 13.9 at 320, 18 at 393, 28.6 at 600 */
   letter-spacing: 0.04em;
   color: #9a9a9a;
   text-decoration: none;
@@ -341,7 +362,7 @@ a { color: inherit; }
   background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%);
 }
 .ak-footer-name {
-  font-size: calc(clamp(15.75px, calc(15.75px + 6.45 * var(--tp)), 22.2px) + clamp(0px, calc(1.3 * var(--t2)), 1.3px));
+  font-size: var(--fs-site-name);
   font-weight: var(--w-normal);
   color: #222;
   margin-bottom: calc(clamp(16px, calc(16px + 5.4 * var(--tp)), 21.4px) + clamp(0px, calc(2.8 * var(--t2)), 2.8px));
@@ -362,6 +383,12 @@ a { color: inherit; }
   white-space: nowrap;
 }
 .ak-footer-link .ak-icon { margin-right: .05em; } /* + the space, as on the about page */
+/* On 2x screens the footer icons' ink rendered one device pixel above the
+ * text's baseline on every page and width; this puts it on the baseline.
+ * translate, not top: layout offsets are rounded to whole CSS pixels. */
+@media (min-resolution: 1.5dppx) {
+  .ak-footer-link .ak-icon { translate: 0 .5px; }
+}
 .ak-footer-link:hover { color: #940000; }
 .ak-footer-copy {
   font-size: calc(clamp(9.625px, calc(9.625px + 3.175 * var(--tp)), 12.8px) + clamp(0px, calc(.7 * var(--t2)), .7px));
@@ -373,17 +400,19 @@ a { color: inherit; }
 
 /* ----------------------------- PAGE WRAPPER ----------------------------- */
 
-/* Header bottom -> H1 baseline 100 / 107, H1 baseline -> pill top 36.9 / 38.9
- * (original at 768 / 1456). */
+/* Listing pages (the home page (work), notes, categories, 404) share one title,
+ * .ak-listing-h1, and the space above it: header -> title capitals
+ * --listing-title-cap (the capitals sit .2529em below the title's box top).
+ * H1 baseline -> pill top 36.9 / 38.9 (original at 768 / 1456). */
 .ak-content {
-  padding: clamp(24px, calc(24px + 80.12 * var(--t)), 61.81px) var(--gutter-content) 0;
+  padding: calc(var(--listing-title-cap) - .2529 * var(--fs-listing-h1)) var(--gutter-content) 0;
 }
-.ak-page-h1 {
+.ak-listing-h1 {
   font-family: var(--serif);
-  font-size: var(--fs-page-h1);
+  font-size: var(--fs-listing-h1);
   color: #000;
   --lh: 1.1957em; /* About Beige's normal: 55px at 46px */
-  margin: 0 0 clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
+  margin: 0 auto clamp(22px, calc(22px + 11.37 * var(--t)), 28.9px); /* line box renders 55, not 55.66 */
   font-weight: var(--w-heavy); /* = the post title */
   text-align: center;
 }
@@ -405,7 +434,9 @@ a { color: inherit; }
 
 /* Original: .nav-pills > li > a { font-size: 1.125em; line-height: 100%;
  * padding: .4em .7em; border-radius: 5px } and li margin .125em.
- * 32.4 tall at 1456, 30.4 at 768; gaps 8.4 x 4 / 7.9 x 3.75. */
+ * 32.4 tall at 1456, 30.4 at 768; gaps 8.4 x 4 / 7.9 x 3.75. Phones: 12px text
+ * (never smaller), the pill 20.6 tall, its height and padding in the same
+ * proportion to the text as at 390 before. */
 .ak-pills {
   display: flex;
   justify-content: center;
@@ -418,11 +449,11 @@ a { color: inherit; }
   background: var(--pill-bg);
   border: none;
   border-radius: 5px;
-  padding: 0 calc(clamp(10px, calc(10px + 1.8 * var(--tp)), 11.8px) + clamp(0px, calc(.8 * var(--t2)), .8px));
-  height: calc(clamp(18px, calc(18px + 12.4 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
-  line-height: calc(clamp(18px, calc(18px + 12.4 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
+  padding: 0 calc(clamp(11.43px, calc(11.43px + .37 * var(--tp)), 11.8px) + clamp(0px, calc(.8 * var(--t2)), .8px));
+  height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
+  line-height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
   font-family: var(--sans);
-  font-size: calc(clamp(10.5px, calc(10.5px + 6.85 * var(--tp)), 17.35px) + clamp(0px, calc(.85 * var(--t2)), .85px));
+  font-size: calc(clamp(12px, calc(12px + 5.35 * var(--tp)), 17.35px) + clamp(0px, calc(.85 * var(--t2)), .85px)); /* 12 on phones, 17.35 at 768 */
   font-weight: var(--w-normal);
   color: #000;
   text-decoration: none;
@@ -466,7 +497,7 @@ a { color: inherit; }
   gap: 0 3.06%;
   align-items: flex-start;
   padding-top: var(--space-4);
-  /* Last ink -> footer card 120 / 124: tile padding 63 / 66 + this + --footer-gap. */
+  /* Last ink -> footer card 105 / 109: tile padding 63 / 66 + this + --footer-gap. */
   margin-bottom: max(calc(-7.06 * var(--t)), min(-2px, calc(-3.55px + 1.294 * var(--t))));
 }
 .ak-post-grid.is-masonry {
@@ -490,7 +521,7 @@ a { color: inherit; }
  * the post sidebar's .ak-side-meta: 14 / 15px, 415, #555; date 610, #000. */
 .ak-post-meta {
   font-family: var(--sans);
-  font-size: clamp(0.75rem, calc(10.5px + 8.24 * var(--t)), 15px);
+  font-size: var(--fs-tile-meta);
   margin-bottom: 14px;
   display: flex;
   align-items: center;
@@ -522,10 +553,10 @@ a { color: inherit; }
 /* Original body text: Helvetica 1rem / 1.6rem, #555. */
 .ak-post-excerpt {
   font-family: var(--serif);
-  font-size: clamp(0.8125rem, calc(11.375px + 10.18 * var(--t)), 16.2px);
+  font-size: var(--fs-tile-copy);
   font-weight: 360;
   color: #555;
-  line-height: clamp(18.2px, calc(18.2px + 13.66 * var(--t)), 25.6px);
+  line-height: var(--lh-tile-copy);
   margin: 0;
 }
 .ak-post-image {
@@ -551,20 +582,21 @@ a { color: inherit; }
   font-size: 0.75rem;
   margin-top: 14px;
 }
-/* "Read More..." on cards is red (post prev/next links are .ak-postnav-link now). */
+/* "Read More..." on cards is red (prev / next links are .ak-prevnext-link now). */
 .ak-post-grid .ak-arrow-link { color: var(--accent); }
 /* "Read More..." on cards: original .btn.btn-link, bold, padding 4px 12px,
- * 1px border, red underline. */
+ * 1px border, red underline. The excerpt's size; the underline .444em below
+ * the text box (7.2px at 16.2px, the desktop gap) at every width. */
 .ak-post-grid .ak-arrow-link {
   display: block;
   width: fit-content;
-  font-size: clamp(0.75rem, calc(10.5px + 12.01 * var(--t)), 16.1px);
+  font-size: var(--fs-tile-copy);
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
   line-height: normal;
   margin-top: clamp(14px, calc(14px + 12.48 * var(--t)), 19.4px);
-  padding: 0 13px clamp(0px, calc(14.83 * var(--t)), 7.15px);
+  padding: 0 13px .444em;
   border-bottom: 1px solid var(--accent);
 }
 .ak-arrow-link .ak-arrow {
@@ -624,16 +656,20 @@ a { color: inherit; }
  * 1px #969696 rule; .author-meta Helvetica 300, 1rem. The 36 / 33.75px
  * padding (1em) and the mark offsets stop growing at 1456 like the font. */
 .ak-post-grid .ak-quote {
+  --fs-tq: min(33.4px, calc(28.954px + .8025cqi)); /* the quote's size, see below */
   padding-left: 0;
   padding-bottom: clamp(0px, calc(5.886 * var(--t)), 3.11px);
   margin-bottom: clamp(0px, calc(23.55 * var(--t)), 11px);
 }
-/* Two columns: 20.92px + 30% of the tile title size (.ak-post-title) at
- * the same column, so 33.4px at 1456 (the original's) and 0.3px smaller
- * for every 1px the titles lose; the 761-979 segment is in the tablet
- * block. One column (phone block): scales with the viewport as before. */
+/* --fs-tq, two columns: 20.92px + 30% of the tile title size
+ * (.ak-post-title) at the same column, so 33.4px at 1456 (the original's)
+ * and 0.3px smaller for every 1px the titles lose; the 761-979 segment is in
+ * the tablet block. One column (phone block): scales with the viewport.
+ * The left spacing is in proportion to it, as at 1456: border -> opening
+ * mark .452 of it, text and author 1.078 (the mark's ink .51 in, the text's
+ * .28 after it). */
 .ak-post-grid .ak-quote-text {
-  font-size: min(33.4px, calc(28.954px + .8025cqi));
+  font-size: var(--fs-tq);
   font-weight: var(--w-normal);
   color: #222;
   /* Headline leading at 85% like the headings; the padding keeps the first
@@ -641,7 +677,7 @@ a { color: inherit; }
   --lh: clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px);
   line-height: calc(var(--lh) * .85);
   padding-block: calc(var(--lh) * .075);
-  padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
+  padding-left: calc(1.078 * var(--fs-tq));
 }
 /* The marks are icon glyphs in the original, heavier than the text. */
 /* The marks are About Beige glyphs at --w-black, in the author feather's #555. */
@@ -650,8 +686,10 @@ a { color: inherit; }
   font-weight: var(--w-black);
   color: #555;
   line-height: 1;
-  top: -4px;
-  left: max(calc(20px - 14.83 * var(--t)), min(15.1px, calc(12.93px + 1.811 * var(--t))));
+  /* The mark's top .25 of the quote size above the first line's capitals
+   * (-4px at 1456, as before). */
+  top: calc(.5 * var(--lh) - .7897 * var(--fs-tq));
+  left: calc(.452 * var(--fs-tq));
 }
 .ak-post-grid .ak-quote-text::after {
   font-size: 1.25em;
@@ -668,7 +706,7 @@ a { color: inherit; }
   font-style: italic;
   line-height: normal;
   margin-top: clamp(8.78px, calc(18px - 20.06 * var(--t)), 18px);
-  padding-left: max(calc(50px - 38.26 * var(--t)), min(36px, calc(32.51px + 2.911 * var(--t))));
+  padding-left: calc(1.078 * var(--fs-tq));
 }
 
 /* Phosphor icons (glyphs, see scripts/build.mjs icon()). A glyph's box is
@@ -705,88 +743,105 @@ a { color: inherit; }
 .ak-feather { display: inline; }
 .ak-feather .ak-icon { margin-right: .05em; }
 
-/* ----------------------------- BLOG POST PAGE ----------------------------- */
+/* ----------------------------- PREV / NEXT ----------------------------- */
 
-/* Original: #wrap 81% / 90% wide; content box x 138.3-1317.7 at 1456.
- * Bottom: Categories pills -> footer card 87.6 / 85.9 (no Disqus space). */
-.ak-post-page {
-  padding: 0 var(--gutter-page)
-    calc(clamp(25.9px, calc(40px - 14.1 * var(--tp)), 40px) + clamp(0px, calc(1.7 * var(--t2)), 1.7px));
-}
-/* Prev / next: red mixed-case label beside the original's 15 x 28 chevron. */
-.ak-postnav {
+/* One component for blog posts and project pages (prevNext() in
+ * scripts/build.mjs), between the header and <main>, at the page gutters.
+ * Pages add no rules of their own; the space below it is the page's own top
+ * padding. Red mixed-case label beside a chevron, sized by the tokens on
+ * :root (--fs-prevnext, --prevnext-chevron, --prevnext-top).
+ * Titles never wrap: on the narrowest phones a long pair just comes close
+ * (7px apart at 320 on betahaus | Sofia, the longest pair). */
+.ak-prevnext {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin: var(--post-nav-top) 0 var(--post-nav-gap);
-  padding: 0;
-}
-.ak-postnav-link {
-  display: inline-flex;
   align-items: center;
-  gap: .38em;
+  margin-top: var(--prevnext-top);
+  padding-inline: var(--gutter-page);
+}
+.ak-prevnext-link {
+  flex: none;
+  display: inline-flex;
+  align-items: baseline; /* the chevron on the label's baseline, see below */
+  gap: .34em; /* ink to ink: the caret's side bearing is pulled in below */
   font-family: var(--sans);
-  font-size: var(--fs-post-nav);
+  font-size: var(--fs-prevnext);
   font-weight: 440;
   line-height: 1.77em;
   color: var(--accent);
   text-decoration: none;
+  white-space: nowrap;
 }
-/* caret-left/right (Light): ink .672 x .36em, so a 2.65em glyph gives the
- * original's 28 x 15 px chevron. Inside the glyph em is 2.65x the link's.
- * Text side: the glyph's side bearing (.35em) is pulled in so the caret-text
- * gap is .34em of the text. Vertically: flex centres it on the line; the
- * shift puts its middle on the text's x-height middle, then 1px higher. The
- * block margins keep the 1.77em line. */
-.ak-postnav-link .ak-icon {
-  --icon-h: 2.65em;
+.ak-prevnext-link.is-next { margin-left: auto; }
+/* caret-left/right (Light): ink .36 x .672em, side bearings .29em outside
+ * and .35em on the text side. Text side: the bearing is pulled in, so the
+ * gap above is ink to ink. Outer side: the ink starts .2753em in, where the
+ * original's 15 x 28px chevron started. Vertically: no height of its own
+ * (the label sets the line). It sits on the label's baseline, so Chrome
+ * rounds both to the same pixel, and the shift moves its ink's middle
+ * (.4365em above its baseline) to the middle of the label's capitals
+ * (.36em above the baseline): the same at every width. */
+.ak-prevnext-link .ak-icon {
+  --icon-h: var(--prevnext-chevron);
   vertical-align: 0;
-  margin-block: -.166em;
-  translate: 0 calc(.0245em - 1px);
+  margin-block: -.5em;
+  translate: 0 calc(.4365 * var(--prevnext-chevron) - .36 * var(--fs-prevnext));
 }
-.ak-postnav-link .ak-icon-caret-left-light { margin-right: -.365em; }
-.ak-postnav-link .ak-icon-caret-right-light { margin-left: -.367em; }
-.ak-postnav-link.is-next { margin-left: auto; }
+.ak-prevnext-link .ak-icon-caret-left-light { margin-left: -.0138em; margin-right: -.3506em; }
+.ak-prevnext-link .ak-icon-caret-right-light { margin-left: -.3525em; margin-right: -.0138em; }
 
-.ak-post-head { text-align: center; margin-bottom: var(--post-head-gap); }
-.ak-post-head h1 {
+/* ----------------------------- HERO ----------------------------- */
+
+/* One component for blog posts and project pages (hero() in
+ * scripts/build.mjs): the title and the line under it (a subtitle, or a
+ * quote's author), with the same sizes and spacing on both. It owns the space
+ * above it (from prev / next) and below it (to the page's content).
+ * Quote posts: the quote is the title, italic at --w-normal with its
+ * emphasis at --w-heavy and About Beige's marks (see "Quote post headline");
+ * the author line has the feather. */
+.ak-hero {
+  text-align: center;
+  margin: var(--hero-top) 0 var(--hero-bottom);
+}
+.ak-hero h1 {
   font-family: var(--serif);
-  font-size: var(--fs-post-h1);
+  font-size: var(--fs-hero-title);
   font-weight: var(--w-heavy);
-  /* 1.2 on phones (as before), 1.25 from 789 (CSS 1.2 x 3rem = 57.6 / 54) */
+  /* 1.2 on phones, 1.25 from 789 (CSS 1.2 x 3rem = 57.6 / 54) */
   --lh: calc(1.2em + clamp(0px, calc(2.16 * var(--tp)), 2.16px) + clamp(0px, calc(.14 * var(--t2)), .14px));
   color: #000;
   margin: 0 0 max(calc(16px - 8.923 * var(--t)), min(calc(11.52px + 1.067 * var(--t)), 12.8px)); /* 16 / 12 / 12.8 */
 }
-.ak-post-head p {
+.ak-hero p {
   font-family: var(--serif);
-  font-size: var(--fs-lede);
+  font-size: var(--fs-hero-sub);
   font-weight: var(--w-normal);
   line-height: 1.41;
   color: #222;
   max-width: 82.906%; /* bootstrap .span10 */
   margin: 0 auto;
 }
-/* Quote posts: the quote is the headline, the author sits under it. */
-.ak-post-head.is-quote { margin-bottom: var(--post-quote-gap); }
-.ak-post-head.is-quote h1 { font-size: var(--fs-quote-h1); font-weight: var(--w-normal); --lh: 1.255em; }
-.ak-post-head.is-quote h1 { font-style: italic; }
-.ak-post-head.is-quote h1 em { font-style: italic; font-weight: var(--w-heavy); }
-.ak-quote-attrib {
-  font-family: var(--sans);
-  font-size: var(--fs-attrib);
-  font-weight: 455;
-  line-height: 1.575;
-  color: #555;
+.ak-hero.is-quote h1 { font-weight: var(--w-normal); font-style: italic; }
+.ak-hero.is-quote h1 em { font-style: italic; font-weight: var(--w-heavy); }
+
+/* ----------------------------- BLOG POST PAGE ----------------------------- */
+
+/* Original: #wrap 81% / 90% wide; content box x 138.3-1317.7 at 1456.
+ * Top: the hero's (.ak-hero). Bottom: Categories pills -> footer card
+ * 87.6 / 85.9 (no Disqus space). */
+.ak-post-page {
+  padding: 0 var(--gutter-page)
+    calc(clamp(25.9px, calc(40px - 14.1 * var(--tp)), 40px) + clamp(0px, calc(1.7 * var(--t2)), 1.7px));
 }
 
 /* Sidebar and main column: bootstrap's >=1200 .span2 / .span8 grid
- * (768-979 values in the tablet block below). */
+ * (14.5299% / 65.812%, gap 2.5641%), each with an eighth of the 17.094% the
+ * original leaves empty on the right, so a quarter of it is shared out and
+ * three quarters stay empty (768-1023 values, half shared out, in the blocks
+ * below). */
 .ak-post-body-wrap {
   display: grid;
-  grid-template-columns: 14.5299% 65.812%;
+  grid-template-columns: 16.6667% 67.9488%;
   column-gap: 2.5641%;
   align-items: start;
 }
@@ -805,7 +860,8 @@ a { color: inherit; }
   font-size: var(--fs-side);
   font-weight: 415;
   color: #555;
-  line-height: clamp(20.3px, calc(20.3px + 4.48 * var(--t)), 23.8px); /* 22.3 / 23.8 = CSS 170% of .875rem */
+  --side-lh: clamp(20.3px, calc(20.3px + 4.48 * var(--t)), 23.8px); /* 22.3 / 23.8 = CSS 170% of .875rem */
+  line-height: var(--side-lh);
 }
 .ak-side-meta a { text-decoration: none; }
 .ak-side-meta a:not(.ak-side-chip) { color: var(--accent); } /* keeps the shared chip black */
@@ -815,7 +871,7 @@ a { color: inherit; }
 .ak-post-body {
   font-family: var(--serif);
   font-size: var(--fs-body);
-  font-weight: var(--w-regular);
+  font-weight: var(--w-normal);
   line-height: var(--lh-body);
   color: #555;
 }
@@ -843,14 +899,15 @@ a { color: inherit; }
   line-height: calc(var(--lh-body) * (5 - 1.5 / .72));
   color: #000;
   margin-right: .085em; /* 8px at 1456 */
-  /* Ink on the column edge: undo the paragraph's pull (--lsb-text at the body
-   * size), then pull by the letter's own bearing (see Optical left edge). */
+  /* Ink where the paragraph's capital stems start (--lsb-text at the body
+   * size): the letter is pulled left by its own bearing (see Left edge). */
   margin-left: calc(var(--lsb-text) * var(--fs-body) - var(--dc-lsb, 0) * 1em);
 }
-/* Bar flush with the text column; the last child's margin is dropped so the
- * space inside the bar is the same above and below. */
+/* Bar 1px in from the column's edge, towards where the paragraphs' ink
+ * starts (see Left edge); the last child's margin is dropped so the space
+ * inside the bar is the same above and below. */
 .ak-post-body blockquote {
-  margin: var(--post-em) 0;
+  margin: var(--post-em) 0 var(--post-em) 1px;
   padding: calc(.25 * var(--post-em)) 0 calc(.25 * var(--post-em)) var(--post-em);
   border-left: 5px solid var(--accent);
   font-style: normal;
@@ -868,21 +925,21 @@ a { color: inherit; }
 }
 .ak-post-body h2 {
   font-size: var(--fs-post-h2);
-  font-weight: var(--w-subhead);
+  font-weight: var(--w-bold);
   --lh: 1.2424em;
   color: #000;
   margin: calc(2.2222 * var(--post-em)) 0 calc(1.3333 * var(--post-em)); /* CSS 2.5rem 0 1.5rem */
 }
 .ak-post-body h3 {
   font-size: var(--fs-post-h3);
-  font-weight: var(--w-subhead);
+  font-weight: var(--w-bold);
   --lh: 1.24em;
   color: #000;
   margin: calc(2.2222 * var(--post-em)) 0 calc(1.3333 * var(--post-em));
 }
 .ak-post-body h4 {
   font-size: var(--fs-post-h4);
-  font-weight: var(--w-subhead);
+  font-weight: var(--w-bold);
   --lh: 1.576em;
   color: #222;
   margin: calc(1.7778 * var(--post-em)) 0 calc(.8889 * var(--post-em)); /* CSS 2rem 0 1rem */
@@ -909,17 +966,19 @@ a { color: inherit; }
   color: #555;
 }
 
-/* Categories under the body (all posts' categories, as in the original). */
+/* Categories under the body (all posts' categories, as in the original),
+ * after a plain "Read more ..." label: not a heading, at the root size
+ * (14 / 15 / 16.6) and body weight, in black. */
 .ak-post-cats { margin-top: calc(2.6667 * var(--post-em)); } /* CSS section 3em */
 .ak-post-main > .ak-post-cats:first-child { margin-top: 0; } /* quote without body */
-.ak-post-cats-h {
+.ak-post-cats-label {
   font-family: var(--serif);
-  font-size: var(--fs-cats);
+  font-size: 1rem;
   font-weight: var(--w-normal);
-  --lh: 1.267em;
+  line-height: 1.21; /* About Beige's normal */
   color: #000;
   text-align: left;
-  margin: 0 0 calc(.8222 * var(--post-em)); /* heading -> pills 14.8 / 13.9 */
+  margin: 0 0 calc(.8222 * var(--post-em)); /* label -> pills */
 }
 .ak-post-cats .ak-pills { justify-content: flex-start; margin: 0; }
 /* Long words, wide code and wide tables must not widen the page. */
@@ -939,29 +998,18 @@ a { color: inherit; }
 
 /* Targets are the original's /work/ at 770 and 1456 (bootstrap fluid
  * grid inside #wrap). No max-width: widths keep scaling above 1456. */
-.ak-work-page { padding-inline: var(--gutter-page); }
-/* 46 / 43.2px, line-height 1.2; the max-width wraps it after "people"
- * at 770 and keeps one line at 1456. Baseline = header + 106.2 / 99.6. */
-.ak-work-h1 {
-  font-family: var(--serif);
-  font-weight: var(--w-heavy); /* = the post title */
-  font-size: var(--fs-work-h1);
-  --lh: clamp(27.5px, calc(27.5px + 62.06 * var(--t)), 57.6px);
-  color: #000;
-  text-align: center;
-  max-width: clamp(470px, calc(470px + 230 * var(--t)), 700px);
-  margin: clamp(40px, calc(40px + 38.36 * var(--t)), 60.12px) auto
-    clamp(25.45px, calc(25.45px + 2.309 * var(--t)), 28.22px);
+.ak-work-page {
+  padding: calc(var(--listing-title-cap) - .2529 * var(--fs-listing-h1)) var(--gutter-page) 0;
 }
+/* The title (.ak-listing-h1) stays on one line from 346px wide up (360px
+ * phones, tablets, desktop); no max-width, so it doesn't wrap after "people"
+ * on tablets as the original did. */
 /* Pill row: one row from 980 up; the tablet block narrows it so it wraps
- * after the third pill at 770 like the original. 76 / 71px down to the
- * grid. At 770 this and the h1 margin-bottom (26.44) are 0.5px under the
- * original's gaps to offset the shared header (+0.2) and pill boxes
- * (+0.4 each), so pills and images land on the original's pixel rows
- * (294 / 328 / 429.5). */
+ * after the third pill at 770 like the original. Down to the grid the home
+ * page's gap: its pills' 30px + the post grid's top padding (50 / 74 / 77.75). */
 .ak-work-page .ak-pills {
   max-width: 760px;
-  margin: 0 auto clamp(30px, calc(30px + 96.03 * var(--t)), 76px);
+  margin: 0 auto calc(30px + var(--space-4));
 }
 /* Two explicit columns (also while work.js hides tiles). The gap is a
  * percentage of the grid like the original's span margin: 30.24px at
@@ -994,34 +1042,15 @@ a { color: inherit; }
 
 /* ----------------------------- PROJECT PAGE ----------------------------- */
 
-/* Prev / next: the blog post's .ak-postnav, at the page gutters and the same
- * height under the header; the gap below keeps the title where it was
- * (header -> h1 top 85 / 87.7 / 91). */
-.ak-project-page > .ak-postnav {
-  padding-inline: var(--gutter-page);
-  margin-bottom: calc(clamp(26.9px, calc(49.3px - 22.4 * var(--tp)), 49.3px) - clamp(0px, calc(1.8 * var(--t2)), 1.8px));
-}
+/* Top: the hero's (.ak-hero), as on blog posts. Below the subtitle 5px more
+ * than on posts: the project hero is short (one-line title, short subtitle),
+ * so the same gap read as tighter there. */
+.ak-project-page .ak-hero { margin-bottom: calc(var(--hero-bottom) + 5px); }
 .ak-project-inner {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--gutter-project) var(--space-8);
   font-family: var(--serif);
-}
-.ak-project-head {
-  text-align: center;
-  margin-bottom: 60px;
-}
-.ak-project-head h1 {
-  font-size: var(--fs-project-h1);
-  font-weight: var(--w-heavy);
-  margin: 0 0 10px;
-  color: #000;
-}
-.ak-project-head p {
-  font-size: clamp(1rem, calc(14px + 4.225 * var(--t)), 1.125rem);
-  color: var(--text-3);
-  margin: 0;
-  font-style: italic;
 }
 /* Main column and sidebar share the row 65:30 while both fit their base
  * widths; on narrower screens the sidebar wraps below at full width. */
@@ -1035,7 +1064,7 @@ a { color: inherit; }
 /* Copy: the blog post body's settings (the drop cap is shared, see the post). */
 .ak-project-body {
   font-size: var(--fs-body);
-  font-weight: var(--w-regular);
+  font-weight: var(--w-normal);
   line-height: var(--lh-body);
   color: #555;
   margin-bottom: 40px;
@@ -1044,7 +1073,7 @@ a { color: inherit; }
 .ak-project-body h2 {
   font-size: 1.375rem;
   --lh: 1.8em; /* was inherited */
-  font-weight: var(--w-subhead);
+  font-weight: var(--w-bold);
   margin: 28px 0 12px;
 }
 .ak-project-divider {
@@ -1107,7 +1136,7 @@ a { color: inherit; }
   --ab-sec2-mt:   calc(clamp(40px, calc(40px + 13.82 * var(--tp)), 53.82px) + clamp(0px, calc(8.05 * var(--t2)), 8.05px)); /* last circle -> "I strive" 68.5 / 78 */
   --ab-ico-mt:    calc(clamp(14px, calc(14px + 1.72 * var(--tp)), 15.72px) + clamp(0px, calc(.9 * var(--t2)), .9px));      /* baseline -> icon top 20.6 / 22 */
   --ab-lbl-mt:    calc(clamp(10px, calc(10px + 1.73 * var(--tp)), 11.73px) + clamp(0px, calc(2.27 * var(--t2)), 2.27px));  /* icon -> label baseline 32.4 / 37.2 */
-  --ab-bottom:    calc(clamp(0px, calc(7.47 * var(--tp)), 7.47px) + clamp(0px, calc(11.41 * var(--t2)), 11.41px));         /* label -> footer 74.1 / 86.7, minus --footer-gap */
+  --ab-bottom:    calc(clamp(0px, calc(7.47 * var(--tp)), 7.47px) + clamp(0px, calc(11.41 * var(--t2)), 11.41px));         /* + --footer-gap: label -> footer 59.1 / 71.7 (the original's 74.1 / 86.7, less 15) */
   --ab-endr-gap:  calc(clamp(3.4px, calc(3.4px + .26 * var(--tp)), 3.66px) + clamp(0px, calc(2.44 * var(--t2)), 2.44px));  /* number -> ENDR baseline 17 / 19.8 */
   --ab-num-shift: calc(clamp(2px, calc(2px + .17 * var(--tp)), 2.17px) + clamp(0px, calc(.63 * var(--t2)), .63px));        /* number baseline above centre 2.2 / 2.8 */
 
@@ -1149,7 +1178,7 @@ a { color: inherit; }
 .ak-about-social a {
   color: var(--accent);
   font-family: var(--sans);
-  font-weight: var(--w-regular);
+  font-weight: var(--w-normal);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -1161,7 +1190,7 @@ a { color: inherit; }
 .ak-endorse-item p {
   font-family: var(--sans);
   font-size: var(--ab-body);
-  font-weight: var(--w-regular);
+  font-weight: var(--w-normal);
   line-height: var(--ab-lh);
   color: #555;
   margin: 0 0 var(--ab-lh);
@@ -1184,17 +1213,29 @@ a { color: inherit; }
 
 /* Endorsements: circle column .span3 (23.0769% desktop, 32.43% at 767),
  * gap 2.6%, text column ends 2.11% short at 767 (.span9 62.86%). Each row is
- * as tall as its circle block, as in the original. */
+ * as tall as its circle block, as in the original (or as its text, where that
+ * wraps taller, on phones).
+ * The text sits centred on its circle by its ink: halfway between the h3's
+ * capital tops and the last line's baseline is the circle's centre. The grid
+ * centres the two boxes; the translate takes out where box and ink differ:
+ * the circle's .5em top margin (its centre is .25em below the row's), above
+ * the capitals the h3's margin, padding, half-leading and ascent
+ * (--ab-name-mt + .405em: .1125 + .0325 + .26), and below the baseline the
+ * p's half-leading and descent (--ab-lh / 2 - .375em). */
 .ak-endorse-item {
   display: grid;
   grid-template-columns:
     max(23.0769%, min(32.43%, clamp(179.1px, calc(223.9px - 44.8 * var(--t2)), 223.9px)))
     minmax(0, 1fr);
   column-gap: 2.58%;
-  align-items: start;
+  align-items: center;
   font-size: var(--ab-body);
 }
-.ak-endorse-item > div:last-child { padding-right: clamp(0px, calc(14.6px - 14.6 * var(--t2)), 14.6px); }
+.ak-endorse-item > div:last-child {
+  padding-right: clamp(0px, calc(14.6px - 14.6 * var(--t2)), 14.6px);
+  translate: 0 calc(.25 * var(--ab-body)
+    + (var(--ab-lh) / 2 - .375 * var(--ab-body) - var(--ab-name-mt) - .405 * var(--ab-name)) / 2);
+}
 /* Diameter --d = 75 / 70 / 65% of the column (the original's .circle.big / normal / small). */
 .ak-endorse-circle {
   width: var(--d);
@@ -1210,7 +1251,7 @@ a { color: inherit; }
   font-family: var(--sans);
 }
 .ak-endorse-circle .num { font-size: var(--ab-name); font-weight: var(--w-normal); line-height: 1; }
-.ak-endorse-circle .lbl { font-size: 12.17px; font-weight: var(--w-regular); line-height: 1; margin-top: var(--ab-endr-gap); }
+.ak-endorse-circle .lbl { font-size: 12.17px; font-weight: var(--w-normal); line-height: 1; margin-top: var(--ab-endr-gap); }
 .ak-endorse-item h3 {
   font-family: var(--serif);
   font-size: var(--ab-name);
@@ -1234,17 +1275,15 @@ a { color: inherit; }
   text-align: center;
 }
 .ak-strive-item .ico {
-  height: 34px;
+  height: calc(var(--ab-lbl) * 34 / 17.4); /* 34 on phones, in proportion to the label */
   display: flex;
   align-items: center;
   justify-content: center;
   color: #000;
 }
-/* Ink 34px tall like the original (glyph sizes from the ink heights). */
-.ak-strive-item .ico .ak-icon { vertical-align: 0; }
-.ak-strive-item .ico .ak-icon-users { --icon-h: 54.4px; }          /* ink .625em */
-.ak-strive-item .ico .ak-icon-device-mobile { --icon-h: 38.86px; } /* ink .875em */
-.ak-strive-item .ico .ak-icon-check-square { --icon-h: 45.33px; }  /* ink .75em */
+/* All three glyphs one size, in proportion to the label under them: 36px at
+ * the phones' 17.4px label (36 / 38.9 / 42.5). */
+.ak-strive-item .ico .ak-icon { vertical-align: 0; --icon-h: calc(var(--ab-lbl) * 36 / 17.4); }
 .ak-strive-item .lbl {
   font-family: var(--sans);
   font-size: var(--ab-lbl);
@@ -1262,12 +1301,23 @@ a { color: inherit; }
   /* work: 19.14px gap at 770 (original 768-979 span margin 2.7624%) */
   .ak-work-grid { --work-gap: 2.7624%; }
   .ak-work-page .ak-pills { max-width: clamp(470px, calc(470px + 290 * var(--t2)), 760px); }
-  /* post: original 768-979 span2 / span8 percentages */
-  .ak-post-body-wrap { grid-template-columns: 14.3646% 65.7459%; column-gap: 2.7624%; }
-  .ak-post-head p { max-width: 82.8729%; }
+  /* post: original 768-979 span2 / span8 percentages (14.3646% / 65.7459%,
+   * gap 2.7624%), each with a quarter of the 17.1271% the original leaves
+   * empty on the right; the other half stays empty (see the 980-1023 block
+   * below). */
+  .ak-post-body-wrap { grid-template-columns: 18.6464% 70.0277%; column-gap: 2.7624%; }
+  .ak-hero p { max-width: 82.8729%; }
   /* home: tile title 32px at a 325px column -> 37.4px at 397 */
   .ak-post-title { font-size: calc(7.625px + 7.5cqi); }
-  .ak-post-grid .ak-quote-text { font-size: min(33.4px, calc(23.208px + 2.25cqi)); } /* 20.92 + 30% of the title */
+  .ak-post-grid .ak-quote { --fs-tq: min(33.4px, calc(23.208px + 2.25cqi)); } /* 20.92 + 30% of the title */
+}
+
+/* Post page, 980-1023 (the one exception to the 979 tablet edge): as on
+ * tablets, half the space the original leaves empty right of the text
+ * column (17.094%) goes a quarter each to the sidebar and the text column,
+ * half stays empty; the gap (2.5641%) stays. From 1024 the desktop columns. */
+@media (min-width: 980px) and (max-width: 1023px) {
+  .ak-post-body-wrap { grid-template-columns: 18.8034% 70.0855%; }
 }
 
 /* Sizes and spacing scale through the fluid tokens on :root. This query
@@ -1280,20 +1330,44 @@ a { color: inherit; }
   .ak-menu:not([hidden]) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 20px 14px;
+    gap: var(--menu-gap);
+    padding: 20px var(--menu-pad);
   }
 
   .ak-post-grid { grid-template-columns: 1fr; }
   .ak-post-grid.is-masonry .ak-post-grid-item { width: 100%; }
-  .ak-post-title { font-size: 5.556cqi; } /* 30px at a 540px column */
-  .ak-post-grid .ak-quote-text { font-size: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px); }
+  /* Tile headlines one column: the title 30px at a 540px column, the quote
+   * with the viewport; both 10% larger on phones (columns up to 402px, 430
+   * wide), the extra fading out by 760 (a 672px column) to the sizes before. */
+  .ak-post-title { font-size: calc(5.556cqi + min(.5556cqi, max(0px, calc(5.553px - .8258cqi)))); }
+  .ak-post-grid .ak-quote {
+    --tq: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px);
+    --tq-boost: min(calc(.1 * var(--tq)), max(0px, calc(4.354px - .6474cqi)));
+    --fs-tq: calc(var(--tq) + var(--tq-boost));
+  }
+  /* The quote's leading grows with the extra (1.4 x, its phone leading). */
+  .ak-post-grid .ak-quote-text { --lh: calc(clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px) + 1.4 * var(--tq-boost)); }
 
   .ak-work-grid { grid-template-columns: 1fr; }
 
   .ak-post-body-wrap { grid-template-columns: 1fr; row-gap: var(--space-5); }
-  .ak-post-head p { max-width: none; }
+  .ak-hero p { max-width: none; }
   .ak-side-box img { aspect-ratio: 4/3; object-fit: cover; }
+  /* With an image: the image 2/3 of the box's inner width, the details beside
+   * it in the last third (after the image -> details gap of the stacked
+   * box), still centred, their first line's capitals level with the image's
+   * top (they sit .5 x the line height - .345em below the line's top). */
+  .ak-side-box:has(> img) {
+    display: grid;
+    grid-template-columns: 66.6667% minmax(0, 1fr);
+    column-gap: calc(.879 * var(--fs-body));
+    align-items: start;
+  }
+  .ak-side-box:has(> img) > img { margin: 0; }
+  .ak-side-box:has(> img) > .ak-side-meta {
+    padding-top: 0;
+    margin-top: calc(.345 * var(--fs-side) - .5 * var(--side-lh));
+  }
 
   /* Two columns, items as on tablet (icon over label); an odd last item
    * sits in the left column like the work grid's. */
@@ -1318,34 +1392,23 @@ h1, h2, h3, h4, h5, h6 {
   padding-block: calc(var(--lh) * .075);
 }
 
-/* Optical left edge (post and project text column). The column's edge is
- * where the blockquote bar, images and figure frames start; text ink starts
- * there too. A glyph's ink begins its left side bearing to the right of its
- * box, so:
- * - Text paragraphs are pulled left by the capitals' stem bearing
- *   (--lsb-text): straight stems sit on the edge and round or diagonal
- *   letters (o, A, t, w) reach just past it, as in optical margin alignment.
- *   The first line's glyph is known, so text-indent corrects that line by
- *   its own bearing (--lsb) and it starts exactly on the edge. Paragraphs
- *   that hold an image stay put, so the image keeps the edge.
- * - A heading and a drop cap are pulled by their own first glyph's bearing
- *   (--lsb, --dc-lsb), so their ink starts exactly on the edge.
- * scripts/build.mjs sets --lsb / --dc-lsb inline from the font at the
- * element's weight. */
-.ak-post-body > p:not(:has(> img)),
-.ak-project-body > p:not(:has(> img)) {
-  margin-left: calc(-1em * var(--lsb-text));
-  text-indent: calc(1em * (var(--lsb-text) - var(--lsb, var(--lsb-text))));
-}
+/* Left edge (post and project text column). Images and figure frames start
+ * on the column's edge. Paragraph text sits in its box as set, so its ink
+ * starts a glyph's left side bearing in: capital stems --lsb-text (.095em,
+ * 1.4 / 1.6 / 1.7px). The blockquote bar sits 1px in, the drop cap's ink
+ * where the capital stems start. A heading (and the "Read more ..." label
+ * over the category pills, so it starts where the pills do) is pulled left by
+ * its first glyph's own bearing (--lsb, set inline by scripts/build.mjs from
+ * the font at its weight), so its ink starts on the edge. */
 .ak-post-body > :is(h2, h3, h4, h5, h6),
 .ak-project-body > :is(h2, h3, h4, h5, h6),
-.ak-post-cats-h { margin-left: calc(-1em * var(--lsb, 0)); }
+.ak-post-cats-label { margin-left: calc(-1em * var(--lsb, 0)); }
 
 /* Quote post headline: About Beige's own marks (--w-black, upright) in the
  * headline's black; the home quote tiles keep their #555 marks. */
-.ak-post-head.is-quote .ak-qm { font-style: normal; font-weight: var(--w-black); }
-.ak-post-head.is-quote .ak-qm-open { margin-right: 0em; }
-.ak-post-head.is-quote .ak-qm-close { margin-left: .05em; }
+.ak-hero.is-quote .ak-qm { font-style: normal; font-weight: var(--w-black); }
+.ak-hero.is-quote .ak-qm-open { margin-right: 0em; }
+.ak-hero.is-quote .ak-qm-close { margin-left: .05em; }
 
 /* 1x screens: small thin text has sub-pixel stems and its diagonals and
  * curves (W, O, brackets) render grey and broken. Raise those weights so the

@@ -1,4 +1,4 @@
-/* work.js — /work/ page. The pills above the grid show one project (or all)
+/* work.js — the work page (the home page, /). The pills above the grid show one project (or all)
  * without leaving the page.
  */
 

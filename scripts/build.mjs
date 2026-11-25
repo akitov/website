@@ -15,7 +15,7 @@
  *   pages/about.html       →  /about/
  *   pages/404.html         →  /404.html
  *   redirects.txt          →  old URL → new URL
- *   + home (/), work (/work/), feed.xml, sitemap.xml
+ *   + home = work (/), notes = all posts (/blog/), feed.xml, sitemap.xml
  */
 
 import { promises as fs, readFileSync } from 'node:fs';
@@ -185,12 +185,13 @@ marked.use({
 // marked wraps a lone image in <p>; a <figure> can't sit inside a <p>.
 const markdown = (src) => marked.parse(src).replace(/<p>\s*(<figure class="ak-figure">[\s\S]*?<\/figure>)\s*<\/p>/g, '$1');
 
-/* Optical left edge (styles.css, TYPE REFINEMENTS): a heading's and a drop
- * cap's first glyph is pulled left by its own left side bearing, so its ink
- * starts on the text column's edge. The build sets the bearing inline (--lsb
- * on headings, --dc-lsb on the drop cap's paragraph) from About Beige's
- * bearings at the weight the element is set in, read from the weight tokens
- * in styles.css. scripts/font-metrics.py writes the table. */
+/* Left edge (styles.css, TYPE REFINEMENTS): a heading's and a drop cap's
+ * first glyph is pulled left by its own left side bearing, the heading's
+ * ink onto the text column's edge, the drop cap's to where the paragraph's
+ * capital stems start. The build sets the bearing inline (--lsb on headings,
+ * --dc-lsb on the drop cap's paragraph) from About Beige's bearings at the
+ * weight the element is set in, read from the weight tokens in styles.css.
+ * scripts/font-metrics.py writes the table. */
 const SIDE_BEARINGS = JSON.parse(readFileSync(path.join(ROOT, 'scripts', 'vendor', 'about-beige', 'side-bearings.json'), 'utf8'));
 const STYLES = readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
 function bearingsAt(token) {
@@ -202,27 +203,24 @@ function bearingsAt(token) {
   if (!table) throw new Error(`No side bearings at weight ${m[1].trim()} (--w-${token}); run scripts/font-metrics.py`);
   return table;
 }
-const BEARINGS = { subhead: bearingsAt('subhead'), heavy: bearingsAt('heavy'), normal: bearingsAt('normal'), regular: bearingsAt('regular') };
-// Text paragraphs are pulled by the capitals' stem bearing (--lsb-text in
-// styles.css), which has to match the font at --w-regular.
+const BEARINGS = { bold: bearingsAt('bold'), heavy: bearingsAt('heavy'), normal: bearingsAt('normal') };
+// The drop cap lines up with the capitals' stem bearing in body text
+// (--lsb-text in styles.css), which has to match the font at --w-normal.
 {
   const css = Number((STYLES.match(/--lsb-text:\s*([\d.]+)/) || [])[1]);
-  const font = bearingsAt('regular').H / 1000;
-  if (css !== font) throw new Error(`styles.css --lsb-text is ${css}; About Beige's H at --w-regular is ${font}. Update --lsb-text.`);
+  const font = bearingsAt('normal').H / 1000;
+  if (css !== font) throw new Error(`styles.css --lsb-text is ${css}; About Beige's H at --w-normal is ${font}. Update --lsb-text.`);
 }
 const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
 const decode = (s) => s.replace(/&(#x[\da-f]+|#\d+|\w+);/gi, (m, e) =>
   e[0] === '#' ? String.fromCodePoint(e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : Number(e.slice(1))) : ENTITIES[e.toLowerCase()] ?? m);
-// The first visible character of an HTML fragment, and whether it is bold.
+// The first visible character of an HTML fragment.
 function firstGlyph(html) {
-  let bold = 0;
-  for (const m of html.matchAll(/<(\/?)([a-z][a-z0-9]*)\b[^>]*>|([^<]+)/gi)) {
-    if (m[3] !== undefined) {
-      const ch = [...decode(m[3]).trimStart()][0];
-      if (ch) return { ch, bold: bold > 0 };
-    } else if (/^(strong|b)$/i.test(m[2])) bold += m[1] ? -1 : 1;
+  for (const m of html.matchAll(/<[^>]*>|([^<]+)/g)) {
+    const ch = m[1] !== undefined && [...decode(m[1]).trimStart()][0];
+    if (ch) return ch;
   }
-  return {};
+  return undefined;
 }
 // A character's bearing in em (0 if the font has no glyph for it).
 const bearing = (table, ch) => (ch && table[ch] != null ? table[ch] / 1000 : 0);
@@ -239,25 +237,17 @@ function topLevelPs(html) {
   }
   return at;
 }
-/* Headings get --lsb at the subhead weight. The drop cap's paragraph (a
+/* Headings get --lsb at --w-bold, their weight. The drop cap's paragraph (a
  * post's first child, a project's first <p>, as the CSS selects them) gets
- * --dc-lsb at the drop cap weight; every other paragraph gets --lsb for its
- * first glyph (bold if it opens in <strong>), which corrects its first line. */
+ * --dc-lsb at the drop cap weight. */
 function opticalEdges(html, dropcap) {
   html = html.replace(/<(h[2-6])((?:\s[^>]*)?)>([\s\S]*?)<\/\1>/g, (_, tag, attrs, inner) =>
-    `<${tag}${attrs} style="--lsb:${bearing(BEARINGS.subhead, firstGlyph(inner).ch)}">${inner}</${tag}>`);
-  const ps = topLevelPs(html);
-  const capAt = ps.length && !(dropcap === 'first-child' && html.slice(0, ps[0]).trim()) ? ps[0] : -1;
-  for (const at of ps.reverse()) {
-    const gt = html.indexOf('>', at);
-    const { ch, bold } = firstGlyph(html.slice(gt + 1, html.indexOf('</p>', gt)));
-    if (!ch) continue;
-    const style = at === capAt
-      ? `--dc-lsb:${bearing(BEARINGS.heavy, ch)}`
-      : `--lsb:${bearing(bold ? BEARINGS.heavy : BEARINGS.regular, ch)}`;
-    html = `${html.slice(0, gt)} style="${style}"${html.slice(gt)}`;
-  }
-  return html;
+    `<${tag}${attrs} style="--lsb:${bearing(BEARINGS.bold, firstGlyph(inner))}">${inner}</${tag}>`);
+  const [at] = topLevelPs(html);
+  if (at === undefined || (dropcap === 'first-child' && html.slice(0, at).trim())) return html;
+  const gt = html.indexOf('>', at);
+  const ch = firstGlyph(html.slice(gt + 1, html.indexOf('</p>', gt)));
+  return ch ? `${html.slice(0, gt)} style="--dc-lsb:${bearing(BEARINGS.heavy, ch)}"${html.slice(gt)}` : html;
 }
 
 // ================================================================ layout
@@ -302,16 +292,22 @@ function page({ url, title, description, image, nav, main, scripts = '', stylesh
     styles: stylesheet ? `    <link rel="stylesheet" href="${esc(stylesheet)}" />` : '',
     main,
     scripts,
-    active_home: nav === 'home' ? ' is-active' : '',
     active_work: nav === 'work' ? ' is-active' : '',
+    active_notes: nav === 'notes' ? ' is-active' : '',
     active_about: nav === 'about' ? ' is-active' : '',
-    current_home: nav === 'home' ? ' aria-current="page"' : '',
     current_work: nav === 'work' ? ' aria-current="page"' : '',
+    current_notes: nav === 'notes' ? ' aria-current="page"' : '',
     current_about: nav === 'about' ? ' aria-current="page"' : '',
-    // Header right: the profile photo linking to /about/; on /about/ (which
-    // already shows the photo) a tennis ball instead.
+    // Header title: the name, and on the home page also "Welcome 👋", shown
+    // instead of it on the visit's first page (layout.html's inline script).
+    page_title: url === '/'
+      ? `<span class="ak-title-greet">Welcome 👋</span><span class="ak-title-name">${esc(SITE_NAME)}</span>`
+      : esc(SITE_NAME),
+    // Header right: the profile photo linking to /about/. On /about/ (which
+    // shows the photo itself) the spot stays empty, at the photo's size so
+    // the header keeps its height.
     avatar: nav === 'about'
-      ? '<span class="ak-avatar ak-avatar-emoji" role="img" aria-label="Tennis ball">🎾</span>'
+      ? '<span class="ak-avatar" aria-hidden="true"></span>'
       : '<a href="/about/" class="ak-avatar" aria-label="About"><img src="/assets/profile.jpg" width="378" height="378" alt="Alexander Kitov" /></a>',
     // Footer ©: the build year; js/main.js updates it in the browser.
     year: String(new Date().getFullYear()),
@@ -350,16 +346,16 @@ function postCard(p) {
       </article>`;
 }
 
-/* Home (all posts) and each category page share this listing. */
+/* Notes (all posts, /blog/) and each category page share this listing. */
 function listingPage({ posts, allPosts, categories, activeCategory }) {
   const pill = (href, label, active) =>
     `<a class="ak-pill${active ? ' is-active' : ''}" href="${href}">${esc(label)}</a>`;
   const pills = [
-    pill('/', `All (${allPosts.length})`, !activeCategory),
+    pill('/blog/', `All (${allPosts.length})`, !activeCategory),
     ...categories.map((c) => pill(categoryUrl(c.name), `${c.name} (${c.posts.length})`, c.name === activeCategory)),
   ].join('\n        ');
   const main = `    <main class="ak-content">
-      <h1 class="ak-page-h1">${activeCategory ? esc(activeCategory) : 'Welcome 👋'}</h1>
+      <h1 class="ak-listing-h1">${activeCategory ? `📓 / ${esc(activeCategory)}` : 'Notebook 📓'}</h1>
       <nav class="ak-pills" aria-label="Categories">
         ${pills}
       </nav>
@@ -368,10 +364,10 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
       </div>
     </main>`;
   return page({
-    url: activeCategory ? categoryUrl(activeCategory) : '/',
-    title: activeCategory || SITE_NAME,
-    description: activeCategory ? `Posts about ${activeCategory} by ${SITE_NAME}.` : SITE_DESCRIPTION,
-    nav: 'home',
+    url: activeCategory ? categoryUrl(activeCategory) : '/blog/',
+    title: activeCategory || 'Notebook',
+    description: activeCategory ? `Posts about ${activeCategory} by ${SITE_NAME}.` : `Notes on product, life, and people by ${SITE_NAME}.`,
+    nav: 'notes',
     main,
     scripts: [
       '<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>',
@@ -381,27 +377,43 @@ function listingPage({ posts, allPosts, categories, activeCategory }) {
   });
 }
 
-/* Prev / next caret: Phosphor Light (the original's chevron was 15 x 28). */
-const chevron = (dir) => icon(dir === 'prev' ? 'caret-left-light' : 'caret-right-light');
+/* Prev / next, the one component blog posts and project pages share
+ * (.ak-prevnext in styles.css). It goes between the header and <main>.
+ * href(item) is the neighbour's URL, label(item) its link text as HTML.
+ * Carets: Phosphor Light. */
+function prevNext(prev, next, href, label) {
+  const link = (item, dir) => {
+    if (!item) return '';
+    return dir === 'prev'
+      ? `<a class="ak-prevnext-link is-prev" href="${href(item)}" rel="prev">${icon('caret-left-light')}${label(item)}</a>`
+      : `<a class="ak-prevnext-link is-next" href="${href(item)}" rel="next">${label(item)}${icon('caret-right-light')}</a>`;
+  };
+  return `    <nav class="ak-prevnext" aria-label="Previous and next">
+      ${[link(prev, 'prev'), link(next, 'next')].filter(Boolean).join('\n      ')}
+    </nav>
+`;
+}
+
+/* Hero: the title and the line under it, the one component blog posts and
+ * project pages share (.ak-hero in styles.css), so both have the same sizes
+ * and spacing. titleHtml and subHtml are HTML; subHtml may be empty. Quote
+ * posts pass quote: true (the quote is the title, the author the line). */
+function hero(titleHtml, subHtml, { quote = false } = {}) {
+  return `<div class="ak-hero${quote ? ' is-quote' : ''}">
+        <h1>${titleHtml}</h1>${subHtml ? `\n        <p>${subHtml}</p>` : ''}
+      </div>`;
+}
 
 function postPage(p, prev, next, categories) {
-  const navLink = (item, dir) => {
-    if (!item) return '<span></span>';
-    return dir === 'prev'
-      ? `<a class="ak-postnav-link" href="${postUrl(item)}">${chevron('prev')}${typeLabel(item)}</a>`
-      : `<a class="ak-postnav-link is-next" href="${postUrl(item)}">${typeLabel(item)}${chevron('next')}</a>`;
-  };
   const type = p.fm.type;
   const isQuote = type === 'quote';
   const title = postTitle(p);
   const head = isQuote
-    ? `<div class="ak-post-head is-quote">
-        <h1><span class="ak-qm ak-qm-open">“</span>${quoteHtml(p.fm.quote)}<span class="ak-qm ak-qm-close">”</span></h1>${p.fm.author ? `
-        <div class="ak-quote-attrib"><span class="ak-feather">${icon('feather-fill')}</span> ${esc(p.fm.author)}</div>` : ''}
-      </div>`
-    : `<div class="ak-post-head">
-        <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
-      </div>`;
+    ? hero(
+      `<span class="ak-qm ak-qm-open">“</span>${quoteHtml(p.fm.quote)}<span class="ak-qm ak-qm-close">”</span>`,
+      p.fm.author ? `<span class="ak-feather">${icon('feather-fill')}</span> ${esc(p.fm.author)}` : '',
+      { quote: true })
+    : hero(esc(title), p.subtitle ? esc(p.subtitle) : '');
   const body = isQuote
     ? (p.body.trim() ? opticalEdges(markdown(p.body), 'first-child') : '')
     : opticalEdges(markdown(p.body), 'first-child') +
@@ -426,11 +438,7 @@ function postPage(p, prev, next, categories) {
     .map((c) => `<a class="ak-pill" href="${categoryUrl(c.name)}">${esc(`${c.name} (${c.posts.length})`)}</a>`)
     .join('\n              ');
 
-  const main = `    <main class="ak-post-page">
-      <nav class="ak-postnav">
-        ${navLink(prev, 'prev')}
-        ${navLink(next, 'next')}
-      </nav>
+  const main = `${prevNext(prev, next, postUrl, typeLabel)}    <main class="ak-post-page">
       ${head}
       <div class="ak-post-body-wrap">
         <aside class="ak-post-side">
@@ -446,7 +454,7 @@ function postPage(p, prev, next, categories) {
             ${body}
           </article>` : ''}
           <section class="ak-post-cats">
-            <h2 class="ak-post-cats-h" style="--lsb:${bearing(BEARINGS.normal, 'C')}">Categories</h2>
+            <p class="ak-post-cats-label" style="--lsb:${bearing(BEARINGS.normal, 'R')}">Read more …</p>
             <nav class="ak-pills" aria-label="Categories">
               ${cats}
             </nav>
@@ -470,7 +478,7 @@ function postPage(p, prev, next, categories) {
     title,
     description: postDescription(p),
     image: p.images[0],
-    nav: '', // the original marks no nav link on a post
+    nav: 'notes', // NOTES is a post's section, as WORK is a project's
     main,
     stylesheet: p.stylesheet,
     extraMeta: [
@@ -500,7 +508,7 @@ function workPage(projects) {
     )
     .join('');
   const main = `    <main class="ak-work-page">
-      <h1 class="ak-work-h1">Building products people love</h1>
+      <h1 class="ak-listing-h1">Building products people love</h1>
       <div class="ak-pills" data-pills>
         ${pills}
       </div>
@@ -508,9 +516,9 @@ function workPage(projects) {
       </div>
     </main>`;
   return page({
-    url: '/work/',
-    title: 'Work',
-    description: `Selected work by ${SITE_NAME}.`,
+    url: '/',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     nav: 'work',
     main,
     scripts: '    <script type="module" src="/js/work.js"></script>',
@@ -526,23 +534,9 @@ function projectPage(p, prev, next) {
     p.date && `<dt>Date:</dt><dd>${esc(p.date)}</dd>`,
   ].filter(Boolean).join('');
   const title = p.title || p.slug;
-  // Prev / next as on blog posts (.ak-postnav), with the project titles.
-  const navLink = (item, dir) => {
-    if (!item) return '<span></span>';
-    const label = esc(item.title || item.slug);
-    return dir === 'prev'
-      ? `<a class="ak-postnav-link" href="${projectUrl(item)}">${chevron('prev')}${label}</a>`
-      : `<a class="ak-postnav-link is-next" href="${projectUrl(item)}">${label}${chevron('next')}</a>`;
-  };
-  const main = `    <main class="ak-project-page">
-      <nav class="ak-postnav">
-        ${navLink(prev, 'prev')}
-        ${navLink(next, 'next')}
-      </nav>
+  const main = `${prevNext(prev, next, projectUrl, (item) => esc(item.title || item.slug))}    <main class="ak-project-page">
       <div class="ak-project-inner">
-      <div class="ak-project-head">
-        <h1>${esc(title)}</h1>${p.subtitle ? `\n        <p>${esc(p.subtitle)}</p>` : ''}
-      </div>
+      ${hero(esc(title), p.subtitle ? esc(p.subtitle) : '')}
       <div class="ak-project-body-wrap">
         <div class="ak-project-main">
           ${p.images[0] ? img(p.images[0], title) : ''}
@@ -632,7 +626,7 @@ function feedXml(posts) {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${SITE_NAME}</title>
-    <link>${SITE_URL}/</link>
+    <link>${SITE_URL}/blog/</link>
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
     <description>Notes on product, life, and people.</description>
     <language>en</language>
@@ -679,13 +673,13 @@ export async function build() {
     pages.set(url, { html, source });
   };
 
-  add('/', listingPage({ posts, allPosts: posts, categories }), 'the home page');
+  add('/', workPage(projects), 'the home page (work)');
+  add('/blog/', listingPage({ posts, allPosts: posts, categories }), 'the notes page');
   for (const c of categories) {
     add(categoryUrl(c.name), listingPage({ posts: c.posts, allPosts: posts, categories, activeCategory: c.name }), `category "${c.name}"`);
   }
   posts.forEach((p, i) => add(postUrl(p), postPage(p, posts[i - 1], posts[i + 1], categories), p.source));
 
-  add('/work/', workPage(projects), 'the work page');
   projects.forEach((p, i) => {
     // Prev / next wrap around.
     const n = projects.length;
@@ -696,7 +690,7 @@ export async function build() {
 
   add('/about/', page({
     url: '/about/',
-    title: 'Resumé',
+    title: 'About',
     description: 'Alexander Kitov — Product Manager and Entrepreneur.',
     image: '/assets/profile.jpg',
     nav: 'about',
@@ -737,7 +731,7 @@ export async function build() {
   await fs.writeFile(path.join(OUT, 'feed.xml'), feedXml(posts));
   await fs.writeFile(path.join(OUT, 'sitemap.xml'), sitemapXml([
     { loc: '/' },
-    { loc: '/work/' },
+    { loc: '/blog/' },
     { loc: '/about/' },
     ...categories.map((c) => ({ loc: categoryUrl(c.name), lastmod: isoDate(c.posts[0].date) })),
     ...posts.map((p) => ({ loc: postUrl(p), lastmod: isoDate(p.date) })),

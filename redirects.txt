@@ -2,5 +2,5 @@
 # One per line: <old path> <new path>
 
 /resume /about/
-/blog /
+/work /
 /ux/slack-ux /blog/slack-ux/
