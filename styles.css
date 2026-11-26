@@ -107,7 +107,9 @@
    * proportion). */
   --phone-plus: clamp(0px, calc(1.1433px - 2.5503 * var(--t)), 1px);
   --fs-tile-copy: clamp(14px, calc(14px + 4.641 * var(--t)), 16.2px);   /* 14 / 16.08 / 16.2 */
-  --lh-tile-copy: clamp(22.4px, calc(22.4px + 5.907 * var(--t)), 25.6px); /* 22.4 / 25.05 / 25.6 */
+  /* The excerpt's line height: the post body's spacing ratio (--lh-body /
+   * --fs-body: 1.44 on phones, 1.51 from 789) at the excerpt's size. */
+  --lh-tile-copy: calc(clamp(20.16px, calc(20.16px + 9.19 * var(--t)), 24.51px) + 1.44 * var(--phone-plus)); /* 21.6 / 24.28 / 24.51 */
 
   /* work: /work/ sizes, 43.2 / 32.56px at 770 and 46 / 34.25px at 1456
    * (About Beige x-height = the original's; px ends hit the targets) */
@@ -118,7 +120,7 @@
 
   /* Sizes, 390 -> 1280 */
   --nav-pad-block: clamp(12px, calc(12px + .6 * var(--tp)), 12.6px);
-  --radius: clamp(4px, calc(6px - 2 * var(--tp)), 6px); /* header and footer cards: 6 on phones, 4 from 768 */
+  --radius: 6px; /* every rounded corner: header and footer cards, menu tiles, the pressed hamburger, pills, chips, image frames and all images (circles stay round) */
   /* Header photo, and the phone hamburger at its height: 44 on phones, 42 from 768 (original .brand) */
   --avatar: clamp(42px, calc(44px - 2 * var(--tp)), 44px);
   /* "Alexander Kitov" in the header and the footer: 17 on phones, 22.2 at 768, 23.5 from 1456 */
@@ -187,7 +189,7 @@ html, body {
   }
 }
 
-img { max-width: 100%; display: block; }
+img { max-width: 100%; display: block; border-radius: var(--radius); }
 a { color: inherit; }
 
 /* ----------------------------- HEADER ----------------------------- */
@@ -292,7 +294,7 @@ a { color: inherit; }
   margin-left: calc(var(--menu-pad) - var(--nav-pad-left));
   margin-top: clamp(0px, calc(1.5 * var(--tp)), 1.5px);
   margin-bottom: clamp(-1.5px, calc(-1.5 * var(--tp)), 0px);
-  border-radius: 8px;
+  border-radius: var(--radius);
   border: 1px solid transparent;
   background: none;
   flex-direction: column;
@@ -336,7 +338,7 @@ a { color: inherit; }
   min-width: 0;
   aspect-ratio: 170 / 100; /* width : height, so the height follows the screen width */
   border: 1px solid #d0d0d0;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   font: 300 16px / 1 var(--title-font);
@@ -457,7 +459,7 @@ a { color: inherit; }
 .ak-pill {
   background: var(--pill-bg);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius);
   --pill-plus: 0px; /* the post page's category pills: --phone-plus */
   padding: 0 calc(clamp(11.43px, calc(11.43px + .37 * var(--tp)), 11.8px) + clamp(0px, calc(.8 * var(--t2)), .8px) + .952 * var(--pill-plus));
   height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px) + 1.714 * var(--pill-plus));
@@ -482,7 +484,7 @@ a { color: inherit; }
   background: #f5f5f5;
   padding: .1867em .4667em;
   line-height: 1.1em;
-  border-radius: 6px;
+  border-radius: var(--radius);
   height: auto;
 }
 .ak-pill:hover, .ak-pill.is-active { background: #ffffff; }
@@ -566,7 +568,7 @@ a { color: inherit; }
   font-size: calc(var(--fs-tile-copy) + var(--phone-plus)); /* Read More keeps --fs-tile-copy */
   font-weight: 360;
   color: #555;
-  line-height: calc(var(--lh-tile-copy) + 1.6 * var(--phone-plus));
+  line-height: var(--lh-tile-copy);
   margin: 0;
 }
 .ak-post-image {
@@ -875,10 +877,15 @@ a { color: inherit; }
   font-size: var(--fs-side);
   font-weight: 415;
   color: #555;
-  --side-lh: clamp(20.3px, calc(20.3px + 4.48 * var(--t)), 23.8px); /* 22.3 / 23.8 = CSS 170% of .875rem */
+  --side-lh: calc(1.4 * var(--fs-side)); /* tighter than the gap between items, so each item reads as one */
   line-height: var(--side-lh);
 }
-.ak-side-meta > * + * { margin-top: 3.5px; } /* author, link, type, date: a little apart */
+.ak-side-meta > * + * { margin-top: .5em; } /* author, link, type, date: further apart than their lines */
+/* The 16px feather and the category chip stand a little taller than these
+ * tight lines; negative margins let them overhang instead of pushing their
+ * line apart (they don't move). */
+.ak-side-meta .ak-icon { margin-block: -.15em; }
+.ak-side-meta .ak-side-chip { margin-block: -.15em; }
 .ak-side-meta a { text-decoration: none; }
 .ak-side-meta a:not(.ak-side-chip) { color: var(--accent); } /* keeps the shared chip black */
 .ak-side-date { display: block; font-weight: 610; color: #000; } /* size inherits .meta, as in the original */
@@ -968,7 +975,7 @@ a { color: inherit; }
   padding: var(--post-em) var(--post-em) 0;
   background: #f5f5f5;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: var(--radius);
   box-shadow: 0 1px 3px rgba(0, 0, 0, .055);
   text-align: center;
 }
