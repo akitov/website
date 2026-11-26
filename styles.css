@@ -101,6 +101,11 @@
    * Phones 12 / 14px; the tablet and desktop sizes as before (15 from 876,
    * 16.2 from 812). The excerpt keeps the original's 1.6 leading on phones. */
   --fs-tile-meta: clamp(12px, calc(12px + 5.493 * var(--t)), 15px);     /* 12 / 14.46 / 15 */
+  /* +1px on phones (up to 440 wide), fading to 0 by 789: added to the text
+   * below the hero on posts and projects (not the post sidebar's details)
+   * and to the listing tiles' headlines and excerpts (line heights grow in
+   * proportion). */
+  --phone-plus: clamp(0px, calc(1.1433px - 2.5503 * var(--t)), 1px);
   --fs-tile-copy: clamp(14px, calc(14px + 4.641 * var(--t)), 16.2px);   /* 14 / 16.08 / 16.2 */
   --lh-tile-copy: clamp(22.4px, calc(22.4px + 5.907 * var(--t)), 25.6px); /* 22.4 / 25.05 / 25.6 */
 
@@ -109,7 +114,7 @@
   /* Listing pages: header -> title capitals, 45.9 on phones, 69.6 at 789,
    * 73 from 847 (the /work/ title's before the two were made one). */
   --listing-title-cap: clamp(45.9px, calc(45.9px + 52.87 * var(--t)), 73.05px);
-  --fs-work-cap: clamp(15.75px, calc(15.75px + 39.37 * var(--t)), 34.25px);
+  --fs-work-cap: calc(clamp(15.75px, calc(15.75px + 39.37 * var(--t)), 34.25px) + var(--phone-plus));
 
   /* Sizes, 390 -> 1280 */
   --nav-pad-block: clamp(12px, calc(12px + .6 * var(--tp)), 12.6px);
@@ -135,17 +140,17 @@
 
   /* post: blog post page, 390 -> 789 -> >=1280 (phone / tablet / desktop
    * in the comments). k = (tablet - phone) / 0.448315, the value of --t at 789. */
-  --fs-body:      clamp(15px,   calc(15px   +  4.684 * var(--t)), 18.2px);  /* 15 / 17.1 / 18.2 */
-  --fs-side:      clamp(12px,   calc(12px   +  4.461 * var(--t)), 15px);    /* 12 / 14 / 15 (= home meta) */
-  --lh-body:      clamp(21.6px, calc(21.6px + 9.414 * var(--t)), 27.54px); /* 21.6 / 25.82 / 27.54: 90% of the original's 24 / 28.69 / 30.6 */
+  --fs-body:      calc(clamp(15px,   calc(15px   +  4.684 * var(--t)), 18.2px) + var(--phone-plus));  /* 16 / 17.1 / 18.2 */
+  --fs-side:      clamp(12px,   calc(12px   +  4.461 * var(--t)), 15px);    /* 12 / 14 / 15 */
+  --lh-body:      calc(clamp(21.6px, calc(21.6px + 9.414 * var(--t)), 27.54px) + 1.44 * var(--phone-plus)); /* 23 / 25.82 / 27.54: 90% of the original's 24 / 28.69 / 30.6, + 1.44 x the phone extra */
   /* Three-line drop cap: its cap height (.72em) = two lines + one body cap height. */
-  --fs-dropcap:   calc(var(--fs-body) + 2 * var(--lh-body) / .72);            /* 75 / 88.8 / 94.7 */
+  --fs-dropcap:   calc(var(--fs-body) + 2 * var(--lh-body) / .72);            /* 80 / 88.8 / 94.7 */
   /* h2 = 0.80 x the hero title, h3 = 0.66 x (phones keep 21 / 16.6) */
-  --fs-post-h2:   clamp(21px,   calc(19.2px  + 34.26 * var(--t)), 36.8px);  /* 21 / 34.56 / 36.8 */
-  --fs-post-h3:   clamp(16.6px, calc(15.84px + 28.27 * var(--t)), 30.36px); /* 16.6 / 28.51 / 30.36 */
-  --fs-post-h4:   clamp(15px,   calc(15px   + 15.84  * var(--t)), 23.6px);  /* 15 / 22.1 / 23.6 */
-  --fs-bq:        clamp(15px,   calc(15px   +  9.145 * var(--t)), 20.4px);  /* 15 / 19.1 / 20.4 */
-  --fs-caption:   clamp(13px,   calc(13px   +  4.684 * var(--t)), 16.1px);  /* 13 / 15.1 / 16.1 */
+  --fs-post-h2:   calc(clamp(21px,   calc(19.2px  + 34.26 * var(--t)), 36.8px) + var(--phone-plus));  /* 22 / 34.56 / 36.8 */
+  --fs-post-h3:   calc(clamp(16.6px, calc(15.84px + 28.27 * var(--t)), 30.36px) + var(--phone-plus)); /* 17.6 / 28.51 / 30.36 */
+  --fs-post-h4:   calc(clamp(15px,   calc(15px   + 15.84  * var(--t)), 23.6px) + var(--phone-plus));  /* 16 / 22.1 / 23.6 */
+  --fs-bq:        calc(clamp(15px,   calc(15px   +  9.145 * var(--t)), 20.4px) + var(--phone-plus));  /* 16 / 19.1 / 20.4 */
+  --fs-caption:   calc(clamp(13px,   calc(13px   +  4.684 * var(--t)), 16.1px) + var(--phone-plus));  /* 14 / 15.1 / 16.1 */
   --post-em:        clamp(15px, calc(15px + 4.183 * var(--t)), 18px);    /* the original's 1em (1.125rem): 15 / 16.875 / 18 */
 }
 
@@ -453,11 +458,12 @@ a { color: inherit; }
   background: var(--pill-bg);
   border: none;
   border-radius: 5px;
-  padding: 0 calc(clamp(11.43px, calc(11.43px + .37 * var(--tp)), 11.8px) + clamp(0px, calc(.8 * var(--t2)), .8px));
-  height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
-  line-height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px));
+  --pill-plus: 0px; /* the post page's category pills: --phone-plus */
+  padding: 0 calc(clamp(11.43px, calc(11.43px + .37 * var(--tp)), 11.8px) + clamp(0px, calc(.8 * var(--t2)), .8px) + .952 * var(--pill-plus));
+  height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px) + 1.714 * var(--pill-plus));
+  line-height: calc(clamp(20.57px, calc(20.57px + 9.83 * var(--tp)), 30.4px) + clamp(0px, calc(2 * var(--t2)), 2px) + 1.714 * var(--pill-plus));
   font-family: var(--sans);
-  font-size: calc(clamp(12px, calc(12px + 5.35 * var(--tp)), 17.35px) + clamp(0px, calc(.85 * var(--t2)), .85px)); /* 12 on phones, 17.35 at 768 */
+  font-size: calc(clamp(12px, calc(12px + 5.35 * var(--tp)), 17.35px) + clamp(0px, calc(.85 * var(--t2)), .85px) + var(--pill-plus)); /* 12 on phones, 17.35 at 768 */
   font-weight: var(--w-normal);
   color: #000;
   text-decoration: none;
@@ -557,10 +563,10 @@ a { color: inherit; }
 /* Original body text: Helvetica 1rem / 1.6rem, #555. */
 .ak-post-excerpt {
   font-family: var(--serif);
-  font-size: var(--fs-tile-copy);
+  font-size: calc(var(--fs-tile-copy) + var(--phone-plus)); /* Read More keeps --fs-tile-copy */
   font-weight: 360;
   color: #555;
-  line-height: var(--lh-tile-copy);
+  line-height: calc(var(--lh-tile-copy) + 1.6 * var(--phone-plus));
   margin: 0;
 }
 .ak-post-image {
@@ -743,7 +749,12 @@ a { color: inherit; }
 .ak-icon-linkedin-logo-bold { --yb: .015625; }
 .ak-icon-x-logo-bold { --yb: .046875; }
 .ak-icon-feather-fill { --yb: .03125; }
-/* map-pin-fill: 0 (the default) */
+/* map-pin-fill: 0 (the default). Its point sits on the baseline, but the
+ * 16px pin beside the small sidebar text then rode high: its ink (about
+ * 13.8px tall, middle 6.9px up) moves down to the middle of the text's
+ * capitals (.36em up), 2.6px at 12px text, 1.5px at 15px; the point dips
+ * below the baseline. */
+.ak-side-loc .ak-icon { translate: 0 calc(6.9px - .36 * var(--fs-side)); }
 .ak-feather { display: inline; }
 .ak-feather .ak-icon { margin-right: .05em; }
 
@@ -867,6 +878,7 @@ a { color: inherit; }
   --side-lh: clamp(20.3px, calc(20.3px + 4.48 * var(--t)), 23.8px); /* 22.3 / 23.8 = CSS 170% of .875rem */
   line-height: var(--side-lh);
 }
+.ak-side-meta > * + * { margin-top: 3.5px; } /* author, link, type, date: a little apart */
 .ak-side-meta a { text-decoration: none; }
 .ak-side-meta a:not(.ak-side-chip) { color: var(--accent); } /* keeps the shared chip black */
 .ak-side-date { display: block; font-weight: 610; color: #000; } /* size inherits .meta, as in the original */
@@ -977,7 +989,7 @@ a { color: inherit; }
 .ak-post-main > .ak-post-cats:first-child { margin-top: 0; } /* quote without body */
 .ak-post-cats-label {
   font-family: var(--serif);
-  font-size: 1rem;
+  font-size: calc(1rem + var(--phone-plus));
   font-weight: var(--w-normal);
   line-height: 1.21; /* About Beige's normal */
   color: #000;
@@ -985,6 +997,7 @@ a { color: inherit; }
   margin: 0 0 calc(.8222 * var(--post-em)); /* label -> pills */
 }
 .ak-post-cats .ak-pills { justify-content: flex-start; margin: 0; }
+.ak-post-cats .ak-pill { --pill-plus: var(--phone-plus); }
 /* Long words, wide code and wide tables must not widen the page. */
 .ak-post-body { overflow-wrap: anywhere; }
 .ak-post-body pre { overflow-x: auto; }
@@ -1039,7 +1052,7 @@ a { color: inherit; }
   font-family: var(--serif);
   font-size: var(--fs-work-cap);
   font-weight: var(--w-normal);
-  --lh: clamp(19.06px, calc(19.06px + 50.25 * var(--t)), 43.2px);
+  --lh: calc(clamp(19.06px, calc(19.06px + 50.25 * var(--t)), 43.2px) + 1.21 * var(--phone-plus));
   line-height: calc(var(--lh) * .85);
   color: #000;
 }
@@ -1075,7 +1088,7 @@ a { color: inherit; }
 }
 .ak-project-body p { margin: 0 0 16px; }
 .ak-project-body h2 {
-  font-size: 1.375rem;
+  font-size: calc(1.375rem + var(--phone-plus));
   --lh: 1.8em; /* was inherited */
   font-weight: var(--w-bold);
   margin: 28px 0 12px;
@@ -1087,7 +1100,7 @@ a { color: inherit; }
 }
 .ak-project-side { flex: 30 1 210px; }
 .ak-project-side h3 {
-  font-size: 1.75rem;
+  font-size: calc(1.75rem + var(--phone-plus));
   font-style: italic;
   color: var(--text-2);
   margin: 0 0 30px;
@@ -1095,7 +1108,7 @@ a { color: inherit; }
 }
 .ak-project-side dl {
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--phone-plus));
   line-height: 1.6;
   color: #444;
   margin: 0;
@@ -1107,7 +1120,7 @@ a { color: inherit; }
   color: var(--accent);
   text-decoration: none;
   font-family: var(--serif);
-  font-size: 1rem;
+  font-size: calc(1rem + var(--phone-plus));
   padding-bottom: 4px;
   border-bottom: 2px solid var(--accent);
   font-weight: var(--w-heavy);
@@ -1346,14 +1359,14 @@ a { color: inherit; }
   /* Tile headlines one column: the title 30px at a 540px column, the quote
    * with the viewport; both 10% larger on phones (columns up to 402px, 430
    * wide), the extra fading out by 760 (a 672px column) to the sizes before. */
-  .ak-post-title { font-size: calc(5.556cqi + min(.5556cqi, max(0px, calc(5.553px - .8258cqi)))); }
+  .ak-post-title { font-size: calc(5.556cqi + min(.5556cqi, max(0px, calc(5.553px - .8258cqi))) + var(--phone-plus)); }
   .ak-post-grid .ak-quote {
     --tq: clamp(1.125rem, calc(15.75px + 39.2 * var(--t)), 33.4px);
     --tq-boost: min(calc(.1 * var(--tq)), max(0px, calc(4.354px - .6474cqi)));
-    --fs-tq: calc(var(--tq) + var(--tq-boost));
+    --fs-tq: calc(var(--tq) + var(--tq-boost) + var(--phone-plus));
   }
   /* The quote's leading grows with the extra (1.4 x, its phone leading). */
-  .ak-post-grid .ak-quote-text { --lh: calc(clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px) + 1.4 * var(--tq-boost)); }
+  .ak-post-grid .ak-quote-text { --lh: calc(clamp(22.05px, calc(22.05px + 43.47 * var(--t)), 44.75px) + 1.4 * (var(--tq-boost) + var(--phone-plus))); }
 
   .ak-work-grid { grid-template-columns: 1fr; }
 
@@ -1362,19 +1375,17 @@ a { color: inherit; }
   .ak-side-box img { aspect-ratio: 4/3; object-fit: cover; }
   /* With an image: the image 2/3 of the box's inner width, the details beside
    * it in the last third (after the image -> details gap of the stacked
-   * box), still centred, their first line's capitals level with the image's
-   * top (they sit .5 x the line height - .345em below the line's top). */
+   * box), still centred, and vertically centred on the image. Without
+   * vertical padding the details' box centre is their ink's (first capitals
+   * to last baseline) to within .015em. */
   .ak-side-box:has(> img) {
     display: grid;
     grid-template-columns: 66.6667% minmax(0, 1fr);
     column-gap: calc(.879 * var(--fs-body));
-    align-items: start;
+    align-items: center;
   }
   .ak-side-box:has(> img) > img { margin: 0; }
-  .ak-side-box:has(> img) > .ak-side-meta {
-    padding-top: 0;
-    margin-top: calc(.345 * var(--fs-side) - .5 * var(--side-lh));
-  }
+  .ak-side-box:has(> img) > .ak-side-meta { padding-block: 0; }
 
   /* Two columns, items as on tablet (icon over label); an odd last item
    * sits in the left column like the work grid's. */

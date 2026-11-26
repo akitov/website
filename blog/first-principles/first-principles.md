@@ -5,7 +5,7 @@ category: Life
 title: First principles reasoning
 subtitle: Elon Musk answers how he succeeds in pursuing such groundbreaking ideas and how he has been able to innovate so often.
 images: [elon.jpg]
-author: Elon Musk - PayPal, Tesla Motors, SolarCity, SpaceX
+author: Elon Musk - PayPal, Tesla, SpaceX
 source: http://www.youtube.com/watch?v=IgKWPdJWuBQ
 ---
 
