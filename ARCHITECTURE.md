@@ -172,7 +172,9 @@ All text uses one font, About Beige, a variable font. The file is
 (`font-weight: 100 1000`, because the font's default weight is hairline and a
 narrower range would render it that way). `--serif`, `--sans` and
 `--title-font` all resolve to the same stack, so changing the font means
-changing those three variables.
+changing those three variables. One exception: the quote posts' headline is
+set in Georgia Italic (`--quote-font`, a system font, so nothing is
+downloaded; Android substitutes its default serif).
 
 **License:** About Beige is a commercial font by Krista Radoeva
 (abouttype.com). It is used under the site owner's license and is not covered

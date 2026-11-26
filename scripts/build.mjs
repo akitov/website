@@ -434,9 +434,12 @@ function postPage(p, prev, next, categories) {
   const order = { quote: ['link', 'type', 'date'], event: ['date', 'type', 'link', 'loc'] }[type] || ['author', 'link', 'type', 'date', 'loc'];
   const sideMeta = order.map((k) => side[k]).filter(Boolean).join('\n              ');
 
-  const cats = categories
-    .map((c) => `<a class="ak-pill" href="${categoryUrl(c.name)}">${esc(`${c.name} (${c.posts.length})`)}</a>`)
-    .join('\n              ');
+  // "Read more ..." pills: All first (the Notebook page), then each category.
+  const allCount = categories.reduce((n, c) => n + c.posts.length, 0);
+  const cats = [
+    `<a class="ak-pill" href="/blog/">${esc(`All (${allCount})`)}</a>`,
+    ...categories.map((c) => `<a class="ak-pill" href="${categoryUrl(c.name)}">${esc(`${c.name} (${c.posts.length})`)}</a>`),
+  ].join('\n              ');
 
   const main = `${prevNext(prev, next, postUrl, typeLabel)}    <main class="ak-post-page">
       ${head}

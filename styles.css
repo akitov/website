@@ -1,7 +1,8 @@
 /* ============================================================
    Alexander Kitov — Personal Site
    Pure CSS, no preprocessor, no framework.
-   One font family only: About Beige (variable, self-hosted) for all text.
+   One font family: About Beige (variable, self-hosted) for all text, except
+   the quote posts' headline, in Georgia Italic (--quote-font).
    ============================================================ */
 
 @font-face {
@@ -31,6 +32,7 @@
   --serif: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --sans: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --title-font: "About Beige", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --quote-font: Georgia, "Times New Roman", Times, serif; /* quote posts' headline (system font; Android falls back to its serif) */
 }
 
 /* Fluid values. --t is 0 at a 390px viewport and 1px at 1280px, so a
@@ -682,6 +684,7 @@ a { color: inherit; }
  * .28 after it). */
 .ak-post-grid .ak-quote-text {
   font-size: var(--fs-tq);
+  font-family: var(--quote-font); /* Georgia Italic, as the quote posts' headline */
   font-weight: var(--w-normal);
   color: #222;
   /* Headline leading at 85% like the headings; the padding keeps the first
@@ -691,26 +694,26 @@ a { color: inherit; }
   padding-block: calc(var(--lh) * .075);
   padding-left: calc(1.078 * var(--fs-tq));
 }
-/* The marks are icon glyphs in the original, heavier than the text. */
-/* The marks are About Beige glyphs at --w-black, in the author feather's #555. */
+/* The marks are Georgia's, regular and upright, in the author feather's
+ * #555, at the quote's size as in the quote posts' headline. The opening one
+ * hangs left of the text but sits on the first line's baseline (same line
+ * height, top at the text's top padding). */
 .ak-post-grid .ak-quote-text::before {
-  font-size: 1.25em;
-  font-weight: var(--w-black);
+  font-size: 1em;
+  font-family: var(--quote-font);
+  font-weight: var(--w-normal);
   color: #555;
-  line-height: 1;
-  /* The mark's top .25 of the quote size above the first line's capitals
-   * (-4px at 1456, as before). */
-  top: calc(.5 * var(--lh) - .7897 * var(--fs-tq));
+  line-height: inherit;
+  top: calc(var(--lh) * .075);
   left: calc(.452 * var(--fs-tq));
 }
 .ak-post-grid .ak-quote-text::after {
-  font-size: 1.25em;
-  font-weight: var(--w-black);
+  font-size: 1em;
+  font-family: var(--quote-font);
+  font-weight: var(--w-normal);
   color: #555;
-  margin-left: 0.14em;
-  /* .1em lower than the original's raise: with 85% leading the raised mark
-   * reached the descenders of the line above. */
-  vertical-align: calc(clamp(0px, calc(-0.3px + 2.587 * var(--t)), 2.8px) - .1em);
+  margin-left: .05em; /* as in the quote posts' headline */
+  vertical-align: baseline;
 }
 .ak-post-grid .ak-quote-author {
   font-size: clamp(0.875rem, calc(12.25px + 9.54 * var(--t)), 16.8px);
@@ -813,8 +816,9 @@ a { color: inherit; }
  * scripts/build.mjs): the title and the line under it (a subtitle, or a
  * quote's author), with the same sizes and spacing on both. It owns the space
  * above it (from prev / next) and below it (to the page's content).
- * Quote posts: the quote is the title, italic at --w-normal with its
- * emphasis at --w-heavy and About Beige's marks (see "Quote post headline");
+ * Quote posts: the quote is the title, in Georgia Italic (--quote-font):
+ * regular throughout (emphasis isn't bold), its marks regular (see "Quote
+ * post headline");
  * the author line has the feather. */
 .ak-hero {
   text-align: center;
@@ -838,8 +842,8 @@ a { color: inherit; }
   max-width: 82.906%; /* bootstrap .span10 */
   margin: 0 auto;
 }
-.ak-hero.is-quote h1 { font-weight: var(--w-normal); font-style: italic; }
-.ak-hero.is-quote h1 em { font-style: italic; font-weight: var(--w-heavy); }
+.ak-hero.is-quote h1 { font-family: var(--quote-font); font-weight: var(--w-normal); font-style: italic; }
+.ak-hero.is-quote h1 em { font-style: italic; font-weight: inherit; } /* no bold inside a quote */
 
 /* ----------------------------- BLOG POST PAGE ----------------------------- */
 
@@ -1429,9 +1433,10 @@ h1, h2, h3, h4, h5, h6 {
 .ak-project-body > :is(h2, h3, h4, h5, h6),
 .ak-post-cats-label { margin-left: calc(-1em * var(--lsb, 0)); }
 
-/* Quote post headline: About Beige's own marks (--w-black, upright) in the
- * headline's black; the home quote tiles keep their #555 marks. */
-.ak-hero.is-quote .ak-qm { font-style: normal; font-weight: var(--w-black); }
+/* Quote post headline: Georgia's marks, upright and regular (--w-normal
+ * picks Georgia Regular), in the headline's black; the home quote tiles keep
+ * their #555 marks. */
+.ak-hero.is-quote .ak-qm { font-style: normal; font-weight: var(--w-normal); }
 .ak-hero.is-quote .ak-qm-open { margin-right: 0em; }
 .ak-hero.is-quote .ak-qm-close { margin-left: .05em; }
 
