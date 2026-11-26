@@ -318,11 +318,13 @@ a { color: inherit; }
 /* ----------------------------- MOBILE MENU ----------------------------- */
 /* Inside the header card, so opening it grows the card and pushes the page down. */
 
-/* The menu is a size container so the tile labels can scale with the tiles:
- * a tile is (100cqi - the 16px gap) / 2 wide, and its label is 18px on a
+/* Tiles: 2 + 1 on phones; all three in one row once each can be 140px wide
+ * (from about 520px), so they stay about phone size (see the phone block).
+ * Each tile is a size container, so its label scales with it: 18px on a
  * 160.37px tile (iPhone 16, 393 wide), the same proportion at every width. */
-.ak-menu { display: none; container-type: inline-size; --menu-gap: 16px; }
+.ak-menu { display: none; --menu-gap: 16px; }
 .ak-menu-tile {
+  container-type: inline-size;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -332,11 +334,13 @@ a { color: inherit; }
   border-radius: 8px;
   background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  font: 300 calc((100cqi - var(--menu-gap)) / 2 * 18 / 160.37) / 1 var(--title-font); /* 13.9 at 320, 18 at 393, 28.6 at 600 */
+  font: 300 16px / 1 var(--title-font);
   letter-spacing: 0.04em;
   color: #9a9a9a;
   text-decoration: none;
 }
+/* 100cqi is the tile inside its 1px borders. */
+.ak-menu-tile > span { font-size: calc((100cqi + 2px) * 18 / 160.37); }
 .ak-menu-tile.is-active {
   background: #e6e6e6;
   border-color: #c5c5c5;
@@ -1329,7 +1333,10 @@ a { color: inherit; }
   .ak-hamburger { display: inline-flex; }
   .ak-menu:not([hidden]) {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Two columns (narrower than 140px on the smallest phones), or three
+     * once a third of the row is 140px or more. The .1px keeps rounding from
+     * dropping a column. */
+    grid-template-columns: repeat(auto-fit, minmax(max(min(140px, calc((100% - var(--menu-gap)) / 2 - .1px)), calc((100% - 2 * var(--menu-gap)) / 3 - .1px)), 1fr));
     gap: var(--menu-gap);
     padding: 20px var(--menu-pad);
   }
